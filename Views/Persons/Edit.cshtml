@@ -1,0 +1,87 @@
+﻿@model TrojWebApp.Models.PersonsModel
+
+@{
+    ViewData["Title"] = "Ändra kontaktuppgifter för " + @Model.FirstName + " " + @Model.LastName;
+}
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="Persons" asp-action="Details" asp-route-id=@Model.PersonId title="Tillbaka till kontaktuppgifter"><span class='glyphicon glyphicon-home' /></a></td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa adress", "Create", "PersonAddresses", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa telefonnummer", "Create", "PhoneNumbers", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa uppdrag", "Create" , "Cases", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PersonId"/>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <th class="head">Förnamn:</th>
+                    <td>
+                        <input asp-for="FirstName" size="50" class="font2" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Efternamn:</th>
+                    <td>
+
+                        <input asp-for="LastName" size="50" class="font2" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Mellanamn:</th>
+                    <td>
+                        <input asp-for="MiddleName" size="50" class="font2" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Personnummer:</th>
+                    <td>
+                        <input asp-for="PersonNumber" size="50" class="font2" />
+                        <span asp-validation-for="PersonNumber" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Mail:</th>
+                    <td>
+                        <input asp-for="MailAddress" size="50" class="font2" />
+                        <span asp-validation-for="MailAddress" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Aktiv:</th>
+                    <td>
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Active" />
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Spara" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <table class="col-md-12" nowrap>
+        <tr>
+            <td nowrap style="width: 100%;"></td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+        </tr>
+    </table>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

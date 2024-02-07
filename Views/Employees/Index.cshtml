@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TrojWebApp.Models.EmployeesModel>
+
+@{
+    ViewData["Title"] = "Personal";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-6">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="tablehead2">Förnamn:</th>
+                    <th class="tablehead2">Efternamn:</th>
+                    <th class="tablehead2">Initialer:</th>
+                    <th class="tablehead2">Mail:</th>
+                    <th class="tablehead2">Titel:</th>
+                    <th class="tablehead2">Företräda:</th>
+                    <th class="tablehead2">Aktiv:</th>
+                    <th class="tablehead2" nowrap>Bara läsa:</th>
+                    <th class="tablehead2">Signatur:</th>
+                    <th class="tablehead2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.Initials)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.MailAddress)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.EmployeeTitle)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.Represent)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.Active)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.ReadOnly)
+                        </td>
+                        <td class="tablefont2" nowrap>
+                            @Html.DisplayFor(modelItem => item.SignatureLink)
+                        </td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink("Ändra...", "Edit", new { id=item.EmployeeId })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

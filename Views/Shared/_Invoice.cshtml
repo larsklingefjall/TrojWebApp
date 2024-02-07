@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta HTTP-EQUIV="Content-Type" content="text/html; charset=UTF-8">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            height: 200mm;
+            width: 175mm;
+            margin-left: 0mm;
+            margin-right: 10mm;
+            margin-top: 35mm;
+            margin-bottom: 5mm;
+            border: 1px solid white;
+        }
+
+        div#headDiv {
+            position: absolute;
+            width: 41mm;
+            height: 30mm;
+            background: white;
+            left: 65mm;
+            top: 5mm;
+            border: 1px solid white;
+        }
+
+        div#bodyUpperDiv {
+            position: absolute;
+            width: 150mm;
+            height: 155mm;
+            background: white;
+            left: 2mm;
+            top: 35mm;
+            border: 1px solid white;
+        }
+
+        div#bodyLowerDiv {
+            position: absolute;
+            width: 150mm;
+            height: 30mm;
+            background: white;
+            left: 6mm;
+            top: 198mm;
+            border: 1px solid white;
+        }
+
+        div#addressDiv {
+            position: absolute;
+            width: 65mm;
+            height: 45mm;
+            background: white;
+            left: 110mm;
+            top: 42mm;
+            border: 1px solid white;
+        }
+
+        div#footDiv {
+            position: absolute;
+            width: 172mm;
+            height: 20mm;
+            background: white;
+            left: 2mm;
+            top: 232mm;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body vlink="#000000" link="#000000" alink="#FF0000">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    @RenderBody()
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

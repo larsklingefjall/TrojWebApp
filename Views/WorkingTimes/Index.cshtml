@@ -1,0 +1,391 @@
+﻿@model IEnumerable<TrojWebApp.Models.WorkingTimesViewModel>
+
+@{
+    ViewData["Title"] = ViewBag.PageTitle;
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-4">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Uppdrag:</td>
+                <td class="head">Datum:</td>
+                <td class="head">Typ:</td>
+                <td class="head">Titel:</td>
+                <td class="head">Ombud:</td>
+                <td class="head">Förnamn:</td>
+                <td class="head">Efternamn:</td>
+                <td class="head"></td>
+            </tr>
+            <tr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input name="CaseId" value="@ViewBag.CaseId" type="text" size="10" class="font2" />
+                </td>
+                <td>
+                    <input name="WhenDate" value="@ViewBag.WhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <select name="CaseTypeId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.CaseTypes)
+                            {
+                                if (option.Value == ViewBag.CaseTypeId)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input name="Title" value="@ViewBag.CaseTitle" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <select name="EmployeeId" class="font2">
+                        <option value="0"></option>
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.EmployeeId)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input name="FirstName" value="@ViewBag.FirstName" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <input name="LastName" value="@ViewBag.LastName" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="Reset">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table class="table table-condensed table-no-border">
+                <tr>
+                    <td class="head">Uppdrag:</td>
+                    <td class="head">Datum:</td>
+                    <td class="head">Ombud:</td>
+                    <td class="head">Typ:</td>
+                    <td class="head">Kontext:</td>
+                    <td class="head">Antal:</td>
+                    <td class="head">Styckkost:</td>
+                    <td class="head"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select class="font2" name="CaseId"
+                                asp-items="@(new SelectList(ViewBag.Cases,"Value","Text"))">
+                        </select>
+                    </td>
+                    <td>
+                        <input name="WhenDate" type="date" value="@ViewBag.CurrentDate" class="font2" />
+                    </td>
+                    <td>
+                        <select name="EmployeeId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.CurrentEmployee)
+                                {
+                                    <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <select class="font2" name="TariffTypeId"
+                                asp-items="@(new SelectList(ViewBag.TariffTypes,"Value","Text"))">
+                        </select>
+                    </td>
+                    <td>
+                        <input name="Comment" type="text" size="50" class="font2" />
+                    </td>
+                    <td>
+                        <input name="NumberOfHours" type="text" size="5" class="font2" />
+                    </td>
+                    <td>
+                        <input name="Cost" type="text" size="5" class="font2" />
+                    </td>
+                    <td>
+                        <input type="submit" value="Spara" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+@{
+    if (Model.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <table border="0" cellpadding="4" cellspacing="0" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="tablehead2">Tid:</td>
+                            <td class="tablehead2">Uppdrag:</td>
+                            <td class="tablehead2">Typ:</td>
+                            <td class="tablehead2">Klient:</td>
+                            <td class="tablehead2">Kontext:</td>
+                            <td class="tablehead2">Antal:</td>
+                            <td class="tablehead2">Styckkost:</td>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">Ombud:</td>
+                            <td class="tablehead2">Underlag:</td>
+                            <td class="tablehead2"></td>
+                            <td class="tablehead2"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            int maxLenght = ViewBag.MaxTitleLenght;
+                            string title = "";
+                            if (item.Title != null && string.IsNullOrEmpty(item.Title) == false)
+                                if (item.Title.Length > maxLenght)
+                                    title = "-" + item.Title.ToString().Substring(0, maxLenght) + "...";
+                                else
+                                    title = "-" + item.Title;
+                            @if (item.Billed)
+                            {
+                                <tr style="background-color:@item.BackgroundColor;">
+                                    <td class="tablefont2" title="@Html.DisplayFor(modelItem => item.Changed) av: @Html.DisplayFor(modelItem => item.ChangedBy)" nowrap>
+                                        @Html.DisplayFor(modelItem => item.WhenDate)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.ActionLink(item.CaseType + "/" + item.CaseId.ToString() + title, "Details", "Cases", new { id = item.CaseId })
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.DisplayFor(modelItem => item.TariffType)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId.ToString(), "Details", "Persons", new { id = item.PersonId })
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.DisplayFor(modelItem => item.Comment)
+                                    </td>
+                                    <td class="tablefont2" align="right" nowrap>
+                                        @String.Format("{0:#,##0.00}", @item.NumberOfHours)
+                                    </td>
+                                    @{
+                                        double unitCost = item.TariffLevel;
+                                        if (item.Cost != null)
+                                            unitCost = item.Cost ?? 0;
+                                    }
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", @unitCost)</td>
+                                    <td class="tablefont2" align="right" nowrap>
+                                        @String.Format("{0:#,##0.00}", item.Sum)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.DisplayFor(modelItem => item.Initials)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.DisplayFor(modelItem => item.Billed)
+                                    </td>
+                                    <td class="tablefont2" nowrap>&nbsp;</td>
+                                    <td class="tablefont2" nowrap>&nbsp;</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr style="background-color:@item.BackgroundColor;">
+                                    <form asp-action="Edit">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="form-group">
+                                            <input type="hidden" name="WorkingTimeId" value="@item.WorkingTimeId" />
+                                        </div>
+                                    <td class="tablefont2" title="@Html.DisplayFor(modelItem => item.Changed) av: @Html.DisplayFor(modelItem => item.ChangedBy)" nowrap>
+                                            @Html.DisplayFor(modelItem => item.WhenDate)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                            @Html.ActionLink(item.CaseType + "/" + item.CaseId.ToString() + title, "Details", "Cases", new { id = item.CaseId })
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                            @Html.DisplayFor(modelItem => item.TariffType)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                            @Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId.ToString(), "Details", "Persons", new { id = item.PersonId })
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        <input class="font2" name="Comment" type="text" size="50" value="@item.Comment" />
+                                    </td>
+                                    <td class="tablefont2" align="right" nowrap>
+                                        <input class="font2" align="right" name="NumberOfHours" type="text" size="5" value="@item.NumberOfHours" />
+                                    </td>
+                                        @{
+                                            double unitCost = item.TariffLevel;
+                                            if (item.Cost != null)
+                                                unitCost = item.Cost ?? 0;
+                                        }
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", @unitCost)</td>
+                                    <td class="tablefont2" align="right" nowrap>
+                                            @String.Format("{0:#,##0.00}", item.Sum)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                            @Html.DisplayFor(modelItem => item.Initials)
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                            @Html.DisplayFor(modelItem => item.Billed)
+                                    </td>
+
+                                    <td class="tablefont2" nowrap>
+                                        <input type="submit" value="Ändra" class="btn btn-primary" />
+                                    </td>
+                                    </form>
+                                    <form asp-action="Delete">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="form-group">
+                                            <input type="hidden" name="WorkingTimeId" value="@item.WorkingTimeId" />
+                                        </div>
+                                    <td class="tablefont2" nowrap><input type="submit" value="Radera" class="btn btn-primary" /></td>
+                                    </form>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td class="tablehead2" colspan="5">Summa:</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalHours)</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+                            <td class="tablehead2" colspan="4">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (Model.Count() > 0)
+    {
+        int iMax = 0;
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" cellpadding="2" cellspacing="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <td nowrap>
+                            <ul class="pagination pagination-sm" style="display: flex;">
+                                @if (ViewBag.Start >= 9)
+                                {
+                                    <li style="display: flex;"><a href="/WorkingTimes/?page=1">1</a></li>
+                                }
+                                @if (ViewBag.Start > 0)
+                                {
+                                    <li style="display: flex;"><a href="/WorkingTimes/?page=@ViewBag.Start">...</a></li>
+                                }
+                                @for (int i = @ViewBag.TrojWorkingTimeStart; i <= @ViewBag.TrojWorkingTimeEnd; i++)
+                                {
+                                    if (i == 1 && @ViewBag.Page == 0)
+                                    {
+                                        <li class="active"><a href="/WorkingTimes/?page=@i">@i</a></li>
+                                    }
+                                    else
+                                    {
+                                        if (i <= @ViewBag.MaxPage)
+                                        {
+                                            if (i == @ViewBag.Page)
+                                            {
+                                                <li class="active"><a href="/WorkingTimes/?page=@i">@i</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li style="display: flex;"><a href="/WorkingTimes/?page=@i">@i</a></li>
+                                            }
+                                        }
+                                    }
+                                    iMax = i;
+                                }
+                                @if (iMax <= @ViewBag.MaxPage)
+                                {
+                                    int iMaxPlus = iMax + 1;
+                                    @if (@iMaxPlus == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/WorkingTimes/?page=@iMaxPlus">...</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/WorkingTimes/?page=@iMaxPlus">...</a></li>
+                                    }
+                                }
+
+                                @if (ViewBag.ShowMaxPage)
+                                {
+                                    @if (@ViewBag.MaxPage == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/WorkingTimes/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/WorkingTimes/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                }
+                            </ul>
+                        </td>
+                        <td width="100%">
+                            <form asp-action="Index">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <select name="Size" class="pagination pagination-sm" style="padding: 5px 10px 8px; font-size: 12px; font-weight: bold;  position: relative; float: left; height: 100%;" onchange="document.location.href = '/WorkingTimes/?size=' + this.options[this.selectedIndex].value;">
+                                    @foreach (SelectListItem option in ViewBag.ListSizes)
+                                    {
+                                        if (option.Value == @ViewBag.Size)
+                                        {
+                                            <option value="@option.Value" selected="selected">@option.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ViewBag.FirstWorkingTime.ChangedBy != "")
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <table nowrap>
+                    <tr>
+                        <td nowrap style="width: 100%;"></td>
+                        <td class="navbar-text navbar-right" nowrap>Ändrad: @ViewBag.FirstWorkingTime.Changed av: @ViewBag.FirstWorkingTime.ChangedBy</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}

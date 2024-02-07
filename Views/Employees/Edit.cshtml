@@ -1,0 +1,111 @@
+﻿@model TrojWebApp.Models.EmployeesModel
+
+@{
+    ViewData["Title"] = "Ändra personal";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="EmployeeId"/>
+            </div>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <th class="head">Förnamn:</th>
+                    <td>
+                        <input asp-for="FirstName" class="font2" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Efternamn:</th>
+                    <td>
+                        <input asp-for="LastName" class="font2" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Initialer:</th>
+                    <td>
+                        <input asp-for="Initials" class="font2" />
+                        <span asp-validation-for="Initials" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Mail:</th>
+                    <td>
+                        <input asp-for="MailAddress" class="font2" />
+                        <span asp-validation-for="MailAddress" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Titel:</th>
+                    <td>
+
+                        <input asp-for="EmployeeTitle" class="font2" />
+                        <span asp-validation-for="EmployeeTitle" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Signaturlänk:</th>
+                    <td>
+                        <input asp-for="SignatureLink" class="font2" />
+                        <span asp-validation-for="SignatureLink" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Företräda:</th>
+                    <td>
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="Represent" /> Företräda
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Aktiv:</th>
+                    <td>
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="Active" /> Aktiv
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Bara läsa:</th>
+                    <td>
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="ReadOnly" /> Bara läsa
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <table class="col-md-12" nowrap>
+        <tr>
+            <td nowrap style="width: 100%;"></td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+        </tr>
+    </table>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

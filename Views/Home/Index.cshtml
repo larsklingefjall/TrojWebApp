@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "TROJ 3.0";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h3>@ViewBag.Sql</h3>
+<h4>@ViewBag.WhenDate</h4>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table class="table table-condensed table-no-border">
+                <tr>
+                    <td class="head">Datum:</td>
+                    <td class="head">Ombud:</td>
+                    <td class="head"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="WhenDate" type="date" value="@ViewBag.WhenDate" class="font2" />
+                    </td>
+                    <td>
+                        <select name="EmployeeId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.EmployeeId)
+                                {
+                                    <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <input type="submit" value="OK" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+@{
+    if (ViewBag.WorkingTimesSummeriesOfYearCount > 0)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="4" nowrap>Summering av året:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Antal:</th>
+                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2" align="right">Summa:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (WorkingTimesSummarysModel item in ViewBag.WorkingTimesSummeriesOfYear)
+                        {
+                            <tr style="background-color:@item.BackgroundColor;">
+                                <td class="tablefont2" nowrap>@item.TariffType</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumHours)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSumOfYear)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ViewBag.WorkingTimesSummeriesOfWeekCount > 0)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="4" nowrap>Summering av veckan:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Antal:</th>
+                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2" align="right">Summa:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (WorkingTimesSummarysModel item in ViewBag.WorkingTimesSummeriesOfWeek)
+                        {
+                            <tr style="background-color:@item.BackgroundColor;">
+                                <td class="tablefont2" nowrap>@item.TariffType</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumHours)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSumOfWeek)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ViewBag.WorkingTimesSummeriesOfDayCount > 0)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="4" nowrap>Summering av dagen:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Antal:</th>
+                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2" align="right">Summa:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (WorkingTimesSummarysModel item in ViewBag.WorkingTimesSummeriesOfDay)
+                        {
+                            <tr style="background-color:@item.BackgroundColor;">
+                                <td class="tablefont2" nowrap>@item.TariffType</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumHours)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSumOfDay)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ViewBag.CasesCount > 0)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="3" nowrap>Aktiva uppdrag:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Klient:</th>
+                            <th class="tablehead2" nowrap>Senaste aktivitet:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ActiveCasesWorkingTimesViewModel item in ViewBag.Cases)
+                        {
+                            <tr>
+                                <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType, "Details", "WorkingTimes", new { id=item.CaseId })</td>
+                                <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName, "Details", "Persons", new { id=item.PersonId })</td>
+                                <td class="tablefont2" nowrap>@item.Changed</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

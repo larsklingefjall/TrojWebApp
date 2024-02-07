@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TrojWebApp.Models.ConfigurationsModel>
+
+@{
+    ViewData["Title"] = "Konfigurationer";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <table class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Namn:</th>
+                        <th class="head">Värde:</th>
+                    </tr>
+                    <tr>
+                        <td><input name="ConfigKey" size="60" class="font2" /></td>
+                        <td><input name="ConfigValue" size="60" class="font2" /></td>
+                        <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="tablehead2">Namn:</th>
+                    <th class="tablehead2">Värde:</th>
+                    <th class="tablehead2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ConfigKey)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ConfigValue)</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink("Ändra...", "Edit", new { id=item.ConfigurationId})</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

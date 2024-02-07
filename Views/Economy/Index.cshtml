@@ -1,0 +1,350 @@
+﻿@using System.Linq
+@using Microsoft.AspNetCore.Html
+@model IEnumerable<TrojWebApp.Models.WorkingTimesEconomyModel>
+
+@{
+    ViewData["Title"] = "Summering av åtgärder";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Start:</td>
+                <td class="head">Slut:</td>
+                <td class="head">Ombud:</td>
+                <td class="head"></td>
+            </tr>
+            <tr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <select name="EmployeeId" class="font2">
+                        <option value="0"></option>
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.EmployeeId)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="Reset">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+@{
+    if (Model.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <table border="0" cellpadding="4" cellspacing="0" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="tablehead2">Uppdrag:</td>
+                            <td class="tablehead2">Klient:</td>
+                            <td class="tablehead2" nowrap>Upparbetat före @ViewBag.StartWhenDate:</td>
+                            <td class="tablehead2">Upparbetat:</td>
+                            <td class="tablehead2">Underlag:</td>
+                            <td class="tablehead2" nowrap>Differens(uarb-ulag):</td>
+                            <td class="tablehead2">Faktura:</td>
+                            <td class="tablehead2" nowrap>Differens(ulag-fak):</td>
+                            <td class="tablehead2">Avslutad:</td>
+                            <td class="tablehead2">Period:</td>
+                            <td class="tablehead2"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            IEnumerable<SumOfWorkingTimesModel> sumOfWorkingTimesBefore = null;
+                            if (ViewBag.SumOfWorkingTimesBefore != null)
+                            {
+                                sumOfWorkingTimesBefore = ViewBag.SumOfWorkingTimesBefore as IEnumerable<SumOfWorkingTimesModel>;
+                            }
+                            IEnumerable<SumOfWorkingTimesModel> sumOfUnderlays = null;
+                            if (ViewBag.SumOfUnderlays != null)
+                            {
+                                sumOfUnderlays = ViewBag.SumOfUnderlays as IEnumerable<SumOfWorkingTimesModel>;
+                            }
+                            double underlaySum = 0;
+                            double totalUnderlaySum = 0;
+                            double processedBeforeSum = 0;
+                            double totalProcessedBeforeSum = 0;
+                            double totalProcessedSum = 0;
+                            double underlayDiff = 0;
+
+                            IEnumerable<InvoiceEconomyModel> invoices = null;
+                            if (ViewBag.Invoices != null)
+                            {
+                                invoices = ViewBag.Invoices as IEnumerable<InvoiceEconomyModel>;
+                            }
+
+                            IEnumerable<WorkingTimesPeriodEconomyModel> periods = null;
+                            if (ViewBag.Periods != null)
+                            {
+                                periods = ViewBag.Periods as IEnumerable<WorkingTimesPeriodEconomyModel>;
+                            }
+
+                            @foreach (WorkingTimesEconomyModel item in Model)
+                            {
+                                totalProcessedSum = totalProcessedSum + @item.WorkingTimesSum;
+                                <tr>
+                                    <td class="tablefont2">
+                                        @Html.ActionLink(item.CaseId.ToString(), "Details", "Cases", new { id = item.CaseId })
+                                    </td>
+                                    <td class="tablefont2" nowrap>
+                                        @Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId.ToString(), "Details", "Persons", new { id = item.PersonId })
+                                    </td>
+                                    @if (sumOfWorkingTimesBefore != null)
+                                    {
+                                        if (sumOfWorkingTimesBefore.Any(d => d.CaseId == item.CaseId))
+                                        {
+                                            processedBeforeSum = @sumOfWorkingTimesBefore.SingleOrDefault(d => d.CaseId == item.CaseId).SumOfSum;
+                                            totalProcessedBeforeSum = totalProcessedBeforeSum + processedBeforeSum;
+                                            <td class="tablefont2" align="right">@String.Format("{0:#,##0.00}", processedBeforeSum)</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tablefont2" align="right"></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td class="tablefont2" align="right"></td>
+                                    }
+                                    
+                                    <td class="tablefont2" align="right">@String.Format("{0:#,##0.00}", @item.WorkingTimesSum)</td>
+                                    @if (sumOfUnderlays != null)
+                                    {
+                                        if (sumOfUnderlays.Any(d => d.CaseId == item.CaseId))
+                                        {
+                                            underlaySum = @sumOfUnderlays.SingleOrDefault(d => d.CaseId == item.CaseId).SumOfSum;
+                                            totalUnderlaySum = totalUnderlaySum + underlaySum;
+                                            <td class="tablefont2" align="right">@String.Format("{0:#,##0.00}", @underlaySum)</td>
+                                        }
+                                        else
+                                        {
+                                            underlaySum = 0;
+                                            <td class="tablefont2" align="right"></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        underlaySum = 0;
+                                        <td class="tablefont2" align="right"></td>
+                                    }
+                                    @{
+                                        if (underlaySum > 0)
+                                        {
+                                            underlayDiff = Math.Abs(@item.WorkingTimesSum - @underlaySum);
+                                            var sColor1 = "#000000";
+                                            if (underlayDiff > 1.0)
+                                            {
+                                                sColor1 = "#FF0000";
+                                            }
+                                            <td class="tablefont2" align="right"><span style="color:@sColor1;">@String.Format("{0:#,##0.00}", @underlayDiff)</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tablefont2" align="right"></td>
+                                        }
+                                    }
+                                    @if (invoices != null)
+                                    {
+
+                                        @if (invoices.Any(d => d.CaseId == item.CaseId))
+                                        {
+                                            invoices = invoices.Where(d => d.CaseId == item.CaseId).ToList();
+                                            List<InvoiceLink> links = new();
+                                            double invoiceTotalSum = 0;
+                                            foreach (InvoiceEconomyModel invoice in invoices)
+                                            {
+                                                InvoiceLink link = new();
+                                                link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
+                                                double addVat = 1.0 + (double)invoice.Vat / 100;
+                                                link.Sum = invoice.Sum / addVat;
+                                                links.Add(link);
+                                                invoiceTotalSum = invoiceTotalSum + invoice.Sum / addVat;
+                                            }
+                                            <td class="tablefont2" align="right" nowrap>
+                                                @foreach (InvoiceLink link in links)
+                                                {
+                                                    <span>@String.Format("{0:#,##0.00}", @link.Sum) (<span>@link.Link</span>)</span>
+                                                }
+                                            </td>
+                                            double underLayInvoiceDiff = 0;
+                                            underLayInvoiceDiff = Math.Abs(@underlaySum - @invoiceTotalSum);
+                                            var sColor2 = "#000000";
+                                            if (underLayInvoiceDiff > 1.0)
+                                            {
+                                                sColor2 = "#FF0000";
+                                            }
+                                            <td class="tablefont2" align="right"><span style="color:@sColor2;">@String.Format("{0:#,##0.00}", @underLayInvoiceDiff)</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tablefont2" align="right"></td>
+                                            <td class="tablefont2" align="right"></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td class="tablefont2" align="right"></td>
+                                        <td class="tablefont2" align="right"></td>
+                                    }
+                                    <td class="tablefont2" nowrap>@item.FinishedDate</td>
+                                    @if (periods != null)
+                                    {
+                                        @if (periods.Any(d => d.CaseId == item.CaseId))
+                                        {
+                                            WorkingTimesPeriodEconomyModel period = periods.Where(d => d.CaseId == item.CaseId).FirstOrDefault();
+                                            <td class="tablefont2" align="right" nowrap>
+                                                @period.MinDate - @period.MaxDate
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tablefont2" align="right"></td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <td class="tablefont2" align="right"></td>
+                                    }
+
+                                    <td class="tablefont2">
+                                        @Html.ActionLink(item.PersonId.ToString(), "Details", "Economy", new { id = item.PersonId })
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td class="tablehead2" colspan="2">Summa:</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @totalProcessedBeforeSum)</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @totalProcessedSum)</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @totalUnderlaySum)</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (Model.Count() > 0)
+    {
+        int iMax = 0;
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" cellpadding="2" cellspacing="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <td nowrap>
+                            <ul class="pagination pagination-sm" style="display: flex;">
+                                @if (ViewBag.Start >= 9)
+                                {
+                                    <li style="display: flex;"><a href="/Economy/?page=1">1</a></li>
+                                }
+                                @if (ViewBag.Start > 0)
+                                {
+                                    <li style="display: flex;"><a href="/Economy/?page=@ViewBag.Start">...</a></li>
+                                }
+                                @for (int i = @ViewBag.TrojEconomyWorkingTimeStart; i <= @ViewBag.TrojEconomyWorkingTimeEnd; i++)
+                                {
+                                    if (i == 1 && @ViewBag.Page == 0)
+                                    {
+                                        <li class="active"><a href="/Economy/?page=@i">@i</a></li>
+                                    }
+                                    else
+                                    {
+                                        if (i <= @ViewBag.MaxPage)
+                                        {
+                                            if (i == @ViewBag.Page)
+                                            {
+                                                <li class="active"><a href="/Economy/?page=@i">@i</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li style="display: flex;"><a href="/Economy/?page=@i">@i</a></li>
+                                            }
+                                        }
+                                    }
+                                    iMax = i;
+                                }
+                                @if (iMax <= @ViewBag.MaxPage)
+                                {
+                                    int iMaxPlus = iMax + 1;
+                                    @if (@iMaxPlus == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/Economy/?page=@iMaxPlus">...</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/Economy/?page=@iMaxPlus">...</a></li>
+                                    }
+                                }
+
+                                @if (ViewBag.ShowMaxPage)
+                                {
+                                    @if (@ViewBag.MaxPage == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/Economy/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/Economy/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                }
+                            </ul>
+                        </td>
+                        <td width="100%">
+                            <form asp-action="Index">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <select name="Size" class="pagination pagination-sm" style="padding: 5px 10px 8px; font-size: 12px; font-weight: bold;  position: relative; float: left; height: 100%;" onchange="document.location.href = '/Economy/?size=' + this.options[this.selectedIndex].value;">
+                                    @foreach (SelectListItem option in ViewBag.ListSizes)
+                                    {
+                                        if (option.Value == @ViewBag.Size)
+                                        {
+                                            <option value="@option.Value" selected="selected">@option.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}

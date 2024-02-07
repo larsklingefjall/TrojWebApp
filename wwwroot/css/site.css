@@ -1,0 +1,362 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+a:hover {
+    color: #FF0000;
+    text-decoration: underline dotted #FF0000;
+}
+
+a {
+    color: #0066FF;
+}
+
+.table-no-border > tr > td,
+.table-no-border > thead > tr > th,
+.table-no-border > tbody > tr > th,
+.table-no-border > tfoot > tr > th,
+.table-no-border > thead > tr > td,
+.table-no-border > tbody > tr > td,
+.table-no-border > tfoot > tr > td {
+    border-top: none;
+    vertical-align: top;
+}
+
+.table-condensed > thead > tr > th,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > td {
+    padding: 6px;
+}
+
+.table-condensed2 > thead > tr > th,
+.table-condensed2 > tbody > tr > th,
+.table-condensed2 > tfoot > tr > th,
+.table-condensed2 > thead > tr > td,
+.table-condensed2 > tbody > tr > td,
+.table-condensed2 > tfoot > tr > td {
+    padding: 0px 10px 0px 0px;
+}
+
+.table-report > thead > tr > th,
+.table-report > tbody > tr > th,
+.table-report > tfoot > tr > th,
+.table-report > thead > tr > td,
+.table-report > tbody > tr > td,
+.table-report > tfoot > tr > td {
+    border-top: none;
+    padding: 6px;
+}
+
+.tablehead2 {
+    background-color: #6699FF;
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.tablefont1 {
+    font-family: Times;
+    font-size: 10pt;
+    font-weight: bold;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.tablefont2 {
+    font-family: Times;
+    font-size: 10pt;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.h1, h1 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 24px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 6px;
+}
+
+.h2, h2 {
+    font-size: 22px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 6px;
+}
+
+.head {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 11pt;
+    font-weight: bold;
+    color: #666666;
+    line-height: 16px;
+}
+
+.head2 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #666666;
+    line-height: 11px;
+}
+
+.head3 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 9pt;
+    font-weight: bold;
+    color: #666666;
+}
+
+.font7 {
+    font-family: Arial Black, Arial, Verdana, Geneva, Sans-serif;
+    font-size: 24pt;
+    font-weight: bold;
+}
+
+.font6 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.font6r {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+.font5 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+.font4 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.font3 {
+    font-family: Times, Arial, Verdana, Geneva, Sans-serif;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.font2 {
+    font-family: Times;
+    font-size: 9pt
+}
+
+.font2r {
+    font-family: Times;
+    font-size: 9pt;
+    color: #FF0000;
+}
+
+.font1 {
+    font-family: Times;
+    font-size: 8pt
+}
+
+.font0 {
+    font-family: Times;
+    font-size: 7pt
+}
+
+.subhead {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 10pt;
+}
+
+.footfont2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    color: #000000;
+}
+
+.avaHeadPrint {
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #000000;
+    LINE-HEIGHT: 14px;
+    FONT-FAMILY: Arial, Verdana, Geneva, Sans-serif
+}
+
+.avaFont5 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.avaFont4 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.avaFont3 {
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 9pt;
+}
+
+.avafont2 {
+    font-family: Arial;
+    font-size: 8pt
+}
+
+.avaTablehead2w {
+    background-color: #FFFFFF;
+    font-family: Arial, Verdana, Geneva, Sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.avaTablefont2 {
+    font-family: Arial;
+    font-size: 10pt;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.navbar-inverse {
+    background-color: #003399
+}
+
+    .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+        background-color: #003399
+    }
+
+    .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+        background-color: #003399
+    }
+
+.dropdown-menu {
+    background-color: #FFFFFF
+}
+
+    .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+        background-color: #003399
+    }
+
+.navbar-inverse {
+    background-image: none;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    background-image: none;
+}
+
+.navbar-inverse {
+    border-color: #003399
+}
+
+    .navbar-inverse .navbar-brand {
+        color: #FFFFFF
+    }
+
+        .navbar-inverse .navbar-brand:hover {
+            color: #FFFFFF
+        }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #999999
+    }
+
+        .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+            color: #6699FF
+        }
+
+    .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+        color: #FFFFFF
+    }
+
+        .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+            color: #FFFFFF
+        }
+
+.dropdown-menu > li > a {
+    color: #313316
+}
+
+    .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+        color: #FFFFFF
+    }
+
+.navbar-inverse .navbar-nav > .dropdown > a .caret {
+    border-top-color: #999999
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
+    border-top-color: #6699FF
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a .caret {
+    border-bottom-color: #999999
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
+    border-bottom-color: #FFFFFF
+}
+
+.navbar-inverse {
+    border-radius: 0px;
+    border-color: #003399;
+    font-size: 11pt;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.navbar-right {
+    padding-right: 4px;
+}
+
+.navbar-header {
+    margin-right: 1px;
+    margin-left: 1px;
+}
+
+.glyphicon-log-out:hover {
+    color: #6699FF;
+    cursor: pointer;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+.form-control {
+    font-family: Times;
+    font-size: 9pt;
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}

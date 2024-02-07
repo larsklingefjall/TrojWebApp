@@ -1,0 +1,129 @@
+﻿@model TrojWebApp.Models.InvoicesViewModel
+
+@{
+    Layout = "/Views/Shared/_Invoice.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Faktura";
+}
+
+
+<div id="bodyUpperDiv">
+    <table border="0" cellpadding="1" cellspacing="0">
+        <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.InvoicePlace) @Model.InvoiceDate.ToShortDateString()</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="30"></td></tr>
+        <tr><td class="avaFont5" valign="top" align="left" nowrap>FAKTURA</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="15"></td></tr>
+        <tr>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>
+                Målnummer:
+                @{
+                    if (ViewBag.CaseNumbers != null)
+                    {
+                        @foreach (CaseNumbersViewModel item in ViewBag.CaseNumbers)
+                        {
+                            @item.CaseNumber
+                        }
+                    }
+                }
+            </td>
+        </tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="5"></td></tr>
+        <tr><td class="avaFont4" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.Headline1)</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="10"></td></tr>
+        <tr><td class="avaFont3" valign="top" align="left" nowrap>Klient/Uppdrag: @Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) / @Html.DisplayFor(model => model.CaseType)</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="10"></td></tr>
+        <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Referens: @Html.DisplayFor(model => model.InvoiceNumber)</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="10"></td></tr>
+        <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Förfallodatum: @Model.ExpirationDate.ToShortDateString()</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="30"></td></tr>
+    </table>
+
+    <table border="0" class="table table-report">
+        <tr>
+            <td class="avaTablehead2w">Typ:</td>
+            <td class="avaTablehead2w">Antal:</td>
+            <td class="avaTablehead2w" align="right">Styckkost:</td>
+            <td class="avaTablehead2w" align="right">Summa:</td>
+        </tr>
+        @foreach (InvoiceSummarysViewModel item in ViewBag.Summaries)
+        {
+            <tr>
+                <td class="avaTablefont2" nowrap>@item.TariffType</td>
+                <td class="avaTablefont2" nowrap>@item.UnitCounts</td>
+                <td class="avaTablefont2" align="right" nowrap>@item.UnitCost</td>
+                <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
+            </tr>
+        }
+        <tr>
+            <td class="avaTablehead2w" nowrap>Summa exklusive moms:</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+        </tr>
+        <tr>
+            <td class="avaTablehead2w">Moms (@ViewBag.Vat %):</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalVatSum)</td>
+        </tr>
+        <tr>
+            <td class="avaTablehead2w" nowrap>Summa inklusive moms:</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w">&nbsp;</td>
+            <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSumWithVat)</td>
+        </tr>
+        @if (@ViewBag.ClientFundingTotalSum != 0)
+        {
+            <tr>
+                <td class="avaTablehead2w" nowrap>Klientmedel:</td>
+                <td class="avaTablehead2w">&nbsp;</td>
+                <td class="avaTablehead2w">&nbsp;</td>
+                <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.ClientFundingTotalSum)</td>
+            </tr>
+            <tr>
+                <td class="avaTablehead2w" nowrap>Att betala:</td>
+                <td class="avaTablehead2w">&nbsp;</td>
+                <td class="avaTablehead2w">&nbsp;</td>
+                <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.ToBePaid)</td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+<div id="bodyLowerDiv">
+    <table border="0" cellpadding="1" cellspacing="0">
+        <tr><td class="avaFont3" valign="top">Datum som ovan</td></tr>
+        <tr><td><img src="@ViewBag.SignatureLink" alt="Signature" border="0"></td></tr>
+        <tr><td><img src="https://localhost:44365/images/blank.gif" width="1" height="30" border="0"></td></tr>
+        <tr><td class="avaFont3" valign="top">@ViewBag.EmployeeFirstName @ViewBag.EmployeeLastName</td></tr>
+        <tr><td class="avaFont3" valign="top">@ViewBag.EmployeeTitle</td></tr>
+    </table>
+</div>
+
+<div id="headDiv" style="left: 65mm;">
+    <table border="0" width="100%" height="80" cellspacing="0" cellpadding="0">
+        <tr><td width="100%"><img src="https://localhost:44365/images/logo.png" width="164" height="80" border="0" alt="Logo"></td></tr>
+    </table>
+</div>
+
+<div id="addressDiv">
+    <table border="0" cellpadding="2" cellspacing="0">
+        <tr><td class="avaFont3">@Html.DisplayFor(model => model.ReceiverName)</td></tr>
+        <tr><td class="avaFont3">@Html.DisplayFor(model => model.CareOf)</td></tr>
+        @if (Model.StreetName != "")
+        {
+            <tr><td class="avaFont3">@Html.DisplayFor(model => model.StreetName) @Html.DisplayFor(model => model.StreetNumber)</td></tr>
+        }
+        <tr><td class="avaFont3">@Html.DisplayFor(model => model.PostalCode) @Html.DisplayFor(model => model.PostalAddress)</td></tr>
+    </table>
+</div>
+
+<div id="footDiv">
+    <table border="0" cellpadding="@ViewBag.NumberOfColumns" cellspacing="0" width="100%" class="footfont2">
+        <tr><td colspan="4"><hr></td></tr>
+        @Html.Raw(@ViewBag.AddressFoot)
+    </table>
+</div>

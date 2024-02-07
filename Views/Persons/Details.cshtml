@@ -1,0 +1,155 @@
+﻿@model TrojWebApp.Models.PersonsModel
+
+@{
+    ViewData["Title"] = @ViewBag.Person;
+}
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Ändra", "Edit", "Persons", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa adress", "Create", "PersonAddresses", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa telefonnummer", "Create", "PhoneNumbers", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa uppdrag", "Create", "Cases", new { id = Model.PersonId })</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Personnummer:</td>
+                <td class="head">Mail:</td>
+                <td class="head">Aktiv:</td>
+            </tr>
+            <tr>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.PersonNumber)</td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.MailAddress)</td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.Active)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+@{
+    if (ViewBag.PhoneNumbers != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="tablehead2">Telefonnummer:</th>
+                            <th class="tablehead2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (PhoneNumbersViewModel item in ViewBag.PhoneNumbers)
+                        {
+                            <tr>
+                                <td class="tablefont2" nowrap>@item.PhoneNumberType @item.PhoneNumber</td>
+                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PhoneNumbers",  new { id = @item.PhoneNumberId, personId = Model.PersonId })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+@{
+    if (ViewBag.Addresses != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="tablehead2">C/O:</th>
+                            <th class="tablehead2">Gatuadress:</th>
+                            <th class="tablehead2">Postadress:</th>
+                            <th class="tablehead2">Land:</th>
+                            <th class="tablehead2">Giltig:</th>
+                            <th class="tablehead2"></th>
+                            <th class="tablehead2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (PersonAddressesModel item in ViewBag.Addresses)
+                        {
+                            <tr>
+                                <td class="tablefont2" nowrap>@item.CareOf</td>
+                                <td class="tablefont2" nowrap>@item.StreetName @item.StreetNumber</td>
+                                <td class="tablefont2" nowrap>@item.PostalCode @item.PostalAddress</td>
+                                <td class="tablefont2" nowrap>@item.Country</td>
+                                @{
+                                    if (item.Valid == true)
+                                    {
+                                        <td class="tablefont2" nowrap><input type="checkbox" disabled checked /></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="tablefont2" nowrap><input type="checkbox" disabled /></td>
+                                    }
+                                }
+                                <td class="tablefont2">@Html.ActionLink("Ändra...", "Edit", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
+                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+@{
+    if (ViewBag.Cases != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="tablehead2">Roll:</th>
+                            <th class="tablehead2">Uppdrag:</th>
+                            <th class="tablehead2">Skapat:</th>
+                            <th class="tablehead2">Aktivt:</th>
+                            <th class="tablehead2">Dagbok:</th>
+                            <th class="tablehead2">Klientmedel:</th>
+                            <th class="tablehead2">Åtgärder:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (PersonsAtCaseViewModel item in ViewBag.Cases)
+                        {
+                            <tr>
+                                <td class="tablefont2" nowrap>@item.PersonType</td>
+                                <td class="tablefont2">@Html.ActionLink((string)item.CaseType + "/" + item.CaseId, "Details", "Cases",  new { id = @item.CaseId})</td>
+                                <td class="tablefont2" nowrap>@item.CaseDate</td>
+                                @{
+                                    if (item.Active == true)
+                                    {
+                                        <td class="tablefont2" nowrap><input type="checkbox" disabled checked /></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="tablefont2" nowrap><input type="checkbox" disabled /></td>
+                                    }
+                                }
+                                <td class="tablefont2" nowrap>@Html.ActionLink("Visa...", "Index", "CaseLogs", new { id = @item.CaseId })</td>
+                                <td class="tablefont2" nowrap>@Html.ActionLink("Visa...", "Index", "ClientFundings", new { id = @item.CaseId })</td>
+                                <td class="tablefont2" nowrap>@Html.ActionLink("Visa...", "Details", "WorkingTimes", new { id = @item.CaseId })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+<div class="row">
+    <table class="col-md-12" nowrap>
+        <tr>
+            <td nowrap style="width: 100%;"></td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+        </tr>
+    </table>
+</div>

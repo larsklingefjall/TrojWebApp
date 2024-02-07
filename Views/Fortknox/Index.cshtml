@@ -1,0 +1,218 @@
+﻿@model IEnumerable<TrojWebApp.Models.InvoicesViewModel>
+
+@{
+    ViewData["Title"] = "Fakturor";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-4">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Faktura:</td>
+                <td class="head">Underlag:</td>
+                <td class="head">Datum:</td>
+                <td class="head">Mottagare:</td>
+                <td class="head">Ombud:</td>
+                <td class="head">Förnamn:</td>
+                <td class="head">Efternamn:</td>
+                <td class="head">Låst:</td>
+            </tr>
+            <tr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input name="InvoiceNumber" value="@ViewBag.InvoiceNumber" type="text" size="10" class="font2" />
+                </td>
+                <td>
+                    <input name="UnderlayNumber" value="@ViewBag.UnderlayNumber" type="text" size="10" class="font2" />
+                </td>
+                <td>
+                    <input name="InvoiceDate" value="@ViewBag.InvoiceDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <input name="ReceiverName" value="@ViewBag.ReceiverName" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <select name="EmployeeId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.EmployeeId)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input name="FirstName" value="@ViewBag.FirstName" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <input name="LastName" value="@ViewBag.LastName" type="text" size="20" class="font2" />
+                </td>
+                <td>
+                    <select name="Locked" class="font2">
+                        <option value=""></option>
+                            @if (ViewBag.Locked == "1")
+                            {
+                            <option value="1" selected>Låst</option>
+                            }
+                            else
+                            {
+                            <option value="1">Låst</option>
+                            }
+                            @if (ViewBag.Locked == "0")
+                            {
+                            <option value="0" selected>Öppen</option>
+                            }
+                            else
+                            {
+                            <option value="0">Öppen</option>
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="Reset">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="tablehead2">Faktura:</th>
+                    <th class="tablehead2">Underlag:</th>
+                    <th class="tablehead2">Uppdrag:</th>
+                    <th class="tablehead2">Datum:</th>
+                    <th class="tablehead2">Mottagare:</th>
+                    <th class="tablehead2">Ombud:</th>
+                    <th class="tablehead2">Klient:</th>
+                    <th class="tablehead2">Låst:</th>
+                    <th class="tablehead2">Summa:</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (InvoicesViewModel item in Model)
+                {
+                    <tr>
+                        <td class="tablefont2" nowrap>@Html.ActionLink(item.InvoiceNumber, "Details", new { id=item.InvoiceId })</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink(item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id=item.InvoiceUnderlayId })</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType + "/" + item.CaseId.ToString(), "Details", "Cases", new { id = item.CaseId })</td>
+                        <td class="tablefont2" nowrap>@item.InvoiceDate.ToShortDateString()</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Initials)</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId, "Details", "Persons", new { id=item.PersonId })</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Locked)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Sum)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@{
+    if (Model.Count() > 0)
+    {
+        int iMax = 0;
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" cellpadding="2" cellspacing="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <td nowrap>
+                            <ul class="pagination pagination-sm" style="display: flex;">
+                                @if (ViewBag.Start >= 9)
+                                {
+                                    <li style="display: flex;"><a href="/Invoices/?page=1">1</a></li>
+                                }
+                                @if (ViewBag.Start > 0)
+                                {
+                                    <li style="display: flex;"><a href="/Invoices/?page=@ViewBag.Start">...</a></li>
+                                }
+                                @for (int i = @ViewBag.TrojInvoiceStart; i <= @ViewBag.TrojInvoiceEnd; i++)
+                                {
+                                    if (i == 1 && @ViewBag.Page == 0)
+                                    {
+                                        <li class="active"><a href="/Invoices/?page=@i">@i</a></li>
+                                    }
+                                    else
+                                    {
+                                        if (i <= @ViewBag.MaxPage)
+                                        {
+                                            if (i == @ViewBag.Page)
+                                            {
+                                                <li class="active"><a href="/Invoices/?page=@i">@i</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li style="display: flex;"><a href="/Invoices/?page=@i">@i</a></li>
+                                            }
+                                        }
+                                    }
+                                    iMax = i;
+                                }
+                                @if (iMax <= @ViewBag.MaxPage)
+                                {
+                                    int iMaxPlus = iMax + 1;
+                                    @if (@iMaxPlus == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/Invoices/?page=@iMaxPlus">...</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/Invoices/?page=@iMaxPlus">...</a></li>
+                                    }
+                                }
+
+                                @if (ViewBag.ShowMaxPage)
+                                {
+                                    @if (@ViewBag.MaxPage == @ViewBag.Page)
+                                    {
+                                        <li class="active"><a href="/Invoices/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="display: flex;"><a href="/Invoices/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                                    }
+                                }
+                            </ul>
+                        </td>
+                        <td width="100%">
+                            <form asp-action="Index">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <select name="Size" class="pagination pagination-sm" style="padding: 5px 10px 8px; font-size: 12px; font-weight: bold;  position: relative; float: left; height: 100%;" onchange="document.location.href = '/Invoices/?size=' + this.options[this.selectedIndex].value;">
+                                    @foreach (SelectListItem option in ViewBag.ListSizes)
+                                    {
+                                        if (option.Value == @ViewBag.Size)
+                                        {
+                                            <option value="@option.Value" selected="selected">@option.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}

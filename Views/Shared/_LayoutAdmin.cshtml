@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrojFeedback</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">TROJ FEEDBACK ADMINISTRATION</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><span class='glyphicon glyphicon-home'></a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Admin" asp-action=".">Lista</a></li>
+                            <li><a asp-area="" asp-controller="Admin" asp-action="Insert">Skapa</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid body-content">
+        @RenderBody()
+    </div>
+    <style>
+        .navbar {
+            min-height: 10px;
+            margin-bottom: 0px;
+        }
+
+        .navbar-text {
+            margin-right: 1px;
+            margin-left: 1px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+    </style>
+    @using Microsoft.AspNetCore.Identity
+    @inject SignInManager<IdentityUser> SignInManager
+    @inject UserManager<IdentityUser> UserManager
+    @if (SignInManager.IsSignedIn(User))
+    {
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text">Användare:<a href="/Identity/Account/Manage/"><span style="color: #FFFFFF;">@UserManager.GetUserName(User)</span></a></p>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar2">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <p class="navbar-text" nowrap>&copy; 2019 - <a target="_blank" href="http://klingefjall.com" style="text-decoration: none; color: #999999;">Klingefjäll Systemutveckling AB</a></p>
+                    </li>
+                    <li>
+                        <p class="navbar-text"> | Kontakt: <a target="_blank" href="mailto:info@troj.se" style="text-decoration: none; color: #999999;">Lars Klingefjäll</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <p class="navbar-text" nowrap>&copy; 2019 - <a target="_blank" href="http://klingefjall.com" style="text-decoration: none; color: #999999;">Klingefjäll Systemutveckling AB</a></p>
+            </div>
+        </nav>
+    }
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

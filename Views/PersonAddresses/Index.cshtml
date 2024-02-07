@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TrojWebApp.Models.PersonAddressesModel>
+
+@{
+    ViewData["Title"] = "Adresser";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Person:</td>
+            </tr>
+            <tr>              
+                <td class="font2">@ViewBag.FirstName @ViewBag.LastName</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th class="tablehead2">C/O:</th>
+            <th class="tablehead2">Gatuadress:</th>
+            <th class="tablehead2">Postadress:</th>
+            <th class="tablehead2">Land:</th>
+            <th class="tablehead2">Giltig:</th>
+            <th class="tablehead2"></th>
+            <th class="tablehead2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.CareOf)</td>
+                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.StreetName) @Html.DisplayFor(modelItem => item.StreetNumber)</td>
+                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.PostalCode)  @Html.DisplayFor(modelItem => item.PostalAddress)</td>
+                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Country)</td>
+                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Valid)</td>
+                <td class="tablefont2" nowrap>@Html.ActionLink("Ändra", "Edit", new { id=item.PersonAddressId }) </td>
+            </tr>
+        }
+    </tbody>
+</table>

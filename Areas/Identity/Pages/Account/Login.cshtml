@@ -1,0 +1,55 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Logga in";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form id="account" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <td class="head">Mail:</td>
+                    <td>
+                        <input asp-for="Input.Email" size="40" class="font2" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="head">Lösenord:</td>
+                    <td>
+                        <input asp-for="Input.Password" size="40" class="font2" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="head" nowrap>Kom ihåg inloggning:</td>
+                    <td>
+                        <input asp-for="Input.RememberMe" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="submit" class="btn btn-primary">Logga in</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

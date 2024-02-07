@@ -1,0 +1,63 @@
+﻿@model IEnumerable<TrojWebApp.Models.TariffTypesModel>
+
+@{
+    ViewData["Title"] = "Tarifftyper";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <table class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Typ:</th>
+                        <th class="head" nowrap>Ny färg:</th>
+                        <th class="head" nowrap>Befintlig färg:</th>
+                    </tr>
+                    <tr>
+                        <td><input name="TariffType" size="60" class="font2" /></td>
+                        <td><input name="NewBackgroundColor" size="10" class="font2" /></td>
+                        <td>
+                            <select name="BackgroundColor" class="font2">
+                                <option value="None">Ingen</option>
+                                @foreach (SelectListItem option in ViewBag.BackgroundColors)
+                                {
+                                    <option value="@option.Value" style="background-color:@option.Text;">@option.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="tablehead2">Typ:</th>
+                    <th class="tablehead2">Osynlig:</th>
+                    <th class="tablehead2">Godtyckligt:</th>
+                    <th class="tablehead2">Backgrundsfärg:</th>
+                    <th class="tablehead2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr style="background-color:@item.BackgroundColor;">
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Invisible)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.NoLevel)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.BackgroundColor)</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink("Ändra...", "Edit", new { id=item.TariffTypeId})</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

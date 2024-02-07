@@ -1,0 +1,114 @@
+﻿@model TrojWebApp.Models.InvoiceUnderlaysViewModel
+
+@{
+    Layout = "/Views/Shared/_CostReport.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Arbetsredogörelse";
+}
+
+<div id="bodyUpperDiv">
+    <table border="0" class="table table-report">
+        <tr><td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE, @Model.UnderlayDate.ToShortDateString()</td></tr>
+        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="5"></td></tr>
+    </table>
+    <table border="0" class="table table-report">
+
+        <tr>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>Referens:</td>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>Uppdrag:</td>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>Ombud:</td>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>Målnummer:</td>
+            <td class="avaHeadPrint" valign="top" align="left" nowrap>Klient:</td>
+        </tr>
+        <tr>
+            <td class="avaFont3" nowrap>@Html.DisplayFor(model => model.UnderlayNumber)</td>
+            <td class="avaFont3" nowrap>@Html.DisplayFor(model => model.CaseId)-@Html.DisplayFor(model => model.CaseType)</td>
+            <td class="avaFont3" nowrap>@ViewBag.EmployeeFirstName @ViewBag.EmployeeLastName</td>
+                @{
+                    if (ViewBag.CaseNumbers != "")
+                    {
+                    <td class="avaFont3" nowrap>@ViewBag.CaseNumbers</td>
+                    }
+                }
+            <td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) /@Html.DisplayFor(model => model.PersonId)</td>
+        </tr>
+    </table>
+
+    @{
+        if (ViewBag.UnderlaySummeries != null)
+        {
+            <table border="0" class="table table-report">
+                <tr><td class="avaFont5" colspan="4">Summering:</td></tr>
+                <tr>
+                    <td class="avaTablehead2w">Typ:</td>
+                    <td class="avaTablehead2w">Antal:</td>
+                    <td class="avaTablehead2w">Styckkost:</td>
+                    <td class="avaTablehead2w" align="right">Summa:</td>
+                </tr>
+                @foreach (InvoiceUnderlaySummarysModel item in ViewBag.UnderlaySummeries)
+                {
+                    <tr style="background-color:@item.BackgroundColor;">
+                        <td class="avaTablefont2" nowrap>@item.TariffType</td>
+                        <td class="avaTablefont2" nowrap>@item.SumHours</td>
+                        <td class="avaTablefont2" nowrap>@item.UnitCost</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="avaTablehead2w">Summa:</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+                </tr>
+            </table>
+        }
+    }
+    @{
+        if (ViewBag.WorkingTimes != null)
+        {
+            <table border="0" class="table table-report">
+                <tr><th class="avaFont5" colspan="6">Åtgärder:</th></tr>
+                <tr>
+                    <td class="avaTablehead2w">Datum:</td>
+                    <td class="avaTablehead2w">Typ:</td>
+                    <td class="avaTablehead2w">Kontext:</td>
+                    <td class="avaTablehead2w">Antal:</td>
+                    <td class="avaTablehead2w" align="right">Styckkost:</td>
+                    <td class="avaTablehead2w" align="right">Summa:</td>
+                </tr>
+                @foreach (InvoiceWorkingTimesViewModel item in ViewBag.WorkingTimes)
+                {
+                    <tr style="background-color:@item.BackgroundColor;">
+                        <td class="avaTablefont2" nowrap>@item.WhenDate.ToShortDateString()</td>
+                        <td class="avaTablefont2" nowrap>@item.TariffType</td>
+                        <td class="avaTablefont2">@item.Comment</td>
+                        <td class="avaTablefont2" nowrap>@item.NumberOfHours</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
+                    </tr>
+                }
+                <tr>
+                    <td class="avaTablehead2w" nowrap>Summa:</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w">&nbsp;</td>
+                    <td class="avaTablehead2w" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+                </tr>
+            </table>
+        }
+    }
+</div>
+
+<div id="headDiv" style="left: 65mm;">
+    <table border="0" width="100%" height="80" cellspacing="0" cellpadding="0">
+        <tr><td width="100%"><img src="https://localhost:44365/images/logo.png" width="164" height="80" border="0" alt="Logo"></td></tr>
+    </table>
+</div>
+
+
+
+
+

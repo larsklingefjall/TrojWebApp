@@ -1,0 +1,148 @@
+﻿@model TrojWebApp.Models.InvoiceUnderlaysViewModel
+
+@{
+    ViewData["Title"] = @ViewBag.UnderlayPageTitle;
+}
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Ändra", "Edit", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Kostnadsräkning", "Costreport", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Arbetsredogörelse", "Workingreport", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Addera fakturaunderlag", "Index", "InvoiceWorkingTimes", new { id = Model.InvoiceUnderlayId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa faktura", "Create", "Invoices", new { id = Model.InvoiceUnderlayId })</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Uppdrag:</td>
+                <td class="head">Klient:</td>
+                <td class="head">Faktura:</td>
+                <td class="head">Ombud:</td>
+                <td class="head">Datum:</td>
+                <td class="head">Låst:</td>
+            </tr>
+            <tr>
+                <td class="font2" nowrap>@Html.ActionLink(Model.CaseType + "/" + Model.CaseId.ToString(), "Details", "Cases", new { id = Model.CaseId })</td>
+                <td class="font2" nowrap>@Html.ActionLink(Model.FirstName + " " + Model.LastName + "/" + Model.PersonId.ToString(), "Details", "Persons", new { id = Model.PersonId })</td>
+                <td class="font2" nowrap>
+                    @foreach (InvoicesPartialViewModel item in ViewBag.Invoices)
+                    {
+                        @Html.ActionLink((string)item.InvoiceNumber, "Details", "Invoices", new { id = @item.InvoiceId })
+                        <br />
+                    }
+                </td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.Initials)</td>
+                <td class="font2" nowrap>@Model.UnderlayDate.ToShortDateString()</td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.Locked)</td>
+            </tr>
+            <tr>
+                <td class="head">Mottagare:</td>
+                <td class="head">Moms:</td>
+                <td class="head">Summa:</td>
+            </tr>
+            <tr>
+                <td class="font2" nowrap>@Html.Raw(@Convert.ToString(@ViewBag.Receiver))</td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.Vat)</td>
+                <td class="font2" nowrap>@Html.DisplayFor(model => model.Sum)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@{
+    if (ViewBag.UnderlaySummeries != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="4">Summering:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Antal:</th>
+                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2" align="right">Summa:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (InvoiceUnderlaySummarysModel item in ViewBag.UnderlaySummeries)
+                        {
+                            <tr style="background-color:@item.BackgroundColor;">
+                                <td class="tablefont2" nowrap>@item.TariffType</td>
+                                <td class="tablefont2" nowrap>@item.SumHours</td>
+                                <td class="tablefont2" nowrap>@item.UnitCost</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ViewBag.WorkingTimes != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr><th class="head" colspan="7">Åtgärder:</th></tr>
+                        <tr>
+                            <th class="tablehead2">Datum:</th>
+                            <th class="tablehead2">Typ:</th>
+                            <th class="tablehead2">Kontext:</th>
+                            <th class="tablehead2">Antal:</th>
+                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2">Summa:</th>
+                            <th class="tablehead2">Ombud:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (InvoiceWorkingTimesViewModel item in ViewBag.WorkingTimes)
+                        {
+                            <tr style="background-color:@item.BackgroundColor;">
+                                <td class="tablefont2" nowrap>@item.WhenDate.ToShortDateString()</td>
+                                <td class="tablefont2" nowrap>@item.TariffType</td>
+                                <td class="tablefont2" nowrap>@item.Comment</td>
+                                <td class="tablefont2" nowrap>@item.NumberOfHours</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
+                                <td class="tablefont2" nowrap>@item.Initials</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2">&nbsp;</td>
+                            <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
+                            <td class="tablehead2">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+<div class="row">
+    <table class="col-md-12" nowrap>
+        <tr>
+            <td nowrap style="width: 100%;"></td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+        </tr>
+    </table>
+</div>

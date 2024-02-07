@@ -1,0 +1,63 @@
+﻿@model TrojWebApp.Models.CasesViewModel
+
+@{
+    ViewData["Title"] = "Skapa nytt uppdrag för " + @ViewBag.PersonName;
+}
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="Persons" asp-action="Details" asp-route-id=@ViewBag.PersonId title="Tillbaka till kontaktuppgifter"><span class='glyphicon glyphicon-home' /></a></td>
+        <td class="subhead" nowrap>@Html.ActionLink("Ändra", "Edit", "Persons", new { id = ViewBag.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa adress", "Create", "PersonAddresses", new { id = ViewBag.PersonId })</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa telefonnummer", "Create", "PhoneNumbers", new { id = ViewBag.PersonId })</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PersonId" value="@ViewBag.PersonId"/>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <th class="head">Typ:</th>
+                    <td>
+                        <select name="CaseTypeId"
+                                asp-for="CaseTypeId" class="font2"
+                                asp-items="@(new SelectList(ViewBag.CaseTypes,"Value","Text"))">
+                        </select>
+                        <span asp-validation-for="CaseTypeId" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Titel:</th>
+                    <td>
+                        <input asp-for="Title" size="40" class="font2" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Ombud:</th>
+                    <td>
+                        <select name="Responsible"
+                                asp-for="Responsible" class="font2"
+                                asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
+                        </select>
+                        <span asp-validation-for="Responsible" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Skapa" class="btn btn-primary" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

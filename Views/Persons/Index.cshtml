@@ -1,0 +1,187 @@
+﻿@model IEnumerable<TrojWebApp.Models.PersonsModel>
+
+@{
+    ViewData["Title"] = "Personer";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-4">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <th class="head">Förnamn:</th>
+                <th class="head">Efternamn:</th>
+                <th class="head">Mellannamn:</th>
+                <th class="head">Personnummer:</th>
+                <th class="head">Mail:</th>
+                <th class="head">Aktiv:</th>
+                <th class="head"></th>
+                <th class="head"></th>
+            </tr>
+            <tr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td><input name="FirstName" value="@ViewBag.FirstName" type="text" size="20" class="font2" /></td>
+                <td><input name="LastName" value="@ViewBag.LastName" type="text" size="20" class="font2" /></td>
+                <td><input name="MiddleName" value="@ViewBag.MiddleName" type="text" size="20" class="font2" /></td>
+                <td><input name="PersonNumber" value="@ViewBag.PersonNumber" type="text" size="20" class="font2" /></td>
+                <td><input name="MailAddress" value="@ViewBag.MailAddress" type="text" size="20" class="font2" /></td>
+                <td>
+                    <select name="Active" class="font2">
+                            @{
+                                if (@ViewBag.Active == "")
+                                {
+                                <option value="-1" selected></option>
+                                }
+                                else
+                                {
+                                <option value="-1"></option>
+                                }
+                                if (@ViewBag.Active == "1")
+                                {
+                                <option value="1" selected>Aktiv</option>
+                                }
+                                else
+                                {
+                                <option value="1">Aktiv</option>
+                                }
+                                if (@ViewBag.Active == "0")
+                                {
+                                <option value="0" selected>Ej aktiv</option>
+                                }
+                                else
+                                {
+                                <option value="0">Ej aktiv</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="Reset">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="tablehead2">Förnamn:</th>
+                    <th class="tablehead2">Efternamn:</th>
+                    <th class="tablehead2">Mellannamn:</th>
+                    <th class="tablehead2">Personnummer:</th>
+                    <th class="tablehead2">Mail:</th>
+                    <th class="tablehead2">Aktiv:</th>
+                    <th class="tablehead2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.LastName)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.MiddleName)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.PersonNumber)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.MailAddress)</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Active)</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink("Mera...", "Details", new { id=item.PersonId })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@{
+    int iMax = 0;
+    <table border="0" cellpadding="2" cellspacing="0" class="table table-condensed table-no-border">
+        <tr>
+            <td nowrap>
+                <ul class="pagination pagination-sm" style="display: flex;">
+                    @if (ViewBag.Start >= 9)
+                    {
+                        <li style="display: flex;"><a href="/Persons/?page=1">1</a></li>
+                    }
+                    @if (ViewBag.Start > 0)
+                    {
+                        <li style="display: flex;"><a href="/Persons/?page=@ViewBag.Start">...</a></li>
+                    }
+                    @for (int i = @ViewBag.TrojPersonStart; i <= @ViewBag.TrojPersonEnd; i++)
+                    {
+                        if (i == 1 && @ViewBag.Page == 0)
+                        {
+                            <li class="active"><a href="/Persons/?page=@i">@i</a></li>
+                        }
+                        else
+                        {
+                            if (i <= @ViewBag.MaxPage)
+                            {
+                                if (i == @ViewBag.Page)
+                                {
+                                    <li class="active"><a href="/Persons/?page=@i">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li style="display: flex;"><a href="/Persons/?page=@i">@i</a></li>
+                                }
+                            }
+                        }
+                        iMax = i;
+                    }
+                    @if (iMax <= @ViewBag.MaxPage)
+                    {
+                        int iMaxPlus = iMax + 1;
+                        @if (@iMaxPlus == @ViewBag.Page)
+                        {
+                            <li class="active"><a href="/Persons/?page=@iMaxPlus">...</a></li>
+                        }
+                        else
+                        {
+                            <li style="display: flex;"><a href="/Persons/?page=@iMaxPlus">...</a></li>
+                        }
+                    }
+
+                    @if (ViewBag.ShowMaxPage)
+                    {
+                        @if (@ViewBag.MaxPage == @ViewBag.Page)
+                        {
+                            <li class="active"><a href="/Persons/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                        }
+                        else
+                        {
+                            <li style="display: flex;"><a href="/Persons/?page=@ViewBag.MaxPage">@ViewBag.MaxPage</a></li>
+                        }
+                    }
+                </ul>
+            </td>
+            <td width="100%">
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <select name="Size" class="pagination pagination-sm" style="padding: 5px 10px 8px; font-size: 12px; font-weight: bold;  position: relative; float: left; height: 100%;" onchange="document.location.href = '/Persons/?size=' + this.options[this.selectedIndex].value;">
+                        @foreach (SelectListItem option in ViewBag.ListSizes)
+                        {
+                            if (option.Value == @ViewBag.Size)
+                            {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@option.Value">@option.Text</option>
+                            }
+                        }
+                    </select>
+                </form>
+            </td>
+        </tr>
+    </table>
+}

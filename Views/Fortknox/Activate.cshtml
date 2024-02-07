@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Aktivera";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-sm-4">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td>
+                    <input type="submit" value="Aktivera" class="btn btn-primary" onclick="clickHandlerInBrowser()" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+
+<script>
+    function clickHandlerInBrowser() {
+        window.location.href = "https://apps.fortnox.se/oauth-v1/auth?client_id=j5z9qU3g1K7A&redirect_uri=https%3A%2F%2Ffortnox.troj.se&scope=invoice&state=somestate123&access_type=offline&response_type=code&account_type=service";
+    }
+</script>

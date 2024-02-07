@@ -1,0 +1,177 @@
+﻿@model IEnumerable<TrojWebApp.Models.InvoicesViewModel>
+
+@{
+    ViewData["Title"] = "Ekonomisk summering";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Start:</td>
+                <td class="head">Slut:</td>
+                <td class="head">Klient:</td>
+                <td class="head"></td>
+            </tr>
+            <tr>
+                <form asp-action="Details">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <select name="ClientId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.Clients)
+                            {
+                                if (option.Value == ViewBag.ClientId)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="ResetDetails">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@{
+    IEnumerable<InvoicesViewModel> invoices = null;
+    if (ViewBag.Invoices != null)
+    {
+        invoices = ViewBag.Invoices as IEnumerable<InvoicesViewModel>;
+    }
+}
+
+@if (invoices != null && invoices.Count() > 0)
+{
+    <div class="row">
+        <div class="col-sm-6">
+            <table border="0" class="table table-condensed">
+                <thead>
+                    <tr>
+                        <td class="head" colspan="9" nowrap>Fakturor (@ViewBag.NumberOfInvoices):</td>
+                    </tr>
+                    <tr>
+                        <th class="tablehead2">Identitet:</th>
+                        <th class="tablehead2">Underlag:</th>
+                        <th class="tablehead2">Uppdrag:</th>
+                        <th class="tablehead2">Datum:</th>
+                        <th class="tablehead2">Mottagare:</th>
+                        <th class="tablehead2">Ombud:</th>
+                        <th class="tablehead2">Klient:</th>
+                        <th class="tablehead2">Låst:</th>
+                        <th class="tablehead2">Summa:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (InvoicesViewModel invoice in invoices)
+                    {
+                        <tr>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(invoice.InvoiceNumber, "Details", new { id=invoice.InvoiceId })</td>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(invoice.UnderlayNumber, "Details", "InvoiceUnderlays", new { id=invoice.InvoiceUnderlayId })</td>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(invoice.CaseType + "/" + invoice.CaseId.ToString(), "Details", "Cases", new { id = invoice.CaseId })</td>
+                            <td class="tablefont2" nowrap>@invoice.InvoiceDate.ToShortDateString()</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => invoice.ReceiverName)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => invoice.Initials)</td>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(invoice.FirstName + " " + invoice.LastName + "/" + invoice.PersonId, "Details", "Persons", new { id=invoice.PersonId })</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => invoice.Locked)</td>
+                            <td class="tablefont2" nowrap>@String.Format("{0:#,##0.00}", @invoice.Sum)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+@{
+    IEnumerable<WorkingTimesViewModel> workingTimes = null;
+    if (ViewBag.WorkingTimes != null)
+    {
+        workingTimes = ViewBag.WorkingTimes as IEnumerable<WorkingTimesViewModel>;
+    }
+}
+
+@{
+    if (workingTimes != null && workingTimes.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <table border="0" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="head"  colspan="9" nowrap>Åtgärder (@ViewBag.NumberOf, mellan @ViewBag.MinDate.ToShortDateString() - @ViewBag.MaxDate.ToShortDateString()):</td>
+                        </tr>
+                        <tr>
+                            <td class="tablehead2">Tid:</td>
+                            <td class="tablehead2">Uppdrag:</td>
+                            <td class="tablehead2">Typ:</td>
+                            <td class="tablehead2">Klient:</td>
+                            <td class="tablehead2">Antal:</td>
+                            <td class="tablehead2">Styckkost:</td>
+                            <td class="tablehead2">Summa:</td>
+                            <td class="tablehead2">Ombud:</td>
+                            <td class="tablehead2">Underlag:</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (WorkingTimesViewModel workingTime in workingTimes)
+                        {
+                            <tr style="background-color:@workingTime.BackgroundColor;">
+                                <td class="tablefont2" title="@Html.DisplayFor(modelItem => workingTime.Changed) av: @Html.DisplayFor(modelItem => workingTime.ChangedBy)" nowrap>
+                                    @Html.DisplayFor(modelItem => workingTime.WhenDate)
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.ActionLink(workingTime.CaseType + "/" + workingTime.CaseId.ToString(), "Details", "Cases", new { id = workingTime.CaseId })
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.DisplayFor(modelItem => workingTime.TariffType)
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.ActionLink(workingTime.FirstName + " " + workingTime.LastName + "/" + workingTime.PersonId.ToString(), "Details", "Persons", new { id = workingTime.PersonId })
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.DisplayFor(modelItem => workingTime.NumberOfHours)
+                                </td>
+                                @{
+                                    double unitCost = workingTime.TariffLevel;
+                                    if (workingTime.Cost != null)
+                                        unitCost = workingTime.Cost ?? 0;
+                                }
+                                <td class="tablefont2" nowrap>@String.Format("{0:#,##0.00}", unitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>
+                                    @String.Format("{0:#,##0.00}", workingTime.Sum)
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.DisplayFor(modelItem => workingTime.Initials)
+                                </td>
+                                <td class="tablefont2" nowrap>
+                                    @Html.DisplayFor(modelItem => workingTime.Billed)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
