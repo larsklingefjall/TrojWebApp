@@ -24,7 +24,19 @@ namespace TrojWebApp.Services
             StringBuilder sql = new StringBuilder("SELECT TariffLevels.*, TariffTypes.TariffType");
             sql.Append(" FROM TariffLevels INNER JOIN TariffTypes ON TariffLevels.TariffTypeId = TariffTypes.TariffTypeId");
             sql.Append(" ORDER BY TariffTypes.TariffType, TariffLevels.ValidFrom DESC");
-            return await _context.TariffLevelsView.FromSqlRaw(sql.ToString()).ToListAsync();
+
+            IEnumerable<TariffLevelsViewModel> list;
+            try
+            {
+                list = await _context.TariffLevelsView.FromSqlRaw(sql.ToString()).ToListAsync();
+            }
+            catch (Exception e)
+            {
+                string lastSqlCommand = sql.ToString();
+                Console.WriteLine("SQL:{0}/n {1} Exception caught.", lastSqlCommand, e);
+                return null;
+            }
+            return list;
         }
         public async Task<TariffLevelsModel> GetTariffLevel(int id)
         {

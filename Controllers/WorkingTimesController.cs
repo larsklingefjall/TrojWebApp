@@ -39,6 +39,11 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            var request = HttpContext.Request;
+            var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+            ViewBag.Link = currentUrl;
+
+
             if (HttpContext.Session.GetInt32("TrojWorkingTimeSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojWorkingTimeSize", 20);
@@ -83,7 +88,7 @@ namespace TrojWebApp.Controllers
             int trojWorkingTimeEnd = HttpContext.Session.GetInt32("TrojWorkingTimeEnd").Value;
             ViewBag.TrojWorkingTimeEnd = trojWorkingTimeEnd;
 
-            if (collection.Count > 0)
+            if (collection != null && collection.Count > 0)
             {
                 HttpContext.Session.SetString("TrojWorkingTimeFilter", "Set");
                 collection.TryGetValue("CaseId", out StringValues caseId);
@@ -216,7 +221,7 @@ namespace TrojWebApp.Controllers
                 ChangedBy = ""
             };
             WorkingTimesViewModel firstWorkingTime = zeroWorkingTime;
-            if (workingTimes.Count() > 0)
+            if (workingTimes != null && workingTimes.Count() > 0)
             {
                 firstWorkingTime = workingTimes.FirstOrDefault<WorkingTimesViewModel>();
             }
@@ -226,7 +231,10 @@ namespace TrojWebApp.Controllers
             if (string.IsNullOrEmpty(UserName) == false)
             {
                 EmployeesModel currentEmployee = await _employeeConnection.GetEmployee(UserName);
-                ViewBag.CurrentEmployee = currentEmployee.EmployeeId.ToString();
+                if (currentEmployee != null)
+                    ViewBag.CurrentEmployee = currentEmployee.EmployeeId.ToString();
+                else
+                    ViewBag.CurrentEmployee = "0";
             }
 
             string maxTitleLenght = "20";

@@ -31,3 +31,5 @@ INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('Anta
 INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('LogoBredd','164','klinlar1','2022-11-01 18:51:25');
 INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('LogoHojd','80','klinlar1','2022-11-01 18:51:42');
 INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('LogoMarginal','65mm','klinlar1','2020-07-09 18:51:27');
+INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('Milersattning','1','klinlar1','2020-07-09 18:51:27');
+INSERT INTO Configurations(ConfigKey,ConfigValue,ChangedBy,Changed) VALUES('Brottmalstaxa','30,50','klinlar1','2020-07-09 18:51:27');

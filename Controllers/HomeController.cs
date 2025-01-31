@@ -24,6 +24,8 @@ namespace TrojWebApp.Controllers
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly EmployeesConnection _employeeConnection;
         private readonly CasesConnection _casesConnection;
+        private readonly UserManager<IdentityUser> _userManager;
+
 
         public HomeController(ILogger<HomeController> logger, TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -31,10 +33,18 @@ namespace TrojWebApp.Controllers
             _workingTimesConnection = new WorkingTimesConnection(context, configuration["CryKey"]);
             _employeeConnection = new EmployeesConnection(context);
             _casesConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userManager = userManager;
         }
 
         public async Task<ActionResult> Index(IFormCollection collection)
         {
+            ViewBag.UserName = UserName;
+
+            var request = HttpContext.Request;
+            var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+            ViewBag.Link = currentUrl;
+
+
             int currentEmployeeId = 0;
             DateTime currentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
 
@@ -53,7 +63,7 @@ namespace TrojWebApp.Controllers
                 HttpContext.Session.SetString("TrojWorkingTimeEmployeeId", employeeId.ToString());
                 HttpContext.Session.SetString("TrojWorkingTimeWhenDate", whenDate.ToString());
 
-                ViewBag.WhenDate = DateOnly.FromDateTime(DateTime.ParseExact(whenDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)); 
+                ViewBag.WhenDate = DateOnly.FromDateTime(DateTime.ParseExact(whenDate, "yyyy-MM-dd", CultureInfo.InvariantCulture));
                 ViewBag.EmployeeId = employeeId;
                 currentEmployeeId = Int32.Parse(employeeId);
                 currentDate = DateTime.Parse(whenDate);
@@ -111,6 +121,7 @@ namespace TrojWebApp.Controllers
 
             double workingTimesSummeriesOfWeekSum = await _workingTimesConnection.GetUnderlaySummariesOfWeekSum(currentDate, currentUserName);
             ViewBag.TotalSumOfWeek = workingTimesSummeriesOfWeekSum;
+
 
             IEnumerable<WorkingTimesSummarysModel> workingTimesSummeriesOfDay = await _workingTimesConnection.GetUnderlaySummariesOfDay(currentDate, currentUserName);
             if (workingTimesSummeriesOfDay == null)

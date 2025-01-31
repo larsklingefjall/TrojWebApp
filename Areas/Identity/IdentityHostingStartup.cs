@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TrojWebApp.Data;
+using TrojWebApp.Models;
 
 [assembly: HostingStartup(typeof(TrojWebApp.Areas.Identity.IdentityHostingStartup))]
 namespace TrojWebApp.Areas.Identity
@@ -15,6 +16,7 @@ namespace TrojWebApp.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
+
             });
         }
     }

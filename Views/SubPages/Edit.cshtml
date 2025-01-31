@@ -1,0 +1,95 @@
+﻿@model TrojWebApp.Models.SubPagesModel
+
+@{
+    ViewData["Title"] = "Ändra undersida";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>@ViewData["Title"]: @Model.SubPageId</h1>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista", "Index")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa", "Create")</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<div class="col-sm-2">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="SubPageId" />
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <th class="head">Title:</th>
+                <td>
+                    <input asp-for="Title" class="font2" size="40" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Huvudsida:</th>
+                <td>
+                    <select name="PageId"
+                            asp-for="PageId " class="font2"
+                            asp-items="@(new SelectList(ViewBag.Pages,"Value","Text"))">
+                    </select>
+                    <span asp-validation-for="PageId" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head" nowrap>Huvudsidans länk:</th>
+                <td>
+                    <input asp-for="Parent" class="font2" size="40" />
+                    <span asp-validation-for="Parent" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Filnamn:</th>
+                <td>
+                    <input asp-for="FileName" class="font2" size="40" />
+                    <span asp-validation-for="FileName" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Tips:</th>
+                <td>
+                    <input asp-for="Tip" class="font2" size="40" />
+                    <span asp-validation-for="Tip" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Position:</th>
+                <td>
+                    <input asp-for="Position" class="font2" size="10" />
+                    <span asp-validation-for="Position" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Parameter:</th>
+                <td>
+                    <input asp-for="Parameter" class="font2" size="40" />
+                    <span asp-validation-for="Parameter" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Synlig:</th>
+                <td>
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsVisible" />
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Spara" class="btn btn-primary" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

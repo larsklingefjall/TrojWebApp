@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = @ViewBag.Person;
 }
+
 <table border="0" class="table table-condensed table-no-border">
     <tr>
         <td class="subhead" nowrap>@Html.ActionLink("Ändra", "Edit", "Persons", new { id = Model.PersonId })</td>
@@ -63,7 +64,7 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th class="tablehead2">C/O:</th>
+                            <th class="tablehead2" nowrap>C/O:</th>
                             <th class="tablehead2">Gatuadress:</th>
                             <th class="tablehead2">Postadress:</th>
                             <th class="tablehead2">Land:</th>

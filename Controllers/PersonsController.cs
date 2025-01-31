@@ -18,15 +18,20 @@ namespace TrojWebApp.Controllers
     public class PersonsController : IdenityController
     {
         private readonly PersonsConnection _connection;
+        private readonly UserConnection _userConnection;
 
         public PersonsController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _connection = new PersonsConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: PersonsController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToIndexPage(HttpContext.Request, UserName);
+            if (!permission) return NoContent();
+
             if (HttpContext.Session.GetInt32("TrojPersonSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojPersonSize", 20);
@@ -113,7 +118,7 @@ namespace TrojWebApp.Controllers
                 string mailAddress = HttpContext.Session.GetString("TrojPersonMailAddress");
                 string active = HttpContext.Session.GetString("TrojPersonActive");
                 persons = await _connection.GetFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active, iOffset, iSize);
-                numberOfPerson = await _connection.GetNumberOfFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active);       
+                numberOfPerson = await _connection.GetNumberOfFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active);
                 ViewBag.FirstName = firstName;
                 ViewBag.LastName = lastName;
                 ViewBag.MiddleName = middleName;
@@ -124,7 +129,7 @@ namespace TrojWebApp.Controllers
             else
             {
                 persons = await _connection.GetPersons(iOffset, iSize);
-                numberOfPerson = await _connection.GetNumberOfPersons();           
+                numberOfPerson = await _connection.GetNumberOfPersons();
                 ViewBag.FirstName = "";
                 ViewBag.LastName = "";
                 ViewBag.MiddleName = "";
@@ -158,8 +163,11 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return NoContent();
+
             PersonsModel person = await _connection.GetPerson(id);
-            if(person == null)
+            if (person == null)
                 return NoContent();
             if (person.MiddleName != null)
                 ViewBag.Person = person.FirstName + " " + person.MiddleName + " " + person.LastName;
@@ -200,6 +208,8 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Create
         public ActionResult Create()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return NoContent();
             return View();
         }
 
@@ -208,6 +218,10 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var request = HttpContext.Request;
+            var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+            ViewBag.Link = currentUrl;
+
             if (!collection.TryGetValue("FirstName", out StringValues firstName))
                 return NoContent();
 
@@ -226,7 +240,7 @@ namespace TrojWebApp.Controllers
             PersonsModel personsModel = await _connection.CreatePerson(firstName.ToString(), lastName.ToString(), middleName.ToString(), personNumber.ToString(), mailAddress.ToString(), UserName);
 
             if (personsModel == null)
-               return NoContent();
+                return NoContent();
 
             return View("Edit", personsModel);
         }
@@ -234,8 +248,11 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return NoContent();
+
             var person = await _connection.GetPerson(id);
-            return View(person);            
+            return View(person);
         }
 
         // POST: PersonsController/Edit/5
@@ -270,7 +287,7 @@ namespace TrojWebApp.Controllers
             if (person == null)
                 return NoContent();
 
-            return RedirectToAction("Details", new { id = person.PersonId});
+            return RedirectToAction("Details", new { id = person.PersonId });
         }
 
         // Get: PersonsController/Reset

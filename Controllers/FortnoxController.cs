@@ -23,7 +23,7 @@ namespace TrojWebApp.Controllers
         private readonly ConfigurationsConnection _configurationsConnection;
         private readonly EmployeesConnection _employeeConnection;
         private readonly InvoicesConnection _invoicesConnection;
-        private static InvoicesModel _currentInvoice;
+        //private static InvoicesModel _currentInvoice;
         private readonly CasesConnection _caseConnection;
 
 

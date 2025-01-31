@@ -18,28 +18,31 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null)
                 {
-                    <tr>
-                        <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.TariffType)
-                        </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.ValidFrom)
-                        </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.ValidTo)
-                        </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.TariffLevel)
-                        </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.Valid)
-                        </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.ActionLink("Ändra...", "Edit", new { id=item.TariffLevelId})
-                        </td>
-                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="tablefont2" nowrap>
+                                @Html.DisplayFor(modelItem => item.TariffType)
+                            </td>
+                            <td class="tablefont2" nowrap>
+                                @Html.DisplayFor(modelItem => item.ValidFrom)
+                            </td>
+                            <td class="tablefont2" nowrap>
+                                @Html.DisplayFor(modelItem => item.ValidTo)
+                            </td>
+                            <td class="tablefont2" nowrap>
+                                @Html.DisplayFor(modelItem => item.TariffLevel)
+                            </td>
+                            <td class="tablefont2" nowrap>
+                                @Html.DisplayFor(modelItem => item.Valid)
+                            </td>
+                            <td class="tablefont2" nowrap>
+                                @Html.ActionLink("Ändra...", "Edit", new { id=item.TariffLevelId})
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

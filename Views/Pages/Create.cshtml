@@ -1,0 +1,79 @@
+﻿@model TrojWebApp.Models.PagesModel
+
+@{
+    ViewData["Title"] = "Skapa huvudsida";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>@ViewData["Title"]</h1>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista", "Index")</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <th class="head">Title:</th>
+                    <td>
+                        <input name="Title" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Filnamn:</th>
+                    <td>
+                        <input name="FileName" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Tips:</th>
+                    <td>
+                        <input name="Tip" value=""type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Länk:</th>
+                    <td>
+                        <input name="Link" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Position:</th>
+                    <td>
+                        <input name="Position" value="" type="text" size="10" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Dölj:</th>
+                    <td>
+                        <input name="Hidden" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Barn:</th>
+                    <td class="checkbox">
+                        <label>
+                            <input asp-for="HasChild" /> @Html.DisplayNameFor(model => model.HasChild)
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input type="submit" value="Skapa" class="btn btn-primary" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

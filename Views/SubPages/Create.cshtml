@@ -1,0 +1,91 @@
+﻿@model TrojWebApp.Models.SubPagesModel
+
+@{
+    ViewData["Title"] = "Skapa undersida";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>@ViewData["Title"]</h1>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista", "Index")</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+
+
+<div class="row">
+    <div class="col-sm-2">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table border="0" class="table table-condensed table-no-border">
+                <tr>
+                    <th class="head">Title:</th>
+                    <td>
+                        <input name="Title" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Huvudsida:</th>
+                    <td>
+                        <select name="PageId"
+                                asp-for="PageId" class="font2"
+                                asp-items="@(new SelectList(ViewBag.Pages,"Value","Text"))">
+                        </select>
+                        <span asp-validation-for="PageId" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head" nowrap>Huvudsidans länk:</th>
+                    <td>
+                        <input name="Parent" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Filnamn:</th>
+                    <td>
+                        <input name="FileName" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Tips:</th>
+                    <td>
+                        <input name="Tip" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Position:</th>
+                    <td>
+                        <input name="Position" value="" type="text" size="10" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Parameter:</th>
+                    <td>
+                        <input name="Parameter" value="" type="text" size="40" class="font2" />
+                    </td>
+                </tr>
+                <tr>
+                    <th class="head">Synlig:</th>
+                    <td class="checkbox">
+                        <label>
+                            <input asp-for="IsVisible" />
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input type="submit" value="Skapa" class="btn btn-primary" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

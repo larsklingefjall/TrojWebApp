@@ -65,6 +65,17 @@ namespace TrojWebApp.Models
         public DbSet<InvoiceEconomyModel> InvoiceEconomy { get; set; } = null!;
         public DbSet<MaxMinDateModel> MaxMinDate { get; set; } = null!;
 
+
+        public DbSet<PagesModel> Pages { get; set; } = null!;
+        public DbSet<PageUsersModel> PageUsers { get; set; } = null!;
+        public DbSet<PageUsersViewModel> PageUsersView { get; set; } = null!;
+
+
+        public DbSet<SubPagesModel> SubPages { get; set; } = null!;
+        public DbSet<SubPagesViewModel> SubPagesView { get; set; } = null!;
+        public DbSet<SubPageUsersModel> SubPageUsers { get; set; } = null!;
+
+
     }
 }
 

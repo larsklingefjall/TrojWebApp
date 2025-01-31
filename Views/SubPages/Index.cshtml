@@ -1,0 +1,69 @@
+﻿@model IEnumerable<TrojWebApp.Models.SubPagesViewModel>
+
+@{
+    ViewData["Title"] = "Undersidor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa", "Create")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Huvudsidor", "Index", "Pages")</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+
+<table class="table table-condensed table-no-border">
+    <thead>
+        <tr>
+            <th class="tablehead2">Föräldersida:</th>
+            <th class="tablehead2">Title:</th>
+            <th class="tablehead2">Filnamn:</th>
+            <th class="tablehead2">Tips:</th>
+            <th class="tablehead2">Position:</th>
+            <th class="tablehead2">Parameter:</th>
+            <th class="tablehead2">Synlig:</th>
+            <th class="tablehead2">Ändrad:</th>
+            <th class="tablehead2" nowrap>Ändrad av:</th>
+            <th class="tablehead2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.PageTitle)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Tip)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Parameter)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.IsVisible)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Changed)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.ChangedBy)
+                </td>
+                <td class="tablefont2" nowrap>
+                    <a asp-action="Edit" asp-route-id="@item.SubPageId">Ändra</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

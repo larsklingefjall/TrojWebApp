@@ -52,12 +52,38 @@ namespace TrojWebApp.Services
             sql.Append(" FROM WorkingTimes");
             sql.AppendFormat(" WHERE WorkingTimes.WhenDate >= '{0}'", currentDate);
             sql.AppendFormat(" AND  WorkingTimes.WhenDate < '{0}'", nextDate);
-            NumberOfModel NumberOf = await _context.NumberOf.FromSqlRaw(sql.ToString()).FirstAsync();
+
+            NumberOfModel NumberOf;
+            int response = 0;
+            try
+            {
+                NumberOf = await _context.NumberOf.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception)
+            {
+                LastSqlCommand = sql.ToString();
+                return response;
+            }
+            if(NumberOf == null)
+                return response;
             return NumberOf.NumberOf;
         }
 
         public async Task<IEnumerable<WorkingTimesViewModel>> GetWorkingTimesForCurrentDay(string currentDate, string nextDate, int offset, int size)
         {
+            StringBuilder where = new StringBuilder("");
+            if (currentDate != "")
+            {
+                where.AppendFormat(" WHERE WorkingTimes.WhenDate >= '{0}'", currentDate);
+            }
+            if (nextDate != "")
+            {
+                if (where.Length > 0)
+                    where.AppendFormat(" AND WorkingTimes.WhenDate < '{0}'", nextDate);
+                else
+                    where.AppendFormat(" WHERE WorkingTimes.WhenDate < '{0}'", nextDate);
+            }
+
             StringBuilder sql = new StringBuilder("SELECT WorkingTimes.WorkingTimeId, WorkingTimes.CaseId, WorkingTimes.TariffTypeId, WorkingTimes.EmployeeId, FORMAT(WorkingTimes.WhenDate,'yyyy-MM-dd') AS WhenDate");
             sql.Append(" ,WorkingTimes.TariffLevel, WorkingTimes.NumberOfHours, WorkingTimes.Cost, WorkingTimes.[Sum]");
             sql.Append(" ,WorkingTimes.Billed, WorkingTimes.Changed, WorkingTimes.ChangedBy, CaseTypes.CaseType, TariffTypes.TariffType, TariffTypes.NoLevel, TariffTypes.BackgroundColor, Employees.Initials, Persons.PersonId");
@@ -71,11 +97,23 @@ namespace TrojWebApp.Services
             sql.Append(" CaseTypes ON Cases.CaseTypeId = CaseTypes.CaseTypeId INNER JOIN");
             sql.Append(" TariffTypes ON WorkingTimes.TariffTypeId = TariffTypes.TariffTypeId INNER JOIN");
             sql.Append(" Employees ON WorkingTimes.EmployeeId = Employees.EmployeeId");
-            sql.AppendFormat(" WHERE (WorkingTimes.WhenDate >= '{0}')", currentDate);
-            sql.AppendFormat(" AND  (WorkingTimes.WhenDate < '{0}')", nextDate);
+
+            if (where.Length > 0)
+                sql.AppendFormat(" {0}", where.ToString());
+
             sql.Append(" ORDER BY WorkingTimes.WhenDate DESC,  WorkingTimes.Changed DESC");
             sql.AppendFormat(" OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY", offset, size);
-            return await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).ToListAsync();
+
+            IEnumerable<WorkingTimesViewModel> response = null;
+            try
+            {
+                response = await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).AsNoTracking().ToListAsync();
+            }
+            catch (Exception)
+            {
+                LastSqlCommand = sql.ToString();
+            }
+            return response;
         }
 
         public async Task<int> GetNumberOfFilteredWorkingTimes(string caseId, string whenDate, string caseTypeId, string title, string employeeId, string firstName, string lastName)
@@ -237,6 +275,7 @@ namespace TrojWebApp.Services
             sql.AppendFormat(", CONVERT(nvarchar(2048), DecryptByPassphrase('{0}', WorkingTimes.CommentCry, 1, CONVERT(varbinary, WorkingTimes.WorkingTimeId))) AS Comment", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', TitleCry, 1 , CONVERT(varbinary, Cases.CaseId))) AS Title", _cryKey);
             sql.Append(" FROM WorkingTimes INNER JOIN");
             sql.Append(" Persons ON WorkingTimes.PersonId = Persons.PersonId INNER JOIN");
             sql.Append(" Cases ON WorkingTimes.CaseId = Cases.CaseId INNER JOIN");
@@ -246,7 +285,17 @@ namespace TrojWebApp.Services
             sql.AppendFormat(" WHERE (WorkingTimes.CaseId = {0})", id);
             sql.Append(" AND WorkingTimes.Billed = 0");
             sql.Append(" ORDER BY WorkingTimes.WhenDate DESC,  WorkingTimes.Changed DESC");
-            return await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).ToListAsync();
+            IEnumerable<WorkingTimesViewModel> list;
+            try
+            {
+                list = await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL: {0} Exception: {1}", sql.ToString(), ex.Message);
+                return null;
+            }
+            return list;
         }
 
         public async Task<WorkingTimesViewModel> GetWorkingTimeNotBilled(int id)
@@ -257,6 +306,7 @@ namespace TrojWebApp.Services
             sql.AppendFormat(", CONVERT(nvarchar(2048), DecryptByPassphrase('{0}', WorkingTimes.CommentCry, 1, CONVERT(varbinary, WorkingTimes.WorkingTimeId))) AS Comment", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', TitleCry, 1 , CONVERT(varbinary, Cases.CaseId))) AS Title", _cryKey);
             sql.Append(" FROM WorkingTimes INNER JOIN");
             sql.Append(" Persons ON WorkingTimes.PersonId = Persons.PersonId INNER JOIN");
             sql.Append(" Cases ON WorkingTimes.CaseId = Cases.CaseId INNER JOIN");
@@ -265,7 +315,17 @@ namespace TrojWebApp.Services
             sql.Append(" Employees ON WorkingTimes.EmployeeId = Employees.EmployeeId");
             sql.AppendFormat(" WHERE WorkingTimes.WorkingTimeId = {0}", id);
             sql.Append(" AND WorkingTimes.Billed = 0");
-            return await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).FirstAsync();
+            WorkingTimesViewModel item;
+            try
+            {
+                item = await _context.WorkingTimesView.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQL: {0} Exception: {1}", sql.ToString(), ex.Message);
+                return null;
+            }
+            return item;
         }
 
         public async Task<IEnumerable<WorkingTimesViewModel>> GetWorkingTimeForClient(int clientId, string startDate, string endDate)
@@ -761,11 +821,11 @@ namespace TrojWebApp.Services
             sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 1");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
-            sql.Append(" ORDER BY TariffTypes.TariffType");    
-            IEnumerable <WorkingTimesSummarysModel> response = null;
+            sql.Append(" ORDER BY TariffTypes.TariffType");
+            IEnumerable<WorkingTimesSummarysModel> response = null;
             try
             {
-                 response = await _context.WorkingTimesSummaries.FromSqlRaw(sql.ToString()).AsNoTracking().ToListAsync();
+                response = await _context.WorkingTimesSummaries.FromSqlRaw(sql.ToString()).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
