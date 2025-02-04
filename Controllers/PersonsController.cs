@@ -30,7 +30,7 @@ namespace TrojWebApp.Controllers
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
             var permission = _userConnection.AccessToIndexPage(HttpContext.Request, UserName);
-            if (!permission) return NoContent();
+            //if (!permission) return NoContent();
 
             if (HttpContext.Session.GetInt32("TrojPersonSize").HasValue == false)
             {
@@ -163,8 +163,11 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return NoContent();
+            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            //if (!permission) return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             PersonsModel person = await _connection.GetPerson(id);
             if (person == null)
@@ -206,10 +209,10 @@ namespace TrojWebApp.Controllers
         }
 
         // GET: PersonsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return NoContent();
+            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            //if (!permission) return NoContent();
             return View();
         }
 
@@ -248,8 +251,10 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return NoContent();
+            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            //if (!permission) return NoContent();
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             var person = await _connection.GetPerson(id);
             return View(person);

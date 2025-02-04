@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TrojWebApp.Models;
 
 namespace TrojWebApp.Services
@@ -149,6 +151,57 @@ namespace TrojWebApp.Services
             if (permission == null) return false;
 
             return true;
+        }
+
+        public async Task<IEnumerable<SubPageMenusChildViewModel>> GetMenu(HttpRequest request, string userName)
+        {
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return null;
+
+            string action;
+            if (request.RouteValues["action"] != null)
+                action = request.RouteValues["action"].ToString();
+            else
+                return null;
+
+            StringBuilder sql = new StringBuilder("SELECT SubPageId AS Id");
+            sql.Append(" FROM SubPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND FileName = '{0}'", action);
+            PageIdModel page = await _context.PageId.FromSqlRaw(sql.ToString()).FirstAsync();
+            
+            sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages.Controller, SubPages.FileName AS Action, SubPages.Title, SubPages.Tip");
+            sql.Append(" FROM SubPages INNER JOIN SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId");
+            sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
+            sql.Append(" ORDER BY SubPageMenus.Position");
+            return await _context.SubPageMenusChildView.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<IEnumerable<SubPageMenusViewModel>> GetMenus()
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPageMenus.ParentPageId, SubPageMenus.ChildPageId, SubPageMenus.Changed, SubPageMenus.ChangedBy, SubPageMenus.Position, ");
+            sql.Append(" SubPages_1.Controller, SubPages_1.FileName AS Action, SubPages_1.Title,");
+            sql.Append(" SubPages.Controller AS ChildController, SubPages.FileName AS ChildAction, SubPages.Title AS ChildTitle");
+            sql.Append(" FROM SubPageMenus INNER JOIN");
+            sql.Append(" dbo.SubPages ON dbo.SubPageMenus.ChildPageId = dbo.SubPages.SubPageId INNER JOIN");
+            sql.Append(" dbo.SubPages AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
+            sql.Append(" ORDER BY SubPages_1.Controller, SubPages_1.FileName, SubPageMenus.Position");
+            return await _context.SubPageMenusView.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<SubPageMenusViewModel> GetMenu(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPageMenus.ParentPageId, SubPageMenus.ChildPageId, SubPageMenus.Changed, SubPageMenus.ChangedBy, SubPageMenus.Position, ");
+            sql.Append(" SubPages_1.Controller, SubPages_1.FileName AS Action, SubPages_1.Title,");
+            sql.Append(" SubPages.Controller AS ChildController, SubPages.FileName AS ChildAction, SubPages.Title AS ChildTitle");
+            sql.Append(" FROM SubPageMenus INNER JOIN");
+            sql.Append(" dbo.SubPages ON dbo.SubPageMenus.ChildPageId = dbo.SubPages.SubPageId INNER JOIN");
+            sql.Append(" dbo.SubPages AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
+            sql.AppendFormat(" WHERE SubPageMenus.SubPageMenuId = {0}", id);
+            return await _context.SubPageMenusView.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
     }

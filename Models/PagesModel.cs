@@ -8,6 +8,7 @@ namespace TrojWebApp.Models
         [Key]
         public int PageId { get; set; }
         public string Title { get; set; }
+        public string Controller { get; set; }
         public string FileName { get; set; }
         public string Tip { get; set; }
         public string Link { get; set; }

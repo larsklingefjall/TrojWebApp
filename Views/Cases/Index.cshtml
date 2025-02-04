@@ -96,14 +96,15 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType.ToString() + "/" + item.CaseId.ToString(), "Details", new { id=item.CaseId })</td>
-                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.CaseDate)</td>
-                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Title)</td>
-                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Responsible)</td>
-                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Active)</td>
-                        <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName.ToString() + " " + item.LastName.ToString() + "/" + item.PersonId, "Details", "Persons", new { id=item.PersonId })</td>
-                    </tr>
+                        <tr>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType.ToString() + "/" + item.CaseId.ToString(), "Details", new { id=item.CaseId })</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.CaseDate)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Title)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Responsible)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Active)</td>
+                            <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId, "Details", "Persons", new { id=item.PersonId })</td>
+                        </tr>
+                    
                 }
             </tbody>
         </table>

@@ -7,12 +7,15 @@ GO
 CREATE TABLE [dbo].[Pages](
 	[PageId] [int] IDENTITY(1,1) NOT NULL,
 	[Title] [nvarchar](255) NOT NULL,
+	[Controller] [nvarchar](50) NULL,
 	[FileName] [nvarchar](255) NOT NULL,
 	[Tip] [nvarchar](255) NULL,
 	[Link] [nvarchar](255) NULL,
 	[Position] [int] NOT NULL,
 	[HasChild] [bit] NULL,
 	[Hidden] [nvarchar](255) NULL,
+	[Changed] [datetime] NULL,
+	[ChangedBy] [nvarchar](50) NULL,
  CONSTRAINT [PK_Pages] PRIMARY KEY CLUSTERED 
 (
 	[PageId] ASC

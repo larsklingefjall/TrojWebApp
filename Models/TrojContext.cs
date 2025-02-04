@@ -74,6 +74,12 @@ namespace TrojWebApp.Models
         public DbSet<SubPagesModel> SubPages { get; set; } = null!;
         public DbSet<SubPagesViewModel> SubPagesView { get; set; } = null!;
         public DbSet<SubPageUsersModel> SubPageUsers { get; set; } = null!;
+        public DbSet<SubPageMenusModel> SubPageMenus { get; set; } = null!;
+        public DbSet<SubPageMenusViewModel> SubPageMenusView { get; set; } = null!;
+        public DbSet<SubPageMenusChildViewModel> SubPageMenusChildView { get; set; } = null!;
+        
+
+        public DbSet<PageIdModel> PageId { get; set; } = null!;
 
 
     }

@@ -40,7 +40,7 @@ namespace TrojWebApp.Controllers
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetPagesWhichHaveChild();
             foreach (var page in pageList)
-                pages.Add(new SelectListItem { Value = page.PageId.ToString(), Text = page.Title });
+                pages.Add(new SelectListItem { Value = page.PageId.ToString(), Text = page.Controller });
             ViewBag.Pages = pages;
 
             return View();
@@ -51,7 +51,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubPageId,PageId,Parent,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
+        public async Task<IActionResult> Create([Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Parent,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
+        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
         {
             if (id != subPagesModel.SubPageId)
             {

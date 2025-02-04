@@ -1,7 +1,7 @@
-﻿@model IEnumerable<TrojWebApp.Models.PagesModel>
+﻿@model IEnumerable<TrojWebApp.Models.SubPageMenusViewModel>
 
 @{
-    ViewData["Title"] = "Huvudsidor";
+    ViewData["Title"] = "Meny för undersidor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -17,14 +17,9 @@
 <table class="table table-condensed table-no-border">
     <thead>
         <tr>
-            <th class="tablehead2">Title:</th>
-            <th class="tablehead2">Kontroller:</th>
-            <th class="tablehead2">Filnamn:</th>
-            <th class="tablehead2">Tips:</th>
-            <th class="tablehead2">Länk:</th>
-            <th class="tablehead2">Position:</th>
-            <th class="tablehead2">Döljas:</th>
+            <th class="tablehead2">Förälder:</th>
             <th class="tablehead2">Barn:</th>
+            <th class="tablehead2">Position:</th>
             <th class="tablehead2">Ändrad:</th>
             <th class="tablehead2" nowrap>Ändrad av:</th>
             <th class="tablehead2"></th>
@@ -35,28 +30,13 @@
         {
             <tr>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => item.Controller)/@Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Controller)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.FileName)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Tip)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Link)
+                    @Html.DisplayFor(modelItem => item.ChildController)/@Html.DisplayFor(modelItem => item.ChildAction)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Position)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Hidden)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.HasChild)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Changed)
@@ -65,7 +45,7 @@
                     @Html.DisplayFor(modelItem => item.ChangedBy)
                 </td>
                 <td class="tablefont2" nowrap>
-                    <a asp-action="Edit" asp-route-id="@item.PageId">Ändra</a>
+                    <a asp-action="Delete" asp-route-id="@item.SubPageMenuId">Delete</a>
                 </td>
             </tr>
         }

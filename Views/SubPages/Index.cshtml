@@ -17,8 +17,8 @@
 <table class="table table-condensed table-no-border">
     <thead>
         <tr>
-            <th class="tablehead2">Föräldersida:</th>
             <th class="tablehead2">Title:</th>
+            <th class="tablehead2">Kontroller:</th>
             <th class="tablehead2">Filnamn:</th>
             <th class="tablehead2">Tips:</th>
             <th class="tablehead2">Position:</th>
@@ -34,10 +34,10 @@
         {
             <tr>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.PageTitle)
+                    @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => item.Controller)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.FileName)

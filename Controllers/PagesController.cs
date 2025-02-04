@@ -41,7 +41,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PageId,Title,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
+        public async Task<IActionResult> Create([Bind("PageId,Title,Controller,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PageId,Title,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
+        public async Task<IActionResult> Edit(int id, [Bind("PageId,Title,Controller,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
         {
             if (id != pagesModel.PageId)
             {

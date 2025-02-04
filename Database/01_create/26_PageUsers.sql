@@ -8,6 +8,8 @@ CREATE TABLE [dbo].[PageUsers](
 	[PageUserId] [int] IDENTITY(1,1) NOT NULL,
 	[PageId] [int] NOT NULL,
 	[EmployeeId] [int] NOT NULL,
+	[Changed] [datetime] NULL,
+	[ChangedBy] [nvarchar](50) NULL,
  CONSTRAINT [PK_PageUsers] PRIMARY KEY CLUSTERED 
 (
 	[PageUserId] ASC

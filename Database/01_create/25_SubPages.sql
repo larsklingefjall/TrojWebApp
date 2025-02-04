@@ -7,12 +7,15 @@ GO
 CREATE TABLE [dbo].[SubPages](
 	[SubPageId] [int] IDENTITY(1,1) NOT NULL,
 	[PageId] [int] NOT NULL,
+	[Controller] [nvarchar](255) NOT NULL,
 	[Title] [nvarchar](255) NOT NULL,
 	[FileName] [nvarchar](255) NOT NULL,
 	[Tip] [nvarchar](255) NULL,
 	[Position] [int] NOT NULL,
 	[Parameter] [nvarchar](255) NULL,
 	[IsVisible] [bit] NULL,
+	[Changed] [datetime] NULL,
+	[ChangedBy] [nvarchar](50) NULL,
  CONSTRAINT [PK_SubPages] PRIMARY KEY CLUSTERED 
 (
 	[SubPageId] ASC
