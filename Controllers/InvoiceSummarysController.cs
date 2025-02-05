@@ -19,11 +19,13 @@ namespace TrojWebApp.Controllers
     {
         private readonly TariffTypesConnection _tariffTypesConnection;
         private readonly InvoicesConnection _invoicesConnection;
+        private readonly UserConnection _userConnection;
 
         public InvoiceSummarysController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _tariffTypesConnection = new TariffTypesConnection(context);
             _invoicesConnection = new InvoicesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: InvoiceSummarysController
@@ -35,6 +37,9 @@ namespace TrojWebApp.Controllers
             InvoicesModel currentInvoice = await _invoicesConnection.GetInvoice(id.Value);
             if (currentInvoice == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.InvoiceId = currentInvoice.InvoiceId.ToString();
             ViewBag.InvoiceLinkText = currentInvoice.InvoiceNumber;

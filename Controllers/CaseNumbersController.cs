@@ -18,11 +18,13 @@ namespace TrojWebApp.Controllers
     {
         private readonly CourtsConnection _courtConnection;
         private readonly CasesConnection _caseConnection;
+        private readonly UserConnection _userConnection;
 
         public CaseNumbersController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _courtConnection = new CourtsConnection(context);
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: CaseNumbersController/Create
@@ -30,6 +32,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             CasesViewModel currentCase = await _caseConnection.GetCase(id.Value);
             if (currentCase == null)

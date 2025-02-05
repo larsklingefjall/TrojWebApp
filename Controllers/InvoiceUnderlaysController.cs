@@ -27,6 +27,7 @@ namespace TrojWebApp.Controllers
         private readonly InvoicesConnection _invoicesConnection;
         private readonly InvoiceUnderlaysConnection _invoiceUnderlaysConnection;
         private static InvoiceUnderlaysModel _currentUnderlay;
+        private readonly UserConnection _userConnection;
 
         public InvoiceUnderlaysController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -37,6 +38,7 @@ namespace TrojWebApp.Controllers
             _caseTypesConnection = new CaseTypesConnection(context);
             _invoicesConnection = new InvoicesConnection(context, configuration["CryKey"]);
             _invoiceUnderlaysConnection = new InvoiceUnderlaysConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: InvoiceUnderlaysController
@@ -191,6 +193,9 @@ namespace TrojWebApp.Controllers
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             if (string.IsNullOrEmpty(underlay.Title))
                 ViewBag.UnderlayPageTitle = "Underlag: " + underlay.UnderlayNumber;
@@ -355,6 +360,9 @@ namespace TrojWebApp.Controllers
             if (currentCase == null)
                 return NoContent();
 
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
+
             ViewBag.CaseId = currentCase.CaseId.ToString();
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();
 
@@ -438,6 +446,9 @@ namespace TrojWebApp.Controllers
             _currentUnderlay = await _invoiceUnderlaysConnection.GetUnderlay2(id);
             if (_currentUnderlay == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.InvoiceUnderlayId = _currentUnderlay.InvoiceUnderlayId;
             ViewBag.UnderlayLinkText = _currentUnderlay.UnderlayNumber;

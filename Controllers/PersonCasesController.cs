@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -20,12 +19,14 @@ namespace TrojWebApp.Controllers
         private readonly CasesConnection _caseConnection;
         private readonly PersonTypesConnection _personTypesConnection;
         private readonly PersonsConnection _personConnection;
+        private readonly UserConnection _userConnection;
 
         public PersonCasesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
             _personTypesConnection = new PersonTypesConnection(context);
             _personConnection = new PersonsConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: PersonCasesController/Create
@@ -37,6 +38,9 @@ namespace TrojWebApp.Controllers
             CasesViewModel currentCase = await _caseConnection.GetCase(id.Value);
             if (currentCase == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.CaseId = currentCase.CaseId.ToString();
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();

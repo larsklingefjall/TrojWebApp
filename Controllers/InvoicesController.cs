@@ -25,7 +25,7 @@ namespace TrojWebApp.Controllers
         private readonly InvoicesConnection _invoicesConnection;
         private static InvoicesModel _currentInvoice;
         private readonly CasesConnection _caseConnection;
-
+        private readonly UserConnection _userConnection;
 
         public InvoicesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -35,6 +35,7 @@ namespace TrojWebApp.Controllers
             _employeeConnection = new EmployeesConnection(context);
             _invoicesConnection = new InvoicesConnection(context, configuration["CryKey"]);
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: InvoicesController
@@ -187,6 +188,11 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Details(int id)
         {
             InvoicesViewModel invoice = await _invoicesConnection.GetInvoiceView(id);
+            if (invoice == null)
+                return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             StringBuilder receiver = new StringBuilder();
             receiver.AppendFormat("{0}<br/>", invoice.ReceiverName);
@@ -299,6 +305,9 @@ namespace TrojWebApp.Controllers
             if (currentUnderlay == null)
                 return NoContent();
 
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
+
             ViewBag.CaseId = currentUnderlay.CaseId.ToString();
             ViewBag.CaseLinkText = currentUnderlay.CaseType + "/" + currentUnderlay.CaseId.ToString();
             ViewBag.InvoiceUnderlayId = currentUnderlay.InvoiceUnderlayId;
@@ -379,6 +388,9 @@ namespace TrojWebApp.Controllers
             _currentInvoice = await _invoicesConnection.GetInvoice(id);
             if (_currentInvoice == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.InvoiceId = _currentInvoice.InvoiceId.ToString();
             ViewBag.InvoiceLinkText = _currentInvoice.InvoiceNumber;

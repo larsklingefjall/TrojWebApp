@@ -19,12 +19,14 @@ namespace TrojWebApp.Controllers
         private readonly CasesConnection _caseConnection;
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly InvoiceUnderlaysConnection _invoiceUnderlaysConnection;
+        private readonly UserConnection _userConnection;
 
         public InvoiceWorkingTimesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
             _workingTimesConnection = new WorkingTimesConnection(context, configuration["CryKey"]);
             _invoiceUnderlaysConnection = new InvoiceUnderlaysConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: InvoiceWorkingTimesController
@@ -36,6 +38,9 @@ namespace TrojWebApp.Controllers
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id.Value);
             if (underlay == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.InvoiceUnderlayId = underlay.InvoiceUnderlayId;
             ViewBag.UnderlayLinkText = underlay.UnderlayNumber;

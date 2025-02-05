@@ -57,6 +57,7 @@ namespace TrojWebApp.Controllers
             {
                 subPagesModel.Changed = DateTime.Now;
                 subPagesModel.ChangedBy = UserName;
+                subPagesModel.Version = 3;
                 _context.Add(subPagesModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -91,7 +92,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
+        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Version,Changed,ChangedBy")] SubPagesModel subPagesModel)
         {
             if (id != subPagesModel.SubPageId)
             {

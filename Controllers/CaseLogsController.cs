@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
@@ -15,10 +16,12 @@ namespace TrojWebApp.Controllers
     public class CaseLogsController : IdenityController
     {
         private readonly CasesConnection _caseConnection;
+        private readonly UserConnection _userConnection;
 
         public CaseLogsController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: CaseLogsController
@@ -26,6 +29,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             CasesViewModel currentCase = await _caseConnection.GetCase(id.Value);
             if (currentCase == null)

@@ -18,11 +18,13 @@ namespace TrojWebApp.Controllers
     {
         private readonly PersonsConnection _personConnection;
         private readonly PhoneNumberTypesConnection _phoneNumberTypesConnection;
+        private readonly UserConnection _userConnection;
 
         public PhoneNumbersController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _personConnection = new PersonsConnection(context, configuration["CryKey"]);
             _phoneNumberTypesConnection = new PhoneNumberTypesConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: PhoneNumbersController/Create
@@ -30,6 +32,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.PersonId = id.Value.ToString();
 

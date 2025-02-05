@@ -6,9 +6,13 @@
 <table border="0" class="table table-condensed table-no-border">
     <tr>
         <td class="subhead" nowrap><a asp-area="" asp-controller="Persons" asp-action="Details" asp-route-id=@ViewBag.PersonId title="Tillbaka till kontaktuppgifter"><span class='glyphicon glyphicon-home' /></a></td>
-        <td class="subhead" nowrap>@Html.ActionLink("Ändra", "Edit", "Persons", new { id = ViewBag.PersonId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Skapa adress", "Create", "PersonAddresses", new { id = ViewBag.PersonId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Skapa uppdrag", "Create" , "Cases", new { id = ViewBag.PersonId })</td>
+        @if (ViewBag.Menu != null)
+        {
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString( )" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = ViewBag.PersonId })</td>
+            }
+        }
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>
 </table>

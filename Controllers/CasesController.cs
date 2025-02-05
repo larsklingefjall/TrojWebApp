@@ -30,6 +30,7 @@ namespace TrojWebApp.Controllers
         private readonly InvoiceUnderlaysConnection _invoiceUnderlaysConnection;
         private readonly CasesConnection _caseConnection;
         private static CasesViewModel _currentCase;
+        private readonly UserConnection _userConnection;
 
         public CasesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -38,6 +39,7 @@ namespace TrojWebApp.Controllers
             _caseTypeConnection = new CaseTypesConnection(context);
             _invoiceUnderlaysConnection = new InvoiceUnderlaysConnection(context, configuration["CryKey"]);
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: CasesController
@@ -198,6 +200,9 @@ namespace TrojWebApp.Controllers
             if (currentCase == null)
                 return NoContent();
 
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
+
             if (string.IsNullOrEmpty(currentCase.Title))
                 ViewBag.CaseTypeAndTitle = "Uppdrag: " + currentCase.CaseType + "/" + id;
             else
@@ -239,6 +244,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.PersonId = id.Value.ToString();
             PersonsModel currentPerson = await _personConnection.GetPerson(id.Value);
@@ -291,6 +299,9 @@ namespace TrojWebApp.Controllers
             _currentCase = await _caseConnection.GetCase(id);
             if (_currentCase == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             List<SelectListItem> caseTypes = new List<SelectListItem>();
             var caseTypeList = await _caseTypeConnection.GetCaseTypes();

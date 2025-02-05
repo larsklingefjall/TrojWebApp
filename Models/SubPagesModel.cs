@@ -19,6 +19,7 @@ namespace TrojWebApp.Models
         public int Position { get; set; }
         public string Parameter { get; set; }
         public bool IsVisible { get; set; }
+        public int Version { get; set; }
         public DateTime Changed { get; set; }
         public string ChangedBy { get; set; }
     }

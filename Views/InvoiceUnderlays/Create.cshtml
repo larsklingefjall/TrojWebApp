@@ -5,13 +5,14 @@
 }
 <table border="0" class="table table-condensed table-no-border">
     <tr>
-        <td class="subhead" nowrap><a asp-area="" asp-controller="Cases" asp-action="Details" asp-route-id=@ViewBag.CaseId title="Tillbaka till uppdrag"><span class='glyphicon glyphicon-home' /></a></td>
-        <td class="subhead" nowrap>@Html.ActionLink("Ändra updrag", "Edit", "Cases", new { id = @ViewBag.CaseId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Addera målnummer", "Create", "CaseNumbers", new { id = @ViewBag.CaseId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Addera person", "Create", "PersonCases", new { id = @ViewBag.CaseId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Dagboksanteckningar", "Index", "CaseLogs", new { id = @ViewBag.CaseId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Klientmedel", "Index", "ClientFundings", new { id = @ViewBag.CaseId })</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Åtgärder", "Details", "WorkingTimes", new { id = @ViewBag.CaseId })</td>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="Cases" asp-action="Details" asp-route-id=@ViewBag.CaseId title="Tillbaka till uppdraget"><span class='glyphicon glyphicon-home' /></a></td>
+        @if (ViewBag.Menu != null)
+        {
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = @ViewBag.CaseId })</td>
+            }
+        }
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>
 </table>

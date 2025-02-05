@@ -167,17 +167,39 @@ namespace TrojWebApp.Services
             else
                 return null;
 
+            PageIdModel page;
             StringBuilder sql = new StringBuilder("SELECT SubPageId AS Id");
             sql.Append(" FROM SubPages");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
             sql.AppendFormat(" AND FileName = '{0}'", action);
-            PageIdModel page = await _context.PageId.FromSqlRaw(sql.ToString()).FirstAsync();
-            
-            sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages.Controller, SubPages.FileName AS Action, SubPages.Title, SubPages.Tip");
-            sql.Append(" FROM SubPages INNER JOIN SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId");
-            sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
-            sql.Append(" ORDER BY SubPageMenus.Position");
-            return await _context.SubPageMenusChildView.FromSqlRaw(sql.ToString()).ToListAsync();
+            try
+            {
+                page = await _context.PageId.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            if (page != null)
+            {
+                sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages.Controller, SubPages.FileName AS Action, SubPages.Title, SubPages.Tip");
+                sql.Append(" FROM SubPages INNER JOIN SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId");
+                sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
+                sql.Append(" ORDER BY SubPageMenus.Position");
+                try
+                {
+                    return await _context.SubPageMenusChildView.FromSqlRaw(sql.ToString()).ToListAsync();
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<SubPageMenusViewModel>> GetMenus()

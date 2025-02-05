@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -18,10 +17,12 @@ namespace TrojWebApp.Controllers
     public class PersonAddressesController : IdenityController
     {
         private readonly PersonsConnection _personConnection;
+        private readonly UserConnection _userConnection;
 
         public PersonAddressesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _personConnection = new PersonsConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: PersonAddressesController
@@ -42,6 +43,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.PersonId = id.Value.ToString();
             PersonsModel currentPerson = await _personConnection.GetPerson(id.Value);
@@ -98,6 +102,9 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             ViewBag.PersonId = personId.Value.ToString();
 

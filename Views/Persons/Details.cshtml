@@ -6,9 +6,12 @@
 <table border="0" class="table table-condensed table-no-border">
     <tr>
         <td class="subhead" nowrap><a asp-area="" asp-controller="Persons" asp-action="Index" title="Tillbaka till list av personer"><span class='glyphicon glyphicon-home' /></a></td>
-        @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+        @if (ViewBag.Menu != null)
         {
-            <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = Model.PersonId })</td>
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = Model.PersonId })</td>
+            }
         }
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>

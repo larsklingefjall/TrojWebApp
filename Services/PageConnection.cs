@@ -20,6 +20,7 @@ namespace TrojWebApp.Services
         {
             StringBuilder sql = new StringBuilder("SELECT SubPages.*, Pages.Title AS PageTitle");
             sql.Append(" FROM SubPages INNER JOIN Pages ON SubPages.PageId = Pages.PageId");
+            sql.Append(" WHERE Version = 3");
             sql.Append(" ORDER BY SubPages.Controller, SubPages.Position");
             return await _context.SubPagesView.FromSqlRaw(sql.ToString()).ToListAsync();
         }

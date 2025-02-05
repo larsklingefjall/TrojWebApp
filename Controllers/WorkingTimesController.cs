@@ -24,6 +24,7 @@ namespace TrojWebApp.Controllers
         private readonly CaseTypesConnection _caseTypeConnection;
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly ConfigurationsConnection _configurationConnection;
+        private readonly UserConnection _userConnection;
 
         public WorkingTimesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -34,6 +35,7 @@ namespace TrojWebApp.Controllers
             _caseTypeConnection = new CaseTypesConnection(context);
             _workingTimesConnection = new WorkingTimesConnection(context, configuration["CryKey"]);
             _configurationConnection = new ConfigurationsConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: WorkingTimesController
@@ -255,6 +257,9 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
+
             IEnumerable<WorkingTimesViewModel> workingTimes = await _workingTimesConnection.GetWorkingTimesForCase(id);
 
             TotalSumAndHoursModel totalSumModel = await _workingTimesConnection.GetTotalSumForCase(id);
