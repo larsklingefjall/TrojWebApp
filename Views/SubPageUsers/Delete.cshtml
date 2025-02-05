@@ -1,4 +1,4 @@
-﻿@model TrojWebApp.Models.PageUsersViewModel
+﻿@model TrojWebApp.Models.SubPageUsersViewModel
 @{
     ViewData["Title"] = "Vill du radera användare?";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,7 +10,7 @@
             <tr>
                 <th class="head">Sida:</th>
                 <td nowrap>
-                    @Html.DisplayFor(model => model.Title)
+                    @Html.DisplayFor(model => model.Controller)/@Html.DisplayFor(model => model.Action)
                 </td>
             </tr>
             <tr>
@@ -30,7 +30,7 @@
                     <div class="form-group" nowrap>
                         <form asp-action="Delete">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <input type="hidden" asp-for="PageUserId" />
+                            <input type="hidden" asp-for="SubPageId" />
                             <input type="submit" value="Ja" class="btn btn-danger" />
                         </form>
                     </div>

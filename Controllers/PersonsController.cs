@@ -163,8 +163,8 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            //if (!permission) return NoContent();
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;

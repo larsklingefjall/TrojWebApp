@@ -1,10 +1,8 @@
-﻿@model IEnumerable<TrojWebApp.Models.SubPageMenusViewModel>
-
+﻿@model IEnumerable<TrojWebApp.Models.SubPageUsersViewModel>
 @{
-    ViewData["Title"] = "Meny för undersidor";
+    ViewData["Title"] = "Användare för undersidor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h1>@ViewData["Title"]</h1>
 <table border="0" class="table table-condensed table-no-border">
     <tr>
@@ -13,13 +11,14 @@
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>
 </table>
-
 <table class="table table-condensed table-no-border">
     <thead>
         <tr>
-            <th class="tablehead2">Förälder:</th>
-            <th class="tablehead2">Barn:</th>
+            <th class="tablehead2">Sida:</th>
+            <th class="tablehead2">Kontroller:</th>
+            <th class="tablehead2">Aktion:</th>
             <th class="tablehead2">Position:</th>
+            <th class="tablehead2">Användare:</th>
             <th class="tablehead2">Ändrad:</th>
             <th class="tablehead2" nowrap>Ändrad av:</th>
             <th class="tablehead2"></th>
@@ -30,13 +29,19 @@
         {
             <tr>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Controller)/@Html.DisplayFor(modelItem => item.Action)
+                    @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.ChildController)/@Html.DisplayFor(modelItem => item.ChildAction)
+                    @Html.DisplayFor(modelItem => item.Controller)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td class="tablefont2" nowrap>
+                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Changed)
@@ -45,7 +50,7 @@
                     @Html.DisplayFor(modelItem => item.ChangedBy)
                 </td>
                 <td class="tablefont2" nowrap>
-                    <a asp-action="Delete" asp-route-id="@item.SubPageMenuId">Radera</a>
+                    <a asp-action="Delete" asp-route-id="@item.SubPageUserId">Radera</a>
                 </td>
             </tr>
         }

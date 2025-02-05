@@ -1,10 +1,8 @@
 ﻿@model IEnumerable<TrojWebApp.Models.PageUsersViewModel>
-
 @{
-    ViewData["Title"] = "Användare för föräldersida";
+    ViewData["Title"] = "Användare för huvudsidor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h1>@ViewData["Title"]</h1>
 <table border="0" class="table table-condensed table-no-border">
     <tr>
@@ -13,7 +11,6 @@
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>
 </table>
-
 <table class="table table-condensed table-no-border">
     <thead>
         <tr>
@@ -28,26 +25,26 @@
     <tbody>
         @foreach (var item in Model)
         {
-                <tr>
-                    <td class="tablefont2" nowrap>
+            <tr>
+                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td class="tablefont2" nowrap>
+                </td>
+                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Position)
-                    </td>
-                    <td class="tablefont2" nowrap>
+                </td>
+                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td class="tablefont2" nowrap>
+                </td>
+                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Changed)
-                    </td>
-                    <td class="tablefont2" nowrap>
+                </td>
+                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.ChangedBy)
-                    </td>
-                    <td class="tablefont2" nowrap>
+                </td>
+                <td class="tablefont2" nowrap>
                     <a asp-action="Delete" asp-route-id="@item.PageUserId">Radera</a>
-                    </td>
-                </tr>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

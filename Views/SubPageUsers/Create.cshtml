@@ -1,4 +1,4 @@
-﻿@model TrojWebApp.Models.PageUsersModel
+﻿@model TrojWebApp.Models.SubPageUsersModel
 @{
     ViewData["Title"] = "Skapa användare för huvudsida";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,11 +18,11 @@
                 <tr>
                     <th class="head">Sida:</th>
                     <td>
-                        <select name="PageId"
-                                asp-for="PageId" class="font2"
+                        <select name="SubPageId"
+                                asp-for="SubPageId" class="font2"
                                 asp-items="@(new SelectList(ViewBag.Pages,"Value","Text"))">
                         </select>
-                        <span asp-validation-for="PageId" class="text-danger"></span>
+                        <span asp-validation-for="SubPageId" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
@@ -46,6 +46,7 @@
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

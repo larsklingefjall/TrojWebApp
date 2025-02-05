@@ -1,38 +1,50 @@
 ﻿@model TrojWebApp.Models.SubPageMenusViewModel
 
 @{
-    ViewData["Title"] = "Radera från meny";
+    ViewData["Title"] = "Vill du radera från menyn?";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h1>@ViewData["Title"]</h1>
-
 <div class="row">
     <div class="col-sm-2">
-        <form asp-action="Delete">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SubPageMenuId" />
-            <table border="0" class="table table-condensed table-no-border">
-                <tr>
-                    <th class="head">Förälder:</th>
-                    <td>
-                        @Html.DisplayFor(model => model.Controller)/@Html.DisplayFor(model => model.Action)
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Barn:</th>
-                    <td>
-                        @Html.DisplayFor(model => model.ChildController)/@Html.DisplayFor(model => model.ChildAction)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Radera" class="btn btn-primary" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <th class="head">Förälder:</th>
+                <td nowrap>
+                    @Html.DisplayFor(model => model.Controller)/@Html.DisplayFor(model => model.Action)
+                </td>
+            </tr>
+            <tr>
+                <th class="head">Barn:</th>
+                <td nowrap>
+                    @Html.DisplayFor(model => model.ChildController)/@Html.DisplayFor(model => model.ChildAction)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-1">
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <td>
+                    <div class="form-group" nowrap>
+                        <form asp-action="Delete">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="SubPageMenuId" />
+                            <input type="submit" value="Ja" class="btn btn-danger" />
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group" nowrap>
+                        <form asp-action="Index">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="submit" value="Nej" class="btn btn-secondary" />
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

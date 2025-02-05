@@ -4,16 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrojWebApp.Models
 {
-    public class SubPageUsersModel
+    public class SubPageUsersViewModel
     {
         [Key]
         public int SubPageUserId { get; set; }
 
-        [ForeignKey("Pages")]
+        [ForeignKey("SubPages")]
         public int SubPageId { get; set; }
 
         [ForeignKey("Employees")]
         public int EmployeeId { get; set; }
+
+        public string Title { get; set; }
+        public string Controller { get; set; }
+        public string Action { get; set; }
+        public int Position { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Initials { get; set; }
 
         public DateTime Changed { get; set; }
         public string ChangedBy { get; set; }

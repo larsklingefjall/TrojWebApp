@@ -100,11 +100,10 @@ namespace TrojWebApp.Services
             else
                 return false;
 
-            string fileName = "/" + controller + "/" + action;
-
-            StringBuilder sql = new("SELECT SubPageId, PageId, Parent, Title, FileName, Tip, Position, Parameter, IsVisible, Changed, ChangedBy");
+            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
             sql.Append(" FROM SubPages");
-            sql.AppendFormat(" WHERE FileName = '{0}'", fileName);
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND FileName = '{0}'", action);
             SubPagesModel subPage;
             try
             {
@@ -134,7 +133,7 @@ namespace TrojWebApp.Services
             if (employee == null) return false;
             int employeeId = employee.EmployeeId;
 
-            sql = new("SELECT SubPageUserId, SubPageId, EmployeeId");
+            sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
             sql.Append(" FROM SubPageUsers");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND SubPageId = {0}", subPageId);

@@ -30,6 +30,11 @@ namespace TrojWebApp.Services
             return await _context.Pages.OrderBy(s => s.Title).ToListAsync();
         }
 
+        public async Task<IEnumerable<SubPagesModel>> GetOnlySubPages()
+        {
+            return await _context.SubPages.Where(s => s.Version==3).OrderBy(s => s.Controller).ThenBy(s => s.FileName).ToListAsync();
+        }
+
         public async Task<IEnumerable<PagesModel>> GetPagesWhichHaveChild()
         {
             return await _context.Pages.OrderBy(s => s.Title).Where(s => s.HasChild == true).ToListAsync();
@@ -43,6 +48,36 @@ namespace TrojWebApp.Services
             sql.Append(" Employees ON PageUsers.EmployeeId = Employees.EmployeeId");
             sql.Append(" ORDER BY Pages.Position");
             return await _context.PageUsersView.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<PageUsersViewModel> GetPageUser(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT PageUsers.*, Pages.Title, Pages.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM PageUsers INNER JOIN");
+            sql.Append(" Pages ON PageUsers.PageId = Pages.PageId INNER JOIN");
+            sql.Append(" Employees ON PageUsers.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE PageUsers.PageUserId = {0}", id);
+            return await _context.PageUsersView.FromSqlRaw(sql.ToString()).FirstAsync();
+        }
+
+        public async Task<IEnumerable<SubPageUsersViewModel>> GetSubPageUsers()
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageUsers.*, SubPages.Title, SubPages.Controller, SubPages.FileName AS Action, SubPages.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM SubPageUsers INNER JOIN");
+            sql.Append(" SubPages ON SubPageUsers.SubPageId = SubPages.SubPageId INNER JOIN");
+            sql.Append(" Employees ON SubPageUsers.EmployeeId = Employees.EmployeeId");
+            sql.Append(" ORDER BY SubPages.Controller, SubPages.FileName");
+            return await _context.SubPageUsersView.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<SubPageUsersViewModel> GetSubPageUser(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageUsers.*, SubPages.Title, SubPages.Controller, SubPages.FileName AS Action, SubPages.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM SubPageUsers INNER JOIN");
+            sql.Append(" SubPages ON SubPageUsers.SubPageId = SubPages.SubPageId INNER JOIN");
+            sql.Append(" Employees ON SubPageUsers.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE SubPageUsers.SubPageUserId = {0}", id);
+            return await _context.SubPageUsersView.FromSqlRaw(sql.ToString()).FirstAsync();
         }
     }
 }

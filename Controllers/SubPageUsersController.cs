@@ -12,35 +12,33 @@ using TrojWebApp.Services;
 namespace TrojWebApp.Controllers
 {
     [Authorize]
-    public class PageUsersController : IdenityController
+    public class SubPageUsersController : IdenityController
     {
         private readonly TrojContext _context;
         private readonly PageConnection _pageConnection;
         private readonly EmployeesConnection _employeeConnection;
-        private readonly UserConnection _userConnection;
 
-        public PageUsersController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
+        public SubPageUsersController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
             _pageConnection = new PageConnection(context);
             _employeeConnection = new EmployeesConnection(context);
-            _userConnection = new UserConnection(context);
         }
 
-        // GET: PageUsers
+        // GET: SubPageUsers
         public async Task<IActionResult> Index()
         {
-            IEnumerable<PageUsersViewModel> pageUsers = await _pageConnection.GetPageUsers();
-            return View(pageUsers);
+            IEnumerable<SubPageUsersViewModel> subPageUsers = await _pageConnection.GetSubPageUsers();
+            return View(subPageUsers);
         }
 
-        // GET: PageUsers/Create
+        // GET: SubPageUsers/Create
         public async Task<IActionResult> Create()
         {
             List<SelectListItem> pages = new List<SelectListItem>();
-            var pageList = await _pageConnection.GetPages();
+            var pageList = await _pageConnection.GetOnlySubPages();
             foreach (var page in pageList)
-                pages.Add(new SelectListItem { Value = page.PageId.ToString(), Text = page.Title });
+                pages.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.FileName });
             ViewBag.Pages = pages;
 
             List<SelectListItem> employees = new List<SelectListItem>();
@@ -50,66 +48,66 @@ namespace TrojWebApp.Controllers
                 employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.Initials });
             ViewBag.Employees = employees;
 
+
             return View();
         }
 
-        // POST: PageUsers/Create
+        // POST: SubPageUsers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PageUserId,PageId,EmployeeId")] PageUsersModel pageUsersModel)
+        public async Task<IActionResult> Create([Bind("SubPageUserId,SubPageId,EmployeeId")] SubPageUsersModel subPageUsersModel)
         {
             if (ModelState.IsValid)
             {
-                pageUsersModel.Changed = DateTime.Now;
-                pageUsersModel.ChangedBy = UserName;
-                _context.Add(pageUsersModel);
+                subPageUsersModel.Changed = DateTime.Now;
+                subPageUsersModel.ChangedBy = UserName;
+                _context.Add(subPageUsersModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(pageUsersModel);
+            return View(subPageUsersModel);
         }
 
-        // GET: PageUsers/Delete/5
+        // GET: SubPageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.PageUsers == null)
+            if (id == null || _context.SubPageUsers == null)
+            {
+                return NotFound();
+            }
+            var subPageUsersModel = await _pageConnection.GetSubPageUser(id.Value);
+            if (subPageUsersModel == null)
             {
                 return NotFound();
             }
 
-            var pageUsersModel = await _pageConnection.GetPageUser(id.Value);
-            if (pageUsersModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(pageUsersModel);
+            return View(subPageUsersModel);
         }
 
-        // POST: PageUsers/Delete/5
+        // POST: SubPageUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.PageUsers == null)
+            if (_context.SubPageUsers == null)
             {
-                return Problem("Entity set 'TrojContext.PageUsers'  is null.");
+                return Problem("Entity set 'TrojContext.SubPageUsers'  is null.");
             }
-            var pageUsersModel = await _context.PageUsers.FindAsync(id);
-            if (pageUsersModel != null)
+            var subPageUsersModel = await _context.SubPageUsers.FindAsync(id);
+            if (subPageUsersModel != null)
             {
-                _context.PageUsers.Remove(pageUsersModel);
+                _context.SubPageUsers.Remove(subPageUsersModel);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PageUsersModelExists(int id)
+        private bool SubPageUsersModelExists(int id)
         {
-          return _context.PageUsers.Any(e => e.PageUserId == id);
+          return _context.SubPageUsers.Any(e => e.SubPageUserId == id);
         }
     }
 }
