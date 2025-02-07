@@ -31,11 +31,10 @@ namespace TrojWebApp.Services
             else
                 return false;
 
-            string fileName = "/" + controller + "/" + action;
-
-            StringBuilder sql = new("SELECT PageId, Title, FileName, Tip, Link, Position, Hidden, HasChild, Changed, ChangedBy");
+            StringBuilder sql = new("SELECT PageId, Title, FileName, Tip, Link, Position, Hidden, HasChild, Controller, Action, Changed, ChangedBy");
             sql.Append(" FROM Pages");
-            sql.AppendFormat(" WHERE FileName = '{0}'", fileName);
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND Action = '{0}'", action);
             PagesModel page;
             try
             {
@@ -67,7 +66,7 @@ namespace TrojWebApp.Services
             int employeeId = employee.EmployeeId;
 
 
-            sql = new("SELECT PageUserId, PageId, EmployeeId");
+            sql = new("SELECT PageUserId, PageId, EmployeeId, Changed, ChangedBy");
             sql.Append(" FROM PageUsers");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND PageId = {0}", pageId);
@@ -100,6 +99,121 @@ namespace TrojWebApp.Services
             else
                 return false;
 
+            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
+            sql.Append(" FROM SubPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND FileName = '{0}'", action);
+            SubPagesModel subPage;
+            try
+            {
+                subPage = _context.SubPages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get sub page: '{ex.Message}'");
+                return false;
+            }
+            if (subPage == null) return false;
+            int subPageId = subPage.SubPageId;
+
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql.Append(" FROM Employees");
+            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            EmployeesModel employee;
+            try
+            {
+                employee = _context.Employees.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to employee: '{ex.Message}'");
+                return false;
+            }
+            if (employee == null) return false;
+            int employeeId = employee.EmployeeId;
+
+            sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
+            sql.Append(" FROM SubPageUsers");
+            sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
+            sql.AppendFormat(" AND SubPageId = {0}", subPageId);
+            SubPageUsersModel permission;
+            try
+            {
+                permission = _context.SubPageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get sub page user: '{ex.Message}'");
+                return false;
+            }
+            if (permission == null) return false;
+
+            return true;
+        }
+
+        public bool AccessToSubPage(HttpRequest request, string action, string userName)
+        {
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return false;
+
+            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
+            sql.Append(" FROM SubPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND FileName = '{0}'", action);
+            SubPagesModel subPage;
+            try
+            {
+                subPage = _context.SubPages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get sub page: '{ex.Message}'");
+                return false;
+            }
+            if (subPage == null) return false;
+            int subPageId = subPage.SubPageId;
+
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql.Append(" FROM Employees");
+            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            EmployeesModel employee;
+            try
+            {
+                employee = _context.Employees.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to employee: '{ex.Message}'");
+                return false;
+            }
+            if (employee == null) return false;
+            int employeeId = employee.EmployeeId;
+
+            sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
+            sql.Append(" FROM SubPageUsers");
+            sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
+            sql.AppendFormat(" AND SubPageId = {0}", subPageId);
+            SubPageUsersModel permission;
+            try
+            {
+                permission = _context.SubPageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get sub page user: '{ex.Message}'");
+                return false;
+            }
+            if (permission == null) return false;
+
+            return true;
+        }
+
+
+        public bool AccessToSubPage(string controller, string action, string userName)
+        {
             StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
             sql.Append(" FROM SubPages");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);

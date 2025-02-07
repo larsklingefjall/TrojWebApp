@@ -19,6 +19,7 @@ namespace TrojWebApp.Controllers
         private readonly CourtsConnection _courtConnection;
         private readonly CasesConnection _caseConnection;
         private readonly UserConnection _userConnection;
+        private static int _currentCaseId;
 
         public CaseNumbersController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -32,6 +33,10 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _currentCaseId = id.Value;
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentCaseId });
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -57,6 +62,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentCaseId });
+
             if (!collection.TryGetValue("CaseId", out StringValues caseId))
                 return NoContent();
 
@@ -76,6 +84,9 @@ namespace TrojWebApp.Controllers
         // GET: CaseNumbersController/Delete/5
         public async Task<ActionResult> Delete(int id, int caseId)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = caseId });
+
             var response = await _caseConnection.DeleteCaseNumber(id);
             if (response == 0)
                 return NoContent();

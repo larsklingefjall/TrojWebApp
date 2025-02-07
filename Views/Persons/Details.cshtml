@@ -95,8 +95,22 @@
                                         <td class="tablefont2" nowrap><input type="checkbox" disabled /></td>
                                     }
                                 }
-                                <td class="tablefont2">@Html.ActionLink("Ändra...", "Edit", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
-                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
+                                @if (ViewBag.EditAddressPermission)
+                                {
+                                    <td class="tablefont2">@Html.ActionLink("Ändra...", "Edit", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
+                                }
+                                else
+                                {
+                                    <td class="tablefont2"></td>
+                                }
+                                @if (ViewBag.DeleteAddressPermission)
+                                {
+                                    <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PersonAddresses",  new { id = @item.PersonAddressId, personId = Model.PersonId })</td>
+                                }
+                                else
+                                {
+                                    <td class="tablefont2"></td>
+                                }
                             </tr>
                         }
                     </tbody>

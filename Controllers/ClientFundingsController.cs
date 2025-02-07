@@ -17,6 +17,7 @@ namespace TrojWebApp.Controllers
     {
         private readonly CasesConnection _caseConnection;
         private readonly UserConnection _userConnection;
+        private static int _currentCaseId;
 
         public ClientFundingsController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -29,6 +30,13 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _currentCaseId = id.Value;
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentCaseId });
+
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.DeletePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Delete", UserName);
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -57,6 +65,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _currentCaseId });
+
             if (!collection.TryGetValue("CaseId", out StringValues caseId))
                 return NoContent();
 
@@ -80,30 +91,12 @@ namespace TrojWebApp.Controllers
             return RedirectToAction("Index", new { id = clientFunding.CaseId });
         }
 
-        // GET: ClientFundingsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ClientFundingsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: ClientFundingsController/Delete/5
         public async Task<ActionResult> Delete(int id, int caseId)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _currentCaseId });
+
             var response = await _caseConnection.DeleteClientFunding(id);
             if (response == 0)
                 return NoContent();

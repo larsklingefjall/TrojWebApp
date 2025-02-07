@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel.Design;
 using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using TrojWebApp.Models;
@@ -45,6 +38,7 @@ namespace TrojWebApp.Controllers
         // GET: CasesController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+
             if (HttpContext.Session.GetInt32("TrojCaseSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojCaseSize", 20);
@@ -196,6 +190,12 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            ViewBag.DeleteCaseNumberPermission = _userConnection.AccessToSubPage("CaseNumbers", "Delete", UserName);
+            ViewBag.DeletePersonPermission = _userConnection.AccessToSubPage("PersonCases", "Delete", UserName);
+
             CasesViewModel currentCase = await _caseConnection.GetCase(id);
             if (currentCase == null)
                 return NoContent();
@@ -242,6 +242,9 @@ namespace TrojWebApp.Controllers
         // GET: CasesController/Create
         public async Task<ActionResult> Create(int? id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (id == null)
                 return NoContent();
 
@@ -296,6 +299,9 @@ namespace TrojWebApp.Controllers
         // GET: CasesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             _currentCase = await _caseConnection.GetCase(id);
             if (_currentCase == null)
                 return NoContent();

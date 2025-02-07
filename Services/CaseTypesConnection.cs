@@ -26,7 +26,7 @@ namespace TrojWebApp.Services
             return await _context.CaseTypes.FindAsync(id);
         }
 
-        public async Task<CaseTypesModel> CreateCaseTypes(string type, string userName = "")
+        public async Task<CaseTypesModel> CreateCaseTypes(string type, string userName)
         {
             CaseTypesModel caseType = new CaseTypesModel
             {

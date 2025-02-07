@@ -11,7 +11,7 @@
 <div id="bodyUpperDiv">
     <table border="0" class="table table-report">
         <tr><td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE, @Model.UnderlayDate.ToShortDateString()</td></tr>
-        <tr><td colspan="2"><img src="https://localhost:44365/images/blank.gif" width="1" height="5"></td></tr>
+        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="5"></td></tr>
     </table>
     <table border="0" class="table table-report">
 
@@ -104,7 +104,7 @@
 
 <div id="headDiv" style="left: 65mm;">
     <table border="0" width="100%" height="80" cellspacing="0" cellpadding="0">
-        <tr><td width="100%"><img src="https://localhost:44365/images/logo.png" width="164" height="80" border="0" alt="Logo"></td></tr>
+        <tr><td width="100%"><img src="@ViewBag.LogoImage" width="164" height="80" border="0" alt="Logo"></td></tr>
     </table>
 </div>
 

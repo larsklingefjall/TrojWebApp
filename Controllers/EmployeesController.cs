@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using System;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
@@ -13,23 +12,33 @@ namespace TrojWebApp.Controllers
     [Authorize]
     public class EmployeesController : IdenityController
     {
-        private readonly EmployeesConnection _connection;
+        private readonly EmployeesConnection _employeesConnection;
+        private readonly UserConnection _userConnection;
 
         public EmployeesController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
-            _connection = new EmployeesConnection(context);
+            _employeesConnection = new EmployeesConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: EmployeesController
         public async Task<ActionResult> Index()
         {
-            var employees = await _connection.GetEmployees();
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+
+            var employees = await _employeesConnection.GetEmployees();
             return View(employees);
         }
 
         // GET: EmployeesController/Create
         public ActionResult Create()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             return View();
         }
 
@@ -38,6 +47,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("FirstName", out StringValues firstName))
                 return NoContent();
 
@@ -53,7 +65,7 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("EmployeeTitle", out StringValues title))
                 return NoContent();
 
-            EmployeesModel employeesModel = await _connection.CreateEmployee(
+            EmployeesModel employeesModel = await _employeesConnection.CreateEmployee(
                 firstName.ToString(), 
                 lastName.ToString(), 
                 initials.ToString(), 
@@ -70,7 +82,10 @@ namespace TrojWebApp.Controllers
         // GET: EmployeesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var employeesModel = await _connection.GetEmployee(id);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            var employeesModel = await _employeesConnection.GetEmployee(id);
             return View(employeesModel);
         }
 
@@ -79,6 +94,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("FirstName", out StringValues firstName))
                 return NoContent();
 
@@ -112,7 +130,7 @@ namespace TrojWebApp.Controllers
                 readOnly = true;
             }
 
-            EmployeesModel employeesModel = await _connection.UpdateEmployee(
+            EmployeesModel employeesModel = await _employeesConnection.UpdateEmployee(
                     id, 
                     firstName.ToString(), 
                     lastName.ToString(), 

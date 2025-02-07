@@ -5,22 +5,26 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <table class="table table-condensed table-no-border">
-                    <tr><th class="head">Namn:</th></tr>
-                    <tr>
-                        <td><input name="CourtName" size="60" class="font2" /></td>
-                        <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
-                    </tr>
-                </table>
-            </div>
-        </form>
+@if (@ViewBag.CreatePermission)
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <table class="table table-condensed table-no-border">
+                        <tr><th class="head">Namn:</th></tr>
+                        <tr>
+                            <td><input name="CourtName" size="60" class="font2" /></td>
+                            <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+}
+
 <div class="row">
     <div class="col-sm-2">
         <table class="table table-condensed">
@@ -49,9 +53,16 @@
                         <td class="tablefont2" nowrap>
                             @Html.DisplayFor(modelItem => item.Country)
                         </td>
-                        <td class="tablefont2" nowrap>
-                            @Html.ActionLink("Ändra...", "Edit", new { id=item.CourtId })
-                        </td>
+                        @if (@ViewBag.EditPermission)
+                        {
+                            <td class="tablefont2" nowrap>
+                                @Html.ActionLink("Ändra...", "Edit", new { id=item.CourtId })
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="tablefont2" nowrap></td>
+                        }
                     </tr>
                 }
             </tbody>

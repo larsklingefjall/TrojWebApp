@@ -30,7 +30,7 @@ namespace TrojWebApp.Controllers
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
             var permission = _userConnection.AccessToIndexPage(HttpContext.Request, UserName);
-            //if (!permission) return NoContent();
+            if (!permission) return RedirectToAction("Index", "Home");
 
             if (HttpContext.Session.GetInt32("TrojPersonSize").HasValue == false)
             {
@@ -166,6 +166,9 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
+            ViewBag.EditAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Edit", UserName);
+            ViewBag.DeleteAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Delete", UserName);
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -209,10 +212,11 @@ namespace TrojWebApp.Controllers
         }
 
         // GET: PersonsController/Create
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
-            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            //if (!permission) return NoContent();
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             return View();
         }
 
@@ -251,8 +255,9 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            //var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            //if (!permission) return NoContent();
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 

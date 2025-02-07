@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using System;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
@@ -13,27 +12,38 @@ namespace TrojWebApp.Controllers
     [Authorize]
     public class CourtsController : IdenityController
     {
-        private readonly CourtsConnection _connection;
+        private readonly CourtsConnection _courtConnection;
+        private readonly UserConnection _userConnection;
 
         public CourtsController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
-            _connection = new CourtsConnection(context);
+            _courtConnection = new CourtsConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: CourtController
         public async Task<ActionResult> Index()
         {
-            var courts = await _connection.GetCourts();
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+
+            var courts = await _courtConnection.GetCourts();
             return View(courts);
         }
 
         // GET: CourtController/Create
         public async Task<IActionResult> Create(string CourtName)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (CourtName == null)
                 return NoContent();
 
-            CourtsModel court = await _connection.CreateCourt(CourtName, UserName);
+            CourtsModel court = await _courtConnection.CreateCourt(CourtName, UserName);
             if (court == null)
                 return NoContent();
 
@@ -48,10 +58,13 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("CourtName", out StringValues courtName))
                 return NoContent();
 
-            CourtsModel court = await _connection.CreateCourt(courtName, UserName);
+            CourtsModel court = await _courtConnection.CreateCourt(courtName, UserName);
             if (court == null)
                 return NoContent();
 
@@ -64,7 +77,10 @@ namespace TrojWebApp.Controllers
         // GET: CourtController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var court = await _connection.GetCourt(id);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            var court = await _courtConnection.GetCourt(id);
             return View(court);
         }
 
@@ -73,6 +89,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("CourtName", out StringValues courtName))
                 return NoContent();
 
@@ -91,7 +110,7 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("Country", out StringValues country))
                 return NoContent();
 
-            CourtsModel updatedCourt = await _connection.UpdateCourt(id, courtName.ToString(), streetName.ToString(), streetNumber.ToString(), postalCode.ToString(), postalAddress.ToString(), country.ToString(), UserName);
+            CourtsModel updatedCourt = await _courtConnection.UpdateCourt(id, courtName.ToString(), streetName.ToString(), streetNumber.ToString(), postalCode.ToString(), postalAddress.ToString(), country.ToString(), UserName);
             if (updatedCourt == null)
                 return NoContent();
 

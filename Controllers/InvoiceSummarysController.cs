@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -20,6 +18,7 @@ namespace TrojWebApp.Controllers
         private readonly TariffTypesConnection _tariffTypesConnection;
         private readonly InvoicesConnection _invoicesConnection;
         private readonly UserConnection _userConnection;
+        private static int _currentInvoiceId;
 
         public InvoiceSummarysController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -33,6 +32,15 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _currentInvoiceId = id.Value;
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Invoices", new { id = _currentInvoiceId });
+
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.CreateNoneLevelPermission = _userConnection.AccessToSubPage(HttpContext.Request, "CreateNoneLevel", UserName);
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+            ViewBag.DeletePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Delete", UserName);
 
             InvoicesModel currentInvoice = await _invoicesConnection.GetInvoice(id.Value);
             if (currentInvoice == null)
@@ -62,7 +70,7 @@ namespace TrojWebApp.Controllers
             ViewBag.TotalSum = totalSumAndHours.TotalSum;
             ViewBag.TotalHours = totalSumAndHours.TotalHours;
 
-            IEnumerable <InvoiceSummarysViewModel> summeries = await _invoicesConnection.GetInvoiceSummeries(id.Value);
+            IEnumerable<InvoiceSummarysViewModel> summeries = await _invoicesConnection.GetInvoiceSummeries(id.Value);
             return View(summeries);
         }
 
@@ -71,6 +79,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _currentInvoiceId });
+
             if (!collection.TryGetValue("InvoiceId", out StringValues invoiceId))
                 return NoContent();
 
@@ -90,6 +101,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateNoneLevel(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _currentInvoiceId });
+
             if (!collection.TryGetValue("InvoiceId", out StringValues invoiceId))
                 return NoContent();
 
@@ -113,6 +127,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id });
+
             if (!collection.TryGetValue("InvoiceSummaryId", out StringValues invoiceSummaryId))
                 return NoContent();
 
@@ -132,6 +149,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceSummarysController/Delete/5
         public async Task<ActionResult> Delete(int invoiceSummaryId, int invoiceId)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = invoiceId });
+
             int response = await _invoicesConnection.DeleteInvoiceSummary(invoiceSummaryId);
             if (response == 0)
                 return NoContent();

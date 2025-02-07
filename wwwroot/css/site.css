@@ -50,6 +50,17 @@ a {
     padding: 0px 10px 0px 0px;
 }
 
+.table-condensed3 > thead > tr > th,
+.table-condensed3 > tbody > tr > th,
+.table-condensed3 > tfoot > tr > th,
+.table-condensed3 > thead > tr > td,
+.table-condensed3 > tbody > tr > td,
+.table-condensed3 > tfoot > tr > td {
+    padding: 6px;
+    margin-left: 100px;
+}
+
+
 .table-report > thead > tr > th,
 .table-report > tbody > tr > th,
 .table-report > tfoot > tr > th,

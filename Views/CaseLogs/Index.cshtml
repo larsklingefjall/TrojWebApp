@@ -17,58 +17,69 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText,  @ViewBag.Client</h1>
-<div class="row">
-    <div class="col-sm-2">
-        <table class="table table-condensed table-no-border">
-            <tr>
-                <td class="head">Anteckning:</td>
-                <td class="head">Datum:</td>
-                <td class="head"></td>
-            </tr>
-            <tr>
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input name="CaseId" type="hidden" value="@ViewBag.CaseId" />
-                <td>
-                    <input name="Comment" type="text" size="60" class="font2" />
-                </td>
-                <td>
-                    <input name="WhenDate" type="date" value="@ViewBag.CurrentDate" class="font2" />
-                </td>
-                <td>
-                    <input type="submit" value="Skapa" class="btn btn-primary" />
-                </td>
-                </form>
-            </tr>
-        </table>
-    </div>
-</div>
 
-@{
-    if (Model.Count() > 0)
-    {
-        <div class="row">
-            <div class="col-sm-2">
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th class="tablehead2">Anteckningar:</th>
-                            <th class="tablehead2">Datum:</th>
-                            <th class="tablehead2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Comment)</td>
-                                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.WhenDate)</td>
-                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseLogs",  new { id = @item.CaseLogId, caseId = @ViewBag.CaseId })</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+@if (@ViewBag.CreatePermission)
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <table class="table table-condensed table-no-border">
+                <tr>
+                    <td class="head">Anteckning:</td>
+                    <td class="head">Datum:</td>
+                    <td class="head"></td>
+                </tr>
+                <tr>
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input name="CaseId" type="hidden" value="@ViewBag.CaseId" />
+                    <td>
+                        <input name="Comment" type="text" size="60" class="font2" />
+                    </td>
+                    <td>
+                        <input name="WhenDate" type="date" value="@ViewBag.CurrentDate" class="font2" />
+                    </td>
+                    <td>
+                        <input type="submit" value="Skapa" class="btn btn-primary" />
+                    </td>
+                    </form>
+                </tr>
+            </table>
         </div>
-    }
+    </div>
 }
+
+
+@if (Model.Count() > 0)
+{
+    <div class="row">
+        <div class="col-sm-2" style="margin-left: 6px;">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="tablehead2">Anteckningar:</th>
+                        <th class="tablehead2">Datum:</th>
+                        <th class="tablehead2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Comment)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.WhenDate)</td>
+                            @if (@ViewBag.DeletePermission)
+                            {
+                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseLogs",  new { id = @item.CaseLogId, caseId = @ViewBag.CaseId })</td>
+                            }
+                            else
+                            {
+                                <td class="tablefont2"></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+

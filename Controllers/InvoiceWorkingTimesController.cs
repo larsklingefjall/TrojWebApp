@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -20,6 +19,7 @@ namespace TrojWebApp.Controllers
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly InvoiceUnderlaysConnection _invoiceUnderlaysConnection;
         private readonly UserConnection _userConnection;
+        private static int _invoiceUnderlayId;
 
         public InvoiceWorkingTimesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -34,8 +34,18 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _invoiceUnderlayId = id.Value;
 
-            InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id.Value);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new {id = _invoiceUnderlayId });
+
+            ViewBag.MovePermission = _userConnection.AccessToSubPage(HttpContext.Request, "MoveWorkingTime", UserName);
+            ViewBag.MoveAllPermission = _userConnection.AccessToSubPage(HttpContext.Request, "MoveAllWorkingTimes", UserName);
+            ViewBag.RemovePermission = _userConnection.AccessToSubPage(HttpContext.Request, "RemoveWorkingTime", UserName);
+            ViewBag.RemoveAllPermission = _userConnection.AccessToSubPage(HttpContext.Request, "RemoveAllWorkingTimes", UserName);
+
+
+            InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(_invoiceUnderlayId);
             if (underlay == null)
                 return NoContent();
 
@@ -49,77 +59,8 @@ namespace TrojWebApp.Controllers
 
             ViewBag.WorkinTimes = await _workingTimesConnection.GetWorkingTimesForCaseNotBilled(underlay.CaseId);
 
-            IEnumerable<InvoiceWorkingTimesViewModel> workingTimes = await _invoiceUnderlaysConnection.GetUnderlayWorkingTimes(id.Value);
+            IEnumerable<InvoiceWorkingTimesViewModel> workingTimes = await _invoiceUnderlaysConnection.GetUnderlayWorkingTimes(_invoiceUnderlayId);
             return View(workingTimes);
-        }
-
-        // GET: InvoiceWorkingTimesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: InvoiceWorkingTimesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: InvoiceWorkingTimesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: InvoiceWorkingTimesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: InvoiceWorkingTimesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: InvoiceWorkingTimesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: InvoiceWorkingTimesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // POST: CasesController/MoveWorkingTime/5
@@ -127,6 +68,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MoveWorkingTime(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _invoiceUnderlayId });
+
             if (collection.Count == 0)
             {
                 return NoContent();
@@ -148,6 +92,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> MoveAllWorkingTimes(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _invoiceUnderlayId });
+
             if (collection.Count == 0)
             {
                 return NoContent();
@@ -169,6 +116,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveWorkingTime(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _invoiceUnderlayId });
+
             if (collection.Count == 0)
             {
                 return NoContent();
@@ -190,6 +140,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveAllWorkingTimes(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", new { id = _invoiceUnderlayId });
+
             if (collection.Count == 0)
             {
                 return NoContent();

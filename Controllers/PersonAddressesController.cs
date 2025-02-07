@@ -18,6 +18,7 @@ namespace TrojWebApp.Controllers
     {
         private readonly PersonsConnection _personConnection;
         private readonly UserConnection _userConnection;
+        private static int _currentPersonId;
 
         public PersonAddressesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -27,14 +28,18 @@ namespace TrojWebApp.Controllers
 
         // GET: PersonAddressesController
         public async Task<ActionResult> Index(int? id)
-        {         
-            if(id == null)
+        {
+            if (id == null)
                 return NoContent();
+            _currentPersonId = id.Value;
 
-            PersonsModel currentPerson = await _personConnection.GetPerson(id.Value);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentPersonId });
+
+            PersonsModel currentPerson = await _personConnection.GetPerson(_currentPersonId);
             ViewBag.FirstName = currentPerson.FirstName;
             ViewBag.LastName = currentPerson.LastName;
-            var adresses = await _personConnection.GetAddressesForPerson(id.Value);
+            var adresses = await _personConnection.GetAddressesForPerson(_currentPersonId);
             return View(adresses);
         }
 
@@ -43,12 +48,16 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _currentPersonId = id.Value;
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
             ViewBag.PersonId = id.Value.ToString();
-            PersonsModel currentPerson = await _personConnection.GetPerson(id.Value);
+            PersonsModel currentPerson = await _personConnection.GetPerson(_currentPersonId);
             if (currentPerson == null)
                 return NoContent();
             ViewBag.PersonName = currentPerson.FirstName + " " + currentPerson.LastName;
@@ -61,6 +70,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
+
             if (!collection.TryGetValue("PersonId", out StringValues personId))
                 return NoContent();
 
@@ -103,6 +115,9 @@ namespace TrojWebApp.Controllers
             if (id == null)
                 return NoContent();
 
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = personId });
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -122,6 +137,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id });
+
             if (!collection.TryGetValue("PersonId", out StringValues personId))
                 return NoContent();
 
@@ -160,6 +178,9 @@ namespace TrojWebApp.Controllers
         // GET: PersonAddressesController/Delete/5
         public async Task<ActionResult> Delete(int id, int personId)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = personId });
+
             var response = await _personConnection.DeleteAddress(id);
             if (response == 0)
                 return NoContent();

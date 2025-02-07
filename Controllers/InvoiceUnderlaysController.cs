@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -28,6 +27,7 @@ namespace TrojWebApp.Controllers
         private readonly InvoiceUnderlaysConnection _invoiceUnderlaysConnection;
         private static InvoiceUnderlaysModel _currentUnderlay;
         private readonly UserConnection _userConnection;
+        private static int _currentCaseId;
 
         public InvoiceUnderlaysController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -44,6 +44,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceUnderlaysController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             if (HttpContext.Session.GetInt32("TrojInvoiceUnderlaySize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojInvoiceUnderlaySize", 20);
@@ -190,6 +193,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceUnderlaysController/Details/5
         public async Task<IActionResult> Details(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
                 return NoContent();
@@ -242,6 +248,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceUnderlaysController/Costreport/5
         public async Task<IActionResult> Costreport(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
                 return NoContent();
@@ -289,7 +298,12 @@ namespace TrojWebApp.Controllers
             ViewBag.EmployeeFirstName = employee.FirstName;
             ViewBag.EmployeeLastName = employee.LastName;
             ViewBag.EmployeeTitle = employee.EmployeeTitle;
-            ViewBag.SignatureLink = "https://localhost:44365/images/" + employee.SignatureLink;
+
+            var request = HttpContext.Request;
+            var currentUrl = $"{request.Scheme}://{request.Host}";
+            ViewBag.SignatureLink = currentUrl + "/images/" + employee.SignatureLink;
+            ViewBag.BlankImage = currentUrl + "/images/blank.gif";
+            ViewBag.LogoImage = currentUrl + "/images/logo.png";
 
             return View(underlay);
         }
@@ -297,6 +311,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceUnderlaysController/Workingreport/5
         public async Task<IActionResult> Workingreport(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
                 return NoContent();
@@ -347,6 +364,11 @@ namespace TrojWebApp.Controllers
             ViewBag.EmployeeLastName = employee.LastName;
             ViewBag.EmployeeTitle = employee.EmployeeTitle;
 
+            var request = HttpContext.Request;
+            var currentUrl = $"{request.Scheme}://{request.Host}";
+            ViewBag.BlankImage = currentUrl + "/images/blank.gif";
+            ViewBag.LogoImage = currentUrl + "/images/logo.png";
+
             return View(underlay);
         }
 
@@ -355,6 +377,11 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = id.Value });
+
+            _currentCaseId = id.Value;
 
             CasesViewModel currentCase = await _caseConnection.GetCase(id.Value);
             if (currentCase == null)
@@ -407,6 +434,8 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentCaseId });
 
             if (!collection.TryGetValue("CaseId", out StringValues caseId))
                 return NoContent();
@@ -443,6 +472,9 @@ namespace TrojWebApp.Controllers
         // GET: InvoiceUnderlaysController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
             _currentUnderlay = await _invoiceUnderlaysConnection.GetUnderlay2(id);
             if (_currentUnderlay == null)
                 return NoContent();
@@ -467,6 +499,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
             if (!collection.TryGetValue("Title", out StringValues title))
                 return NoContent();
 
