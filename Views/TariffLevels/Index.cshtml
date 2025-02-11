@@ -38,9 +38,16 @@
                             <td class="tablefont2" nowrap>
                                 @Html.DisplayFor(modelItem => item.Valid)
                             </td>
-                            <td class="tablefont2" nowrap>
-                                @Html.ActionLink("Ändra...", "Edit", new { id=item.TariffLevelId})
-                            </td>
+                            @if (@ViewBag.EditPermission)
+                            {
+                                <td class="tablefont2" nowrap>
+                                    @Html.ActionLink("Ändra...", "Edit", new { id=item.TariffLevelId})
+                                </td>
+                            }
+                            else
+                            {
+                                 <td class="tablefont2" nowrap></td>                               
+                            }
                         </tr>
                     }
                 }

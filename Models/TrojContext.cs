@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using TrojWebApp.Models;
 
 namespace TrojWebApp.Models
 {
@@ -82,7 +83,11 @@ namespace TrojWebApp.Models
         public DbSet<SubPageMenusChildViewModel> SubPageMenusChildView { get; set; } = null!;
         
 
-        public DbSet<PageIdModel> PageId { get; set; } = null!;
+        public DbSet<IdModel> Id { get; set; } = null!;
+
+
+        public DbSet<MenuPagesModel> MenuPages { get; set; }
+        public DbSet<MenuPagesViewModel> MenuPagesView { get; set; }
 
 
     }

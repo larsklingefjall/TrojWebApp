@@ -22,7 +22,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><span class='glyphicon glyphicon-home'/></a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><span class='glyphicon glyphicon-home' /></a></li>
                 </ul>
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="WorkingTimes" asp-action=".">Dagrapport</a></li>
@@ -30,6 +30,13 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Uppdrag<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="Cases" asp-action=".">Lista</a></li>
+                            @if (ViewBag.CaseMenu != null)
+                            {
+                                @foreach (MenuPagesViewModel menu in ViewBag.CaseMenu)
+                                {
+                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                }
+                            }
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -37,18 +44,39 @@
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="Persons" asp-action=".">Lista</a></li>
                             <li><a asp-area="" asp-controller="Persons" asp-action="Create">Skapa person</a></li>
+                            @if (ViewBag.PersonMenu != null)
+                            {
+                                @foreach (MenuPagesViewModel menu in ViewBag.PersonMenu)
+                                {
+                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                }
+                            }
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Underlag<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="InvoiceUnderlays" asp-action=".">Lista</a></li>
+                            @if (ViewBag.UnderlayMenu != null)
+                            {
+                                @foreach (MenuPagesViewModel menu in ViewBag.UnderlayMenu)
+                                {
+                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                }
+                            }
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fakturor<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="Invoices" asp-action=".">Lista</a></li>
+                            @if (ViewBag.InvoiceMenu != null)
+                            {
+                                @foreach (MenuPagesViewModel menu in ViewBag.InvoiceMenu)
+                                {
+                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                }
+                            }
                         </ul>
                     </li>
                     <li class="dropdown">

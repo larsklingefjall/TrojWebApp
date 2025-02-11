@@ -41,10 +41,17 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
-            var request = HttpContext.Request;
-            var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
-            ViewBag.Link = currentUrl;
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
 
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+            ViewBag.DeletePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Delete", UserName);
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
 
             if (HttpContext.Session.GetInt32("TrojWorkingTimeSize").HasValue == false)
             {
@@ -175,7 +182,7 @@ namespace TrojWebApp.Controllers
             ViewBag.MaxPage = maxPage;
 
             ViewBag.ShowMaxPage = false;
-            if (trojWorkingTimeEnd < maxPage -1)
+            if (trojWorkingTimeEnd < maxPage - 1)
             {
                 ViewBag.ShowMaxPage = true;
             }
@@ -257,6 +264,9 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Cases", new { id });
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -289,6 +299,9 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController/Create
         public async Task<ActionResult> Create()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             List<SelectListItem> persons = new List<SelectListItem>();
             var personList = await _personConnection.GetActivePersons();
             foreach (var item in personList)
@@ -339,6 +352,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("CaseId", out StringValues caseId))
                 return NoContent();
 
@@ -380,6 +396,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("WorkingTimeId", out StringValues workingTimeId))
                 return NoContent();
 
@@ -401,6 +420,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("WorkingTimeId", out StringValues workingTimeId))
                 return NoContent();
 

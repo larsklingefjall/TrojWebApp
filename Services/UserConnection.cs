@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -280,14 +284,14 @@ namespace TrojWebApp.Services
             else
                 return null;
 
-            PageIdModel page;
+            IdModel page;
             StringBuilder sql = new StringBuilder("SELECT SubPageId AS Id");
             sql.Append(" FROM SubPages");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
             sql.AppendFormat(" AND FileName = '{0}'", action);
             try
             {
-                page = await _context.PageId.FromSqlRaw(sql.ToString()).FirstAsync();
+                page = await _context.Id.FromSqlRaw(sql.ToString()).FirstAsync();
             }
             catch (Exception)
             {
@@ -337,6 +341,121 @@ namespace TrojWebApp.Services
             sql.Append(" dbo.SubPages AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
             sql.AppendFormat(" WHERE SubPageMenus.SubPageMenuId = {0}", id);
             return await _context.SubPageMenusView.FromSqlRaw(sql.ToString()).FirstAsync();
+        }
+
+        public async Task<int> GetMenuItemId(HttpRequest request, int id, string userName)
+        {
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return 0;
+
+            IdModel menuId;
+            StringBuilder sql = new StringBuilder("SELECT MenuPageId AS Id");
+            sql.Append(" FROM MenuPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.Append(" AND Action = 'Details'");
+            sql.AppendFormat(" AND Id = {0}", id);
+            sql.AppendFormat(" AND ChangedBy = '{0}'", userName);
+            try
+            {
+                menuId = await _context.Id.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+            return menuId.Id;
+        }
+
+        public async Task<bool> CreateMenuItem(HttpRequest request, string title, int id, string userName)
+        {
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return false;
+
+            int menuPageId = await GetMenuItemId(request, id, userName);
+
+            if (menuPageId > 0)
+            {
+                MenuPagesModel menu = new MenuPagesModel
+                {
+                    MenuPageId = menuPageId,
+                    Controller = controller,
+                    Action = "Details",
+                    Title = title,
+                    Id = id,
+                    Changed = DateTime.Now,
+                    ChangedBy = userName
+                };
+                _context.Entry(menu).State = EntityState.Modified;
+                int numberOfSaves = await _context.SaveChangesAsync();
+                if (numberOfSaves == 1)
+                    return true;
+                else
+                    return false;              
+            }
+            else
+            {
+                MenuPagesModel menu = new MenuPagesModel
+                {
+                    MenuPageId = 0,
+                    Controller = controller,
+                    Action = "Details",
+                    Title = title,
+                    Id = id,
+                    Changed = DateTime.Now,
+                    ChangedBy = userName
+                };
+                _context.MenuPages.Add(menu);
+                int numberOfSaves = await _context.SaveChangesAsync();
+                if (numberOfSaves == 1)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public async Task<IEnumerable<MenuPagesViewModel>> GetMenuItems(HttpRequest request, string userName)
+        {
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return null;
+
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT TOP 5 Title, Controller, Action, Id");
+            sql.Append(" FROM MenuPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND ChangedBy = '{0}'", userName);
+            try
+            {
+                return await _context.MenuPagesView.FromSqlRaw(sql.ToString()).ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<MenuPagesViewModel>> GetMenuItems(string controller, string userName)
+        {
+            StringBuilder sql = new StringBuilder("SELECT DISTINCT TOP 5 Title, Controller, Action, Id");
+            sql.Append(" FROM MenuPages");
+            sql.AppendFormat(" WHERE Controller = '{0}'", controller);
+            sql.AppendFormat(" AND ChangedBy = '{0}'", userName);
+            sql.Append(" ORDER BY Title");
+            try
+            {
+                return await _context.MenuPagesView.FromSqlRaw(sql.ToString()).ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
     }

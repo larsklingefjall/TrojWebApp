@@ -38,6 +38,10 @@ namespace TrojWebApp.Controllers
         // GET: CasesController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
 
             if (HttpContext.Session.GetInt32("TrojCaseSize").HasValue == false)
             {
@@ -129,7 +133,7 @@ namespace TrojWebApp.Controllers
                 string firstName = HttpContext.Session.GetString("TrojCaseFirstName");
                 string lastName = HttpContext.Session.GetString("TrojCaseLastName");
                 cases = await _caseConnection.GetFilteredCases(caseId, whenDate, caseTypeId, title, initials, firstName, lastName, iOffset, iSize);
-                numberOfCases = await _caseConnection.GetNumberOfFilteredCases(caseId, whenDate, caseTypeId, title, initials, firstName, lastName);                
+                numberOfCases = await _caseConnection.GetNumberOfFilteredCases(caseId, whenDate, caseTypeId, title, initials, firstName, lastName);
                 ViewBag.CaseId = caseId;
                 ViewBag.WhenDate = whenDate;
                 ViewBag.CaseTypeId = caseTypeId;
@@ -141,7 +145,7 @@ namespace TrojWebApp.Controllers
             else
             {
                 cases = await _caseConnection.GetCases(iOffset, iSize);
-                numberOfCases = await _caseConnection.GetNumberOfCases();   
+                numberOfCases = await _caseConnection.GetNumberOfCases();
                 ViewBag.CaseId = "";
                 ViewBag.WhenDate = "";
                 ViewBag.CaseTypeId = "";
@@ -195,6 +199,11 @@ namespace TrojWebApp.Controllers
 
             ViewBag.DeleteCaseNumberPermission = _userConnection.AccessToSubPage("CaseNumbers", "Delete", UserName);
             ViewBag.DeletePersonPermission = _userConnection.AccessToSubPage("PersonCases", "Delete", UserName);
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
 
             CasesViewModel currentCase = await _caseConnection.GetCase(id);
             if (currentCase == null)
@@ -292,6 +301,11 @@ namespace TrojWebApp.Controllers
             CasesViewModel casesModel = await _caseConnection.CreateCase(Int32.Parse(caseTypeId.ToString()), title.ToString(), responsible.ToString(), Int32.Parse(personId.ToString()), UserName);
             if (casesModel == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = casesModel.CaseType + "/" + casesModel.CaseId;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, casesModel.CaseId, UserName);
+            }
 
             return RedirectToAction("Details", "Persons", new { id = casesModel.PersonId });
         }
@@ -362,11 +376,16 @@ namespace TrojWebApp.Controllers
 
             DateTime? inputFinishedDate = null;
             if (finishedDate != "")
-                inputFinishedDate =  DateTime.Parse(finishedDate);
+                inputFinishedDate = DateTime.Parse(finishedDate);
 
             CasesViewModel updatedCase = await _caseConnection.UpdateCase(id, int.Parse(caseTypeId.ToString()), title.ToString(), responsible.ToString(), active, inputFinishedDate, comment.ToString(), int.Parse(personId.ToString()), _currentCase, UserName);
             if (updatedCase == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = updatedCase.CaseType + "/" + updatedCase.CaseId;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedCase.CaseId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = updatedCase.CaseId });
         }

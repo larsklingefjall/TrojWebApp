@@ -14,29 +14,40 @@ namespace TrojWebApp.Controllers
     [Authorize]
     public class TariffTypesController : IdenityController
     {
-        private readonly TariffTypesConnection _connection;
+        private readonly TariffTypesConnection _tariffTypesConnection;
+        private readonly UserConnection _userConnection;
 
         public TariffTypesController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
-            _connection = new TariffTypesConnection(context);
+            _tariffTypesConnection = new TariffTypesConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: TariffTypesController
         public async Task<ActionResult> Index()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+
             List<SelectListItem> colors = new List<SelectListItem>();
-            var backgroundColors = await _connection.GetBackgroundColors();
+            var backgroundColors = await _tariffTypesConnection.GetBackgroundColors();
             foreach (BackgroundColorsModel backgroundColor in backgroundColors)
                 colors.Add(new SelectListItem { Value = backgroundColor.BackgroundColor, Text = backgroundColor.BackgroundColor });
             ViewBag.BackgroundColors = colors;
 
-            var types = await _connection.GetTariffTypes();
+            var types = await _tariffTypesConnection.GetTariffTypes();
             return View(types);
         }
 
         // GET: TariffTypesController/Create
         public ActionResult Create()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             return View();
         }
 
@@ -45,6 +56,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("TariffType", out StringValues type))
                 return NoContent();
 
@@ -70,7 +84,7 @@ namespace TrojWebApp.Controllers
                 invisible = true;
             }
 
-            TariffTypesModel tariffType = await _connection.CreateTariffType(type, noLevel, invisible, backgroundColor, UserName);
+            TariffTypesModel tariffType = await _tariffTypesConnection.CreateTariffType(type, noLevel, invisible, backgroundColor, UserName);
 
             if (tariffType == null)
                 return NoContent();
@@ -81,7 +95,12 @@ namespace TrojWebApp.Controllers
         // GET: TariffTypesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var tariffType = await _connection.GetTariffType(id);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            var tariffType = await _tariffTypesConnection.GetTariffType(id);
+            if (tariffType == null) return NoContent();
+
             return View(tariffType);
         }
 
@@ -90,6 +109,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("TariffType", out StringValues type))
                 return NoContent();
 
@@ -108,7 +130,7 @@ namespace TrojWebApp.Controllers
                 invisible = true;
             }
 
-            TariffTypesModel tariffType = await _connection.UpdateTariffType(id, type, noLevel, invisible, backgroundColor, UserName);
+            TariffTypesModel tariffType = await _tariffTypesConnection.UpdateTariffType(id, type, noLevel, invisible, backgroundColor, UserName);
 
             if (tariffType == null)
                 return NoContent();

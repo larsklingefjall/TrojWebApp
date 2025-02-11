@@ -4,22 +4,26 @@
     ViewData["Title"] = "Persontyper";
 }
 <h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <table class="table table-condensed table-no-border">
-                    <tr><th class="head">Typ:</th></tr>
-                    <tr>
-                        <td><input name="PersonType" size="60" class="font2" /></td>
-                        <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
-                    </tr>
-                </table>
-            </div>
-        </form>
+
+@if (@ViewBag.CreatePermission)
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <table class="table table-condensed table-no-border">
+                        <tr><th class="head">Typ:</th></tr>
+                        <tr>
+                            <td><input name="PersonType" size="60" class="font2" /></td>
+                            <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+}
 <div class="row">
     <div class="col-sm-2">
         <table class="table table-condensed">

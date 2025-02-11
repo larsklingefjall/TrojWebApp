@@ -46,6 +46,11 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+
             if (HttpContext.Session.GetInt32("TrojInvoiceSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojInvoiceSize", 20);
@@ -194,6 +199,11 @@ namespace TrojWebApp.Controllers
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
 
             _currentInvoiceId = id;
 
@@ -404,6 +414,11 @@ namespace TrojWebApp.Controllers
             InvoicesModel newInvoice = await _invoicesConnection.CreateInvoice(int.Parse(invoiceUnderlayId), int.Parse(employeeId), place, DateTime.Parse(invoiceDate), DateTime.Parse(expirationDate), int.Parse(vat), int.Parse(division), double.Parse(clientFundingTotalSum), UserName);
             if (newInvoice == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = newInvoice.InvoiceNumber + ": " + newInvoice.InvoiceDate.Year + "-" + newInvoice.InvoiceDate.Month + "-" + newInvoice.InvoiceDate.Day;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, newInvoice.InvoiceId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = newInvoice.InvoiceId });
         }
@@ -479,6 +494,11 @@ namespace TrojWebApp.Controllers
             InvoicesModel updatedInvoice = await _invoicesConnection.UpdateInvoice(id, int.Parse(employeeId), DateTime.Parse(invoiceDate), DateTime.Parse(expirationDate), invoicePlace, headline1, headline2, text1, locked, hideClientFunding, _currentInvoice, UserName);
             if (updatedInvoice == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = updatedInvoice.InvoiceNumber + ": " + updatedInvoice.InvoiceDate.Year + "-" + updatedInvoice.InvoiceDate.Month + "-" + updatedInvoice.InvoiceDate.Day;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedInvoice.InvoiceId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = updatedInvoice.InvoiceId });
         }

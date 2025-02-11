@@ -29,14 +29,14 @@
                 <tr>
                     <th class="head">Från:</th>
                     <td>
-                        <input asp-for="ValidFrom" class="font2" />
+                        <input name="ValidFrom" type="date" value="@ViewBag.StartDate" class="font2" />
                         <span asp-validation-for="ValidFrom" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Till:</th>
                     <td>
-                        <input asp-for="ValidTo" class="font2" />
+                        <input name="ValidTo" type="date" value="@ViewBag.EndDate" class="font2" />
                         <span asp-validation-for="ValidTo" class="text-danger"></span>
                     </td>
                 </tr>

@@ -3,7 +3,7 @@ using System;
 
 namespace TrojWebApp.Models
 {
-    public class PageIdModel
+    public class IdModel
     {
         [Key]
         public int Id { get; set; }

@@ -47,6 +47,11 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+
             if (HttpContext.Session.GetInt32("TrojInvoiceUnderlaySize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojInvoiceUnderlaySize", 20);
@@ -195,6 +200,11 @@ namespace TrojWebApp.Controllers
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
 
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
@@ -465,6 +475,11 @@ namespace TrojWebApp.Controllers
             InvoiceUnderlaysModel newUnderlay = await _invoiceUnderlaysConnection.CreateUnderlay(Int32.Parse(caseId.ToString()), Int32.Parse(employeeId.ToString()), Int32.Parse(courtId.ToString()), Int32.Parse(personId.ToString()), place, date, Int32.Parse(vat.ToString()), UserName);
             if (newUnderlay == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = newUnderlay.UnderlayNumber + ": " + newUnderlay.Title;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, newUnderlay.InvoiceUnderlayId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = newUnderlay.InvoiceUnderlayId });
         }
@@ -533,6 +548,11 @@ namespace TrojWebApp.Controllers
             InvoiceUnderlaysModel updatedUnderlay = await _invoiceUnderlaysConnection.UpdateUnderlay(id, int.Parse(employeeId), title, DateTime.Parse(underlayDate), underlayPlace, headline1, headline2, workingReport, locked, _currentUnderlay, UserName);
             if (updatedUnderlay == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = updatedUnderlay.UnderlayNumber + ": " + updatedUnderlay.Title;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedUnderlay.InvoiceUnderlayId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = updatedUnderlay.InvoiceUnderlayId });
         }

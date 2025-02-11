@@ -17,16 +17,24 @@ namespace TrojWebApp.Controllers
     {
         private readonly TariffLevelsConnection _tariffLevelsConnection;
         private readonly TariffTypesConnection _tariffTypesConnection;
+        private readonly UserConnection _userConnection;
 
         public TariffLevelsController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _tariffLevelsConnection = new TariffLevelsConnection(context);
             _tariffTypesConnection = new TariffTypesConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: TariffLevelsController
         public async Task<ActionResult> Index()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
+            ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
+
             var tariffLevels = await _tariffLevelsConnection.GetTariffLevels();
             return View(tariffLevels);
         }
@@ -34,6 +42,12 @@ namespace TrojWebApp.Controllers
         // GET: TariffLevelsController/Create
         public async Task<ActionResult> Create()
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            @ViewBag.StartDate = DateTime.Now.Year + "-01-01";
+            @ViewBag.EndDate = DateTime.Now.Year + "-12-31";
+
             List<SelectListItem> tariffTypes = new List<SelectListItem>();
             var tariffTypeList = await _tariffTypesConnection.GetTariffTypes();
             foreach (var tariffType in tariffTypeList)
@@ -48,6 +62,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("TariffTypeId", out StringValues tariffTypeId))
                 return NoContent();
 
@@ -78,12 +95,15 @@ namespace TrojWebApp.Controllers
                 tariffTypes.Add(new SelectListItem { Value = tariffType.TariffTypeId.ToString(), Text = tariffType.TariffType });
             ViewBag.TariffTypes = tariffTypes;
 
-            return RedirectToAction("Edit", new { id = tariffLevelsModel.TariffLevelId });
+            return RedirectToAction("Index");
         }
 
         // GET: TariffLevelsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             TariffLevelsModel tariffLevelsModel = await _tariffLevelsConnection.GetTariffLevel(id);
             if (tariffLevelsModel == null)
                 return NoContent();
@@ -102,6 +122,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (!collection.TryGetValue("TariffTypeId", out StringValues tariffTypeId))
                 return NoContent();
 
@@ -129,12 +152,11 @@ namespace TrojWebApp.Controllers
             if (validTo != "")
                 validToDate = DateTime.Parse(validTo);
 
-            TariffLevelsModel tariffLevelsModel = await _tariffLevelsConnection.UpdateTariffLevel(id, Int32.Parse(tariffTypeId.ToString()), Double.Parse(tariffLevel.ToString()), validFromDate, validToDate, valid);
+            TariffLevelsModel tariffLevelsModel = await _tariffLevelsConnection.UpdateTariffLevel(id, Int32.Parse(tariffTypeId.ToString()), Double.Parse(tariffLevel.ToString()), validFromDate, validToDate, valid, UserName);
             if (tariffLevelsModel == null)
                 return NoContent();
 
-            var tariffLevels = await _tariffLevelsConnection.GetTariffLevels();
-            return View("Index", tariffLevels);
+            return RedirectToAction("Index");
         }
     }
 }

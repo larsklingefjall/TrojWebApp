@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,5 +81,6 @@ namespace TrojWebApp.Services
             sql.AppendFormat(" WHERE SubPageUsers.SubPageUserId = {0}", id);
             return await _context.SubPageUsersView.FromSqlRaw(sql.ToString()).FirstAsync();
         }
+
     }
 }

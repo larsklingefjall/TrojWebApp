@@ -19,6 +19,7 @@ namespace TrojWebApp.Controllers
     {
         private readonly PersonsConnection _connection;
         private readonly UserConnection _userConnection;
+        private static int _currentPersonId;
 
         public PersonsController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -31,6 +32,11 @@ namespace TrojWebApp.Controllers
         {
             var permission = _userConnection.AccessToIndexPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
 
             if (HttpContext.Session.GetInt32("TrojPersonSize").HasValue == false)
             {
@@ -169,6 +175,13 @@ namespace TrojWebApp.Controllers
             ViewBag.EditAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Edit", UserName);
             ViewBag.DeleteAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Delete", UserName);
 
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+
+            _currentPersonId = id;
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -215,7 +228,7 @@ namespace TrojWebApp.Controllers
         public ActionResult Create()
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return RedirectToAction("Index");
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
             return View();
         }
@@ -225,6 +238,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
+
             var request = HttpContext.Request;
             var currentUrl = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
             ViewBag.Link = currentUrl;
@@ -244,19 +260,24 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("MailAddress", out StringValues mailAddress))
                 return NoContent();
 
-            PersonsModel personsModel = await _connection.CreatePerson(firstName.ToString(), lastName.ToString(), middleName.ToString(), personNumber.ToString(), mailAddress.ToString(), UserName);
+            PersonsModel person = await _connection.CreatePerson(firstName.ToString(), lastName.ToString(), middleName.ToString(), personNumber.ToString(), mailAddress.ToString(), UserName);
 
-            if (personsModel == null)
+            if (person == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = person.LastName + " " + person.FirstName;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, person.PersonId, UserName);
+            }
 
-            return View("Edit", personsModel);
+            return View("Edit", person);
         }
 
         // GET: PersonsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return RedirectToAction("Index");
+            if (!permission) return RedirectToAction("Details", "Persons", new { id });
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -270,6 +291,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id });
+
             if (!collection.TryGetValue("FirstName", out StringValues firstName))
                 return NoContent();
 
@@ -296,6 +320,11 @@ namespace TrojWebApp.Controllers
 
             if (person == null)
                 return NoContent();
+            else
+            {
+                string menuTitle = person.LastName + " " + person.FirstName;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, person.PersonId, UserName);
+            }
 
             return RedirectToAction("Details", new { id = person.PersonId });
         }

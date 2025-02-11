@@ -52,7 +52,7 @@ namespace TrojWebApp.Services
             return await _context.TariffLevels.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
-        public async Task<TariffLevelsModel> CreateTariffLevel(int tariffTypeId, double level, DateTime? from, DateTime? to, string userName = "")
+        public async Task<TariffLevelsModel> CreateTariffLevel(int tariffTypeId, double level, DateTime? from, DateTime? to, string userName)
         {
             TariffLevelsModel tariffLevel = new TariffLevelsModel
             {
@@ -74,7 +74,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<TariffLevelsModel> UpdateTariffLevel(int id, int tariffTypeId, double level, DateTime? from, DateTime? to, bool valid, string userName = "")
+        public async Task<TariffLevelsModel> UpdateTariffLevel(int id, int tariffTypeId, double level, DateTime? from, DateTime? to, bool valid, string userName)
         {
             TariffLevelsModel tariffLevel = new TariffLevelsModel
             {
