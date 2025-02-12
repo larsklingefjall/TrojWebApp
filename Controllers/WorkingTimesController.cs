@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -41,6 +42,8 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
@@ -258,6 +261,10 @@ namespace TrojWebApp.Controllers
             {
                 ViewBag.MaxTitleLenght = 20;
             }
+
+            stopwatch.Stop();
+            ViewBag.LoadTime = stopwatch.ElapsedMilliseconds;
+
             return View(workingTimes);
         }
 

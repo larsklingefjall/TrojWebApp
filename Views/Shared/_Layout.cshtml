@@ -9,6 +9,16 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+    @{
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+    }
+    <script>
+        window.onload = function () {
+            var loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+            document.getElementById("loadTime").innerText = "Laddningstid: " + loadTime + " ms";
+        };
+    </script>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -197,5 +207,18 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
+
+    @{
+        stopwatch.Stop();
+        var elapsedTime = stopwatch.ElapsedMilliseconds;
+    }
+    <span class="footfont1b">
+        Rendering: @elapsedTime ms
+        <span id="loadTime">Mäter laddningstid...</span>
+        @if (ViewBag.LoadTime != null)
+        {
+            <span>Exekveringstiden: @ViewBag.LoadTime ms</span>
+        }
+    </span>
 </body>
 </html>
