@@ -243,7 +243,15 @@ namespace TrojWebApp.Controllers
                 ViewBag.PersonsAtCase = personsAtCase;
             }
 
-            ViewBag.Underlays = await _invoiceUnderlaysConnection.GetUnderlayForCase(id);
+            var underlaysAtCase = await _invoiceUnderlaysConnection.GetUnderlayForCase(id);
+            if (underlaysAtCase.Count() == 0)
+            {
+                ViewBag.UnderlaysAtCase = null;
+            }
+            else
+            {
+                ViewBag.UnderlaysAtCase = underlaysAtCase;
+            }
 
             return View(currentCase);
         }

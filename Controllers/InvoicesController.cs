@@ -338,6 +338,8 @@ namespace TrojWebApp.Controllers
             if (currentUnderlay == null)
                 return NoContent();
 
+            ViewBag.NumberOfInvoices = await _invoicesConnection.GetNumberOfInvoices4Underlay(id.Value);
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 

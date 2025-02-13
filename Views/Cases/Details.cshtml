@@ -36,10 +36,13 @@
             <tr>
                 <td class="font2" nowrap>@Html.ActionLink((string)ViewBag.Client + "/" + Model.PersonId.ToString(), "Details", "Persons", new { id = Model.PersonId })</td>
                 <td class="font2" nowrap>
-                    @foreach (InvoiceUnderlaysPartialViewModel item in ViewBag.Underlays)
+                    @if (ViewBag.UnderlaysAtCase != null)
                     {
-                        @Html.ActionLink((string)item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = @item.InvoiceUnderlayId })
-                        <br />
+                        @foreach (InvoiceUnderlaysPartialViewModel item in ViewBag.UnderlaysAtCase)
+                        {
+                            @Html.ActionLink((string)item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = @item.InvoiceUnderlayId })
+                            <br />
+                        }
                     }
                 </td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Responsible)</td>

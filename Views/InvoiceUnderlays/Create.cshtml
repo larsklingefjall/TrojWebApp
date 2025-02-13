@@ -17,6 +17,17 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText</h1>
+@if (ViewBag.NumberOfUnderlays > 0)
+{
+    @if (ViewBag.NumberOfUnderlays == 1)
+    {
+            <h2><span class="label label-danger">Uppdraget har redan ett underlag!</span></h2>
+    }
+    else
+    {
+        <h2><span class="label label-danger">Uppdraget har redan @ViewBag.NumberOfUnderlays underlag!</span></h2>
+    }
+}
 <div class="row">
     <div class="col-sm-2">
         <form asp-action="Create">

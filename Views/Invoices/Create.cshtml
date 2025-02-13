@@ -17,6 +17,17 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText</h1>
+@if (ViewBag.NumberOfInvoices > 0)
+{
+    @if (ViewBag.NumberOfInvoices == 1)
+    {
+        <h2><span class="label label-danger">Underlaget har redan en faktura!</span></h2>
+    }
+    else
+    {
+        <h2><span class="label label-danger">Underlaget har redan @ViewBag.NumberOfInvoices fakturor!</span></h2>
+    }
+}
 <div class="row">
     <div class="col-sm-1">
         <table border="0" class="table table-condensed table-no-border">

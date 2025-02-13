@@ -248,6 +248,15 @@ namespace TrojWebApp.Services
             return await _context.InvoiceUnderlaySummaries.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
+        public async Task<int> GetNumberOfUnderlays4Case(int caseIdd)
+        {
+            StringBuilder sql = new StringBuilder("SELECT Count(InvoiceUnderlayId) AS NumberOf");
+            sql.Append(" FROM InvoiceUnderlays ");
+            sql.AppendFormat(" WHERE CaseId = {0}", caseIdd);
+            NumberOfModel NumberOf = await _context.NumberOf.FromSqlRaw(sql.ToString()).FirstAsync();
+            return NumberOf.NumberOf;
+        }
+
         public async Task<TotalSumModel> GetUnderlaySummariesTotalSum(int id)
         {
             StringBuilder sql = new StringBuilder("SELECT Count(InvoiceWorkingTimes.InvoiceWorkingTimeId) AS NumberOf");

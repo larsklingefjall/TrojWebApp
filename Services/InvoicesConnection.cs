@@ -112,6 +112,15 @@ namespace TrojWebApp.Services
             return NumberOf.NumberOf;
         }
 
+        public async Task<int> GetNumberOfInvoices4Underlay(int underlayId)
+        {
+            StringBuilder sql = new StringBuilder("SELECT Count(Invoices.InvoiceId) AS NumberOf");
+            sql.Append(" FROM Invoices");
+            sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", underlayId);
+            NumberOfModel NumberOf = await _context.NumberOf.FromSqlRaw(sql.ToString()).FirstAsync();
+            return NumberOf.NumberOf;
+        }
+
         public async Task<IEnumerable<InvoicesViewModel>> GetFilyeredInvoices(string invoiceNumber, string underlayNumber, string invoiceDate, string receiverName, string employeeId, string firstName, string lastName, string locked, int offset, int size)
         {
             StringBuilder sql = new StringBuilder("SELECT Invoices.InvoiceId, Invoices.InvoiceUnderlayId, InvoiceUnderlays.UnderlayNumber, Invoices.PersonId");
