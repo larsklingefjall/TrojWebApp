@@ -135,8 +135,8 @@ namespace TrojWebApp.Controllers
             }
 
 
-            string currentDate = DateTime.Now.ToShortDateString();
-            string nextDate = DateTime.Now.AddDays(1).ToShortDateString();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string nextDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
             ViewBag.CurrentDate = currentDate;
             IEnumerable<WorkingTimesViewModel> workingTimes;
             IEnumerable<CasesClientViewModel> caseList;
@@ -270,7 +270,7 @@ namespace TrojWebApp.Controllers
             ViewBag.LoadTime = loadTime;
             await _userConnection.AddLoadTime(HttpContext.Request, loadTime, UserName);
 
-            if(_createLoadTime > 0)
+            if (_createLoadTime > 0)
                 ViewBag.CreateLoadTime = _createLoadTime;
 
             if (_deleteLoadTime > 0)
@@ -278,7 +278,7 @@ namespace TrojWebApp.Controllers
 
             if (_editLoadTime > 0)
                 ViewBag.EditLoadTime = _editLoadTime;
-      
+
             return View(workingTimes);
         }
 

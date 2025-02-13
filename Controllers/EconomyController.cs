@@ -123,8 +123,8 @@ namespace TrojWebApp.Controllers
             }
             else
             {
-                startWhenDate = new DateTime(DateTime.Now.Year, 1, 1).ToShortDateString();
-                endWhenDate = DateTime.Now.ToShortDateString();
+                startWhenDate = new DateTime(DateTime.Now.Year, 1, 1).ToString("yyyy-MM-dd");
+                endWhenDate = DateTime.Now.ToString("yyyy-MM-dd");
                 employeeId = "0";
             }
             workingTimes = await _economyConnection.GetEconomyWorkingTimes(startWhenDate, endWhenDate, employeeId, iOffset, iSize);
@@ -234,8 +234,8 @@ namespace TrojWebApp.Controllers
             }
             else
             {
-                startWhenDate = new DateTime(DateTime.Now.Year, 1, 1).ToShortDateString();
-                endWhenDate = DateTime.Now.ToShortDateString();
+                startWhenDate = new DateTime(DateTime.Now.Year, 1, 1).ToString("yyyy-MM-dd");
+                endWhenDate = DateTime.Now.ToString("yyyy-MM-dd");
                 clientId = firstClientId;
             }
 

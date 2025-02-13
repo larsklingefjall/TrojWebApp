@@ -112,7 +112,7 @@
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.InvoiceNumber, "Details", new { id=item.InvoiceId })</td>
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id=item.InvoiceUnderlayId })</td>
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType + "/" + item.CaseId.ToString(), "Details", "Cases", new { id = item.CaseId })</td>
-                        <td class="tablefont2" nowrap>@item.InvoiceDate.ToShortDateString()</td>
+                        <td class="tablefont2" nowrap>@item.InvoiceDate.ToString("yyyy-MM-dd")</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Initials)</td>
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId, "Details", "Persons", new { id=item.PersonId })</td>

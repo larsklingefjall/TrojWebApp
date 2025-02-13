@@ -433,7 +433,7 @@ namespace TrojWebApp.Controllers
                 underlayPlace = configuration.ConfigValue;
             ViewBag.Place = underlayPlace;
 
-            string currentDate = DateTime.Now.ToShortDateString();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
             ViewBag.CurrentDate = currentDate;
 
             return View();

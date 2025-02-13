@@ -34,7 +34,12 @@ namespace TrojWebApp.Services
             _cryKey = crykey;
         }
 
-        public String LastSqlCommand;
+        public static String LastSqlCommand;
+
+        public String GetSqlCommand()
+        {
+            return LastSqlCommand;
+        }
 
         public async Task<IEnumerable<WorkingTimesModel>> GetWorkingTimes()
         {

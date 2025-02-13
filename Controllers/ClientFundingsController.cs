@@ -50,7 +50,7 @@ namespace TrojWebApp.Controllers
             ViewBag.Client = currentCase.FirstName + " " + currentCase.LastName;
             ViewBag.PersonId = currentCase.PersonId.ToString();
 
-            string currentDate = DateTime.Now.ToShortDateString();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
             ViewBag.CurrentDate = currentDate;
 
             TotalSumModel totalSumModel = await _caseConnection.GetTotalSum(id.Value);

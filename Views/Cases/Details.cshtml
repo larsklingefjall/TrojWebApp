@@ -47,7 +47,7 @@
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Active)</td>
                 @if (Model.FinishedDate.HasValue)
                 {
-                    <td class="font2" nowrap>@Model.FinishedDate.Value.ToShortDateString()</td>
+                    <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.FinishedDate)</td>
                 }
                 else
                 {

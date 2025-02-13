@@ -358,7 +358,7 @@ namespace TrojWebApp.Controllers
             ViewBag.Vat = currentUnderlay.Vat;
             ViewBag.Place = currentUnderlay.UnderlayPlace;
 
-            string currentDate = DateTime.Now.ToShortDateString();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
             ViewBag.CurrentDate = currentDate;
 
             int respite = 30;
@@ -366,7 +366,7 @@ namespace TrojWebApp.Controllers
             if (configuration != null)
                 if (int.TryParse(configuration.ConfigValue, out respite) == false)
                     respite = 30;
-            string expirationDate = DateTime.Now.AddDays(respite).ToShortDateString();
+            string expirationDate = DateTime.Now.AddDays(respite).ToString("yyyy-MM-dd");
             ViewBag.ExpirationDate = expirationDate;
 
             TotalSumModel totalSumModel = await _caseConnection.GetTotalSum(currentUnderlay.CaseId);

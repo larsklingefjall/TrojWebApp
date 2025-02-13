@@ -25,7 +25,7 @@ namespace TrojWebApp.Controllers
         private readonly EmployeesConnection _employeeConnection;
         private readonly CasesConnection _casesConnection;
         private readonly UserManager<IdentityUser> _userManager;
-
+        private readonly UserConnection _userConnection;
 
         public HomeController(ILogger<HomeController> logger, TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -33,11 +33,17 @@ namespace TrojWebApp.Controllers
             _workingTimesConnection = new WorkingTimesConnection(context, configuration["CryKey"]);
             _employeeConnection = new EmployeesConnection(context);
             _casesConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
             _userManager = userManager;
         }
 
         public async Task<ActionResult> Index(IFormCollection collection)
         {
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+
             ViewBag.UserName = UserName;
 
             var request = HttpContext.Request;
@@ -110,7 +116,7 @@ namespace TrojWebApp.Controllers
             IEnumerable<WorkingTimesSummarysModel> workingTimesSummeriesOfWeek = await _workingTimesConnection.GetUnderlaySummariesOfWeek(currentDate, currentUserName);
             if (workingTimesSummeriesOfWeek == null)
             {
-                ViewBag.Sql = _workingTimesConnection.LastSqlCommand;
+                ViewBag.Sql = _workingTimesConnection.GetSqlCommand();
                 ViewBag.WorkingTimesSummeriesOfWeekCount = 0;
             }
             else
@@ -126,7 +132,7 @@ namespace TrojWebApp.Controllers
             IEnumerable<WorkingTimesSummarysModel> workingTimesSummeriesOfDay = await _workingTimesConnection.GetUnderlaySummariesOfDay(currentDate, currentUserName);
             if (workingTimesSummeriesOfDay == null)
             {
-                ViewBag.Sql = _workingTimesConnection.LastSqlCommand;
+                ViewBag.Sql = _workingTimesConnection.GetSqlCommand();
                 ViewBag.WorkingTimesSummeriesOfDayCount = 0;
             }
             else
