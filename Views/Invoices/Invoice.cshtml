@@ -10,7 +10,7 @@
 
 <div id="bodyUpperDiv">
     <table border="0" cellpadding="1" cellspacing="0">
-        <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.InvoicePlace) @Model.InvoiceDate.ToShortDateString()</td></tr>
+        <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.InvoicePlace) @string.Format("{0:yyyy-MM-dd}", Model.InvoiceDate)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="30"></td></tr>
         <tr><td class="avaFont5" valign="top" align="left" nowrap>FAKTURA</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="15"></td></tr>
@@ -35,7 +35,7 @@
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
         <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Referens: @Html.DisplayFor(model => model.InvoiceNumber)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
-        <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Förfallodatum: @Model.ExpirationDate.ToShortDateString()</td></tr>
+        <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Förfallodatum: @string.Format("{0:yyyy-MM-dd}", Model.ExpirationDate)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="30"></td></tr>
     </table>
 

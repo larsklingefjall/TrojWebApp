@@ -74,9 +74,7 @@
                                     <input type="hidden" name="WorkingTimeId" value="@item.WorkingTimeId" />
                                     <input type="hidden" name="InvoiceUnderlayId" value="@ViewBag.InvoiceUnderlayId" />
                                 <tr style="background-color:@item.BackgroundColor;">
-                                    <td class="tablefont2" title="@Html.DisplayFor(modelItem => item.Changed) av: @Html.DisplayFor(modelItem => item.ChangedBy)" nowrap>
-                                            @Html.DisplayFor(modelItem => item.WhenDate)
-                                    </td>
+                                    <td class="tablefont2" title="@Html.DisplayFor(modelItem => item.Changed) av: @Html.DisplayFor(modelItem => item.ChangedBy)" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                                     <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
                                     <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Comment)</td>
                                     <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.NumberOfHours)</td>
@@ -138,7 +136,7 @@
                                     <input type="hidden" name="InvoiceWorkingTimeId" value="@item.InvoiceWorkingTimeId" />
                                     <input type="hidden" name="InvoiceUnderlayId" value="@ViewBag.InvoiceUnderlayId" />
                                 <tr style="background-color:@item.BackgroundColor;">
-                                    <td class="tablefont2" nowrap>@item.WhenDate.ToShortDateString()</td>
+                                    <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                                     <td class="tablefont2" nowrap>@item.TariffType</td>
                                     <td class="tablefont2" nowrap>@item.Comment</td>
                                     <td class="tablefont2" nowrap>@item.NumberOfHours</td>

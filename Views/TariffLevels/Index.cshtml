@@ -27,10 +27,10 @@
                                 @Html.DisplayFor(modelItem => item.TariffType)
                             </td>
                             <td class="tablefont2" nowrap>
-                                @Html.DisplayFor(modelItem => item.ValidFrom)
+                                @string.Format("{0:yyyy-MM-dd}", item.ValidFrom)
                             </td>
                             <td class="tablefont2" nowrap>
-                                @Html.DisplayFor(modelItem => item.ValidTo)
+                                @string.Format("{0:yyyy-MM-dd}", item.ValidTo)
                             </td>
                             <td class="tablefont2" nowrap>
                                 @Html.DisplayFor(modelItem => item.TariffLevel)
@@ -46,7 +46,7 @@
                             }
                             else
                             {
-                                 <td class="tablefont2" nowrap></td>                               
+                                <td class="tablefont2" nowrap></td>
                             }
                         </tr>
                     }

@@ -35,8 +35,8 @@
                 <td class="font2" nowrap>@Html.ActionLink(Model.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
                 <td class="font2" nowrap>@Html.ActionLink(Model.FirstName + " " + Model.LastName + "/" + Model.PersonId.ToString(), "Details", "Persons", new { id = Model.PersonId })</td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Initials)</td>
-                <td class="font2" nowrap>@Model.InvoiceDate.ToShortDateString()</td>
-                <td class="font2" nowrap>@Model.ExpirationDate.ToShortDateString()</td>
+                <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.InvoiceDate)</td>
+                <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.ExpirationDate)</td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.InvoicePlace)</td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Locked)</td>
             </tr>
@@ -119,7 +119,7 @@
     <table class="col-md-12" nowrap>
         <tr>
             <td nowrap style="width: 100%;"></td>
-            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @string.Format("{0:yyyy-MM-dd HH:mm:ss}", Model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
         </tr>
     </table>
 </div>

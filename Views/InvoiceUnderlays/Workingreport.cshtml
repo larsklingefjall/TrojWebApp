@@ -10,7 +10,7 @@
 
 <div id="bodyUpperDiv">
     <table border="0" class="table table-report">
-        <tr><td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE, @Model.UnderlayDate.ToShortDateString()</td></tr>
+        <tr><td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE, @string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="5"></td></tr>
     </table>
     <table border="0" class="table table-report">
@@ -81,7 +81,7 @@
                 @foreach (InvoiceWorkingTimesViewModel item in ViewBag.WorkingTimes)
                 {
                     <tr style="background-color:@item.BackgroundColor;">
-                        <td class="avaTablefont2" nowrap>@item.WhenDate.ToShortDateString()</td>
+                        <td class="avaTablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                         <td class="avaTablefont2" nowrap>@item.TariffType</td>
                         <td class="avaTablefont2">@item.Comment</td>
                         <td class="avaTablefont2" nowrap>@item.NumberOfHours</td>

@@ -39,7 +39,7 @@
                     }
                 </td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Initials)</td>
-                <td class="font2" nowrap>@Model.UnderlayDate.ToShortDateString()</td>
+                <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate)</td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Locked)</td>
             </tr>
             <tr>
@@ -116,7 +116,7 @@
                         @foreach (InvoiceWorkingTimesViewModel item in ViewBag.WorkingTimes)
                         {
                             <tr style="background-color:@item.BackgroundColor;">
-                                <td class="tablefont2" nowrap>@item.WhenDate.ToShortDateString()</td>
+                                <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                                 <td class="tablefont2" nowrap>@item.TariffType</td>
                                 <td class="tablefont2" nowrap>@item.Comment</td>
                                 <td class="tablefont2" nowrap>@item.NumberOfHours</td>
@@ -145,7 +145,7 @@
     <table class="col-md-12" nowrap>
         <tr>
             <td nowrap style="width: 100%;"></td>
-            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @string.Format("{0:yyyy-MM-dd HH:mm:ss}", Model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
         </tr>
     </table>
 </div>

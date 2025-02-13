@@ -103,7 +103,7 @@
                     <tr>
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.UnderlayNumber, "Details", new { id=item.InvoiceUnderlayId })</td>
                         <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType + "/" + item.CaseId.ToString(), "Details", "Cases", new { id=item.CaseId })</td>
-                        <td class="tablefont2" nowrap>@item.UnderlayDate.ToShortDateString()</td>
+                        <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.UnderlayDate)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.CaseType)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Initials)</td>

@@ -98,7 +98,7 @@
     <table class="col-md-12" nowrap>
         <tr>
             <td nowrap style="width: 100%;"></td>
-            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @string.Format("{0:yyyy-MM-dd HH:mm:ss}", Model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
         </tr>
     </table>
 </div>

@@ -142,7 +142,7 @@
                             <tr>
                                 <td class="tablefont2" nowrap>@item.PersonType</td>
                                 <td class="tablefont2">@Html.ActionLink((string)item.CaseType + "/" + item.CaseId, "Details", "Cases",  new { id = @item.CaseId})</td>
-                                <td class="tablefont2" nowrap>@item.CaseDate</td>
+                                <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", item.CaseDate)</td>
                                 @{
                                     if (item.Active == true)
                                     {
@@ -168,7 +168,7 @@
     <table class="col-md-12" nowrap>
         <tr>
             <td nowrap style="width: 100%;"></td>
-            <td class="navbar-text navbar-right" nowrap>Ändrad: @Html.DisplayFor(model => model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
+            <td class="navbar-text navbar-right" nowrap>Ändrad: @string.Format("{0:yyyy-MM-dd HH:mm:ss}", Model.Changed) av: @Html.DisplayFor(model => model.ChangedBy)</td>
         </tr>
     </table>
 </div>

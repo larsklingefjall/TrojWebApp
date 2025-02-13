@@ -59,7 +59,7 @@
                     @Html.DisplayFor(modelItem => item.HasChild)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Changed)
+                    @string.Format("{0:yyyy-MM-dd HH:mm:ss}", item.Changed)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.ChangedBy)

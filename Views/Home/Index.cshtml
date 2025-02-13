@@ -175,7 +175,7 @@
                             <tr>
                                 <td class="tablefont2" nowrap>@Html.ActionLink(item.CaseType, "Details", "WorkingTimes", new { id=item.CaseId })</td>
                                 <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName, "Details", "Persons", new { id=item.PersonId })</td>
-                                <td class="tablefont2" nowrap>@item.Changed</td>
+                                <td class="tablefont2" nowrap>@item.Changed.ToString("yyyy-MM-dd HH:mm:ss")</td>
                             </tr>
                         }
                     </tbody>
