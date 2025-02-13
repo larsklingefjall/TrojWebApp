@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,7 +25,6 @@ namespace TrojWebApp.Services
 {
     public class WorkingTimesConnection
     {
-        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly TrojContext _context;
         private readonly string _cryKey;
 
@@ -827,9 +825,8 @@ namespace TrojWebApp.Services
             {
                 response = await _context.WorkingTimesSummaries.FromSqlRaw(sql.ToString()).AsNoTracking().ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error($"Failed to get underlays for a week: {ex.Message}");
                 LastSqlCommand = sql.ToString();
             }
             return response;
@@ -879,9 +876,8 @@ namespace TrojWebApp.Services
             {
                 response = await _context.WorkingTimesSummaries.FromSqlRaw(sql.ToString()).AsNoTracking().ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error($"Failed to get underlays for a day: {ex.Message}");
                 LastSqlCommand = sql.ToString();
             }
             return response;

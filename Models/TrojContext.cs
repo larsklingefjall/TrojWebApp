@@ -89,6 +89,8 @@ namespace TrojWebApp.Models
         public DbSet<MenuPagesModel> MenuPages { get; set; }
         public DbSet<MenuPagesViewModel> MenuPagesView { get; set; }
 
+        public DbSet<LoadTimesModel> LoadTimes { get; set; }
+
 
     }
 }

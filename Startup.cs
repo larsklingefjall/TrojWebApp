@@ -88,6 +88,8 @@ namespace TrojWebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMiddleware<RequestTimingMiddleware>();
+
             }
             else
             {

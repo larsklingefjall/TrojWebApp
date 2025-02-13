@@ -213,11 +213,23 @@
         var elapsedTime = stopwatch.ElapsedMilliseconds;
     }
     <span class="footfont1b">
-        Rendering: @elapsedTime ms
+        Rendering: @elapsedTime ms, 
         <span id="loadTime">Mäter laddningstid...</span>
         @if (ViewBag.LoadTime != null)
         {
-            <span>Exekveringstiden: @ViewBag.LoadTime ms</span>
+            <span>, Lista: @ViewBag.LoadTime ms</span>
+        }
+        @if (ViewBag.CreateLoadTime != null)
+        {
+            <span>, Skapa: @ViewBag.CreateLoadTime ms</span>
+        }
+        @if (ViewBag.EditLoadTime != null)
+        {
+            <span>, Ändra: @ViewBag.EditLoadTime ms</span>
+        }
+        @if (ViewBag.DeleteLoadTime != null)
+        {
+            <span>, Radera: @ViewBag.DeleteLoadTime ms</span>
         }
     </span>
 </body>

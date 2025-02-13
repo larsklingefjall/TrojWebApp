@@ -26,6 +26,9 @@ namespace TrojWebApp.Controllers
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly ConfigurationsConnection _configurationConnection;
         private readonly UserConnection _userConnection;
+        private static long _createLoadTime;
+        private static long _editLoadTime;
+        private static long _deleteLoadTime;
 
         public WorkingTimesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -263,8 +266,19 @@ namespace TrojWebApp.Controllers
             }
 
             stopwatch.Stop();
-            ViewBag.LoadTime = stopwatch.ElapsedMilliseconds;
+            long loadTime = stopwatch.ElapsedMilliseconds;
+            ViewBag.LoadTime = loadTime;
+            await _userConnection.AddLoadTime(HttpContext.Request, loadTime, UserName);
 
+            if(_createLoadTime > 0)
+                ViewBag.CreateLoadTime = _createLoadTime;
+
+            if (_deleteLoadTime > 0)
+                ViewBag.DeleteLoadTime = _deleteLoadTime;
+
+            if (_editLoadTime > 0)
+                ViewBag.EditLoadTime = _editLoadTime;
+      
             return View(workingTimes);
         }
 
@@ -359,6 +373,8 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(IFormCollection collection)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
@@ -395,6 +411,10 @@ namespace TrojWebApp.Controllers
             if (workingTimesModel == null)
                 return NoContent();
 
+            stopwatch.Stop();
+            _createLoadTime = stopwatch.ElapsedMilliseconds;
+            await _userConnection.AddLoadTime(HttpContext.Request, _createLoadTime, UserName);
+
             return RedirectToAction("Index");
         }
 
@@ -403,6 +423,8 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
@@ -419,6 +441,10 @@ namespace TrojWebApp.Controllers
             if (response == 0)
                 return NoContent();
 
+            stopwatch.Stop();
+            _editLoadTime = stopwatch.ElapsedMilliseconds;
+            await _userConnection.AddLoadTime(HttpContext.Request, _editLoadTime, UserName);
+
             return RedirectToAction("Index");
         }
 
@@ -427,6 +453,8 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
@@ -436,6 +464,10 @@ namespace TrojWebApp.Controllers
             var response = await _workingTimesConnection.DeleteWorkingTime(int.Parse(workingTimeId.ToString()));
             if (response == 0)
                 return NoContent();
+
+            stopwatch.Stop();
+            _deleteLoadTime = stopwatch.ElapsedMilliseconds;
+            await _userConnection.AddLoadTime(HttpContext.Request, _deleteLoadTime, UserName);
 
             return RedirectToAction("Index");
         }

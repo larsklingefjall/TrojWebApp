@@ -396,7 +396,7 @@ namespace TrojWebApp.Services
                 if (numberOfSaves == 1)
                     return true;
                 else
-                    return false;              
+                    return false;
             }
             else
             {
@@ -456,6 +456,54 @@ namespace TrojWebApp.Services
             {
                 return null;
             }
+        }
+
+        public async Task<bool> AddLoadTime(HttpRequest request, long loadTime, string userName)
+        {
+            if (request == null)
+                return false;
+
+            if (request.Host.Value == null)
+                return false;
+
+            string controller;
+            if (request.RouteValues["controller"] != null)
+                controller = request.RouteValues["controller"].ToString();
+            else
+                return false;
+
+            string action;
+            if (request.RouteValues["action"] != null)
+                action = request.RouteValues["action"].ToString();
+            else
+                return false;
+
+            int intValue;
+            try
+            {
+                intValue = Convert.ToInt32(loadTime);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            LoadTimesModel time = new LoadTimesModel
+            {
+                LoadTimeId = 0,
+                Host = request.Host.Value,
+                Controller = controller,
+                Action = action,
+                LoadTime = intValue,
+                Changed = DateTime.Now,
+                ChangedBy = userName
+            };
+            _context.LoadTimes.Add(time);
+            int numberOfSaves = await _context.SaveChangesAsync();
+            if (numberOfSaves == 1)
+                return true;
+            else
+                return false;
         }
 
     }
