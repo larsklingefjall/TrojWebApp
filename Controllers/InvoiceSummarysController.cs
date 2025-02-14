@@ -51,6 +51,7 @@ namespace TrojWebApp.Controllers
 
             ViewBag.InvoiceId = currentInvoice.InvoiceId.ToString();
             ViewBag.InvoiceLinkText = currentInvoice.InvoiceNumber;
+            ViewBag.InvoiceLocked = currentInvoice.Locked;
 
             var tariffTypeList = await _tariffTypesConnection.GetActiveTariffTypeAndLevel();
 

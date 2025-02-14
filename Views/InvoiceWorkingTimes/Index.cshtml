@@ -17,6 +17,11 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]</h1>
+@if (ViewBag.UnderlayLocked)
+{
+    <h3><span class="label label-danger">Underlaget är låst, vill addera fakturaunderlag, lås upp underlaget på: @Html.ActionLink("Ändra underlag", "Edit", "InvoiceUnderlays", new { id = @ViewBag.InvoiceUnderlayId }, new { style = "color: black;" })</span></h3>
+    <br />
+}
 <div class="row">
     <div class="col-sm-2">
         <table border="0" class="table table-condensed table-no-border">
@@ -49,7 +54,14 @@
                                 <td class="head" colspan="7">Åtgärder:</td>
                                     @if (ViewBag.MoveAllPermission)
                                     {
-                                    <td class="head" align="right"><input type="submit" value="Flytta alla>>" class="btn btn-primary"></td>
+                                        @if (ViewBag.UnderlayLocked == false)
+                                        {
+                                        <td class="head" align="right"><input type="submit" value="Flytta alla>>" class="btn btn-primary"></td>
+                                        }
+                                        else
+                                        {
+                                        <td class="head" align="right"></td>
+                                        }
                                     }
                                     else
                                     {
@@ -88,7 +100,14 @@
                                     <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Initials)</td>
                                         @if (ViewBag.MovePermission)
                                         {
-                                        <td class="tablefont2"><input type="submit" value="Flytta >>" class="btn btn-primary"></td>
+                                            @if (ViewBag.UnderlayLocked == false)
+                                            {
+                                            <td class="tablefont2"><input type="submit" value="Flytta >>" class="btn btn-primary"></td>
+                                            }
+                                            else
+                                            {
+                                            <td class="tablefont2"></td>
+                                            }
                                         }
                                         else
                                         {
@@ -111,7 +130,14 @@
                                 <td class="head" colspan="7">Fakturaunderlag:</td>
                                     @if (ViewBag.RemoveAllPermission)
                                     {
-                                    <td class="head" align="right"><input type="submit" value="<< Flytta alla" class="btn btn-primary"></td>
+                                        @if (ViewBag.UnderlayLocked == false)
+                                        {
+                                        <td class="head" align="right"><input type="submit" value="<< Flytta alla" class="btn btn-primary"></td>
+                                        }
+                                        else
+                                        {
+                                        <td class="head" align="right"></td>
+                                        }
                                     }
                                     else
                                     {
@@ -145,7 +171,14 @@
                                     <td class="tablefont2" nowrap>@item.Initials</td>
                                         @if (ViewBag.RemovePermission)
                                         {
-                                        <td class="tablefont2"><input type="submit" value="<< Flytta" class="btn btn-primary"></td>
+                                            @if (ViewBag.UnderlayLocked == false)
+                                            {
+                                            <td class="tablefont2"><input type="submit" value="<< Flytta" class="btn btn-primary"></td>
+                                            }
+                                            else
+                                            {
+                                            <td class="tablefont2"></td>
+                                            }
                                         }
                                         else
                                         {

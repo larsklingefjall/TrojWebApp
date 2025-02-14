@@ -211,6 +211,7 @@ namespace TrojWebApp.Controllers
             if (invoice == null)
                 return NoContent();
 
+            ViewBag.InvoiceLocked = invoice.Locked;
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -349,6 +350,7 @@ namespace TrojWebApp.Controllers
             ViewBag.InvoiceUnderlayLinkText = currentUnderlay.UnderlayNumber;
             ViewBag.PersonId = currentUnderlay.PersonId;
             ViewBag.ClientLinkText = currentUnderlay.FirstName + " " + currentUnderlay.LastName + "/" + currentUnderlay.PersonId.ToString();
+            ViewBag.UnderlayLocked = currentUnderlay.Locked;
 
             List<SelectListItem> employees = new List<SelectListItem>();
             var employeesList = await _employeesConnection.GetActiveEmployees();

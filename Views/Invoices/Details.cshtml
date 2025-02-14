@@ -17,6 +17,11 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @Model.InvoiceNumber</h1>
+@if (ViewBag.InvoiceLocked)
+{
+    <h3><span class="label label-danger">Fakturan är låst!</span></h3>
+    <br />
+}
 <div class="row">
     <div class="col-sm-2">
         <table border="0" class="table table-condensed table-no-border">

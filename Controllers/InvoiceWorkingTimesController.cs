@@ -56,6 +56,7 @@ namespace TrojWebApp.Controllers
             ViewBag.UnderlayLinkText = underlay.UnderlayNumber;
             ViewBag.CaseId = underlay.CaseId.ToString();
             ViewBag.CaseLinkText = underlay.CaseType + "/" + underlay.CaseId.ToString();
+            ViewBag.UnderlayLocked = underlay.Locked;
 
             ViewBag.WorkinTimes = await _workingTimesConnection.GetWorkingTimesForCaseNotBilled(underlay.CaseId);
 

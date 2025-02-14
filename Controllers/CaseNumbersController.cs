@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
@@ -47,6 +48,10 @@ namespace TrojWebApp.Controllers
 
             ViewBag.CaseId = id.Value.ToString();
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();
+            ViewBag.CaseActive = currentCase.Active;
+
+            var caseNumbers = await _caseConnection.GetCaseNumbers(id.Value);
+            ViewBag.NumberOfCaseNumbers = caseNumbers.Count();
 
             List<SelectListItem> courts = new List<SelectListItem>();
             var courtList = await _courtConnection.GetCourts();

@@ -49,6 +49,7 @@ namespace TrojWebApp.Controllers
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();
             ViewBag.Client = currentCase.FirstName + " " + currentCase.LastName;
             ViewBag.PersonId = currentCase.PersonId.ToString();
+            ViewBag.CaseActive = currentCase.Active;
 
             string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
             ViewBag.CurrentDate = currentDate;

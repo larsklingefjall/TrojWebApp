@@ -210,6 +210,8 @@ namespace TrojWebApp.Controllers
             if (underlay == null)
                 return NoContent();
 
+            ViewBag.UnderlayLocked = underlay.Locked;
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -404,6 +406,7 @@ namespace TrojWebApp.Controllers
 
             ViewBag.CaseId = currentCase.CaseId.ToString();
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();
+            ViewBag.CaseActive = currentCase.Active;
 
             List<SelectListItem> persons = new List<SelectListItem>();
             var personList = await _caseConnection.GetAllPersonsAtCase(id.Value);

@@ -17,83 +17,94 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText</h1>
-@if (ViewBag.NumberOfUnderlays > 0)
+@if (ViewBag.CaseActive == false)
 {
-    @if (ViewBag.NumberOfUnderlays == 1)
-    {
-            <h2><span class="label label-danger">Uppdraget har redan ett underlag!</span></h2>
-    }
-    else
-    {
-        <h2><span class="label label-danger">Uppdraget har redan @ViewBag.NumberOfUnderlays underlag!</span></h2>
-    }
+    <h3><span class="label label-danger">Uppdraget är inte aktivt, vill du skapa ett underlag, aktivera uppdraget på: @Html.ActionLink("Ändra uppdrag", "Edit", "Cases", new { id = @ViewBag.CaseId }, new { style = "color: black;" })</span></h3>
+    <br />
 }
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CaseId" value="@ViewBag.CaseId"/>
-            <table border="0" class="table table-condensed table-no-border">
-                <tr>
-                    <th class="head">Mottagare:</th>
-                    <td>
-                        <select name="CourtId" class="font2">
-                            <option value="0"></option>
-                            @foreach (SelectListItem option in ViewBag.Courts)
-                            {
-                                <option value="@option.Value">@option.Text</option>
-                            }
-                        </select>
-                    </td>
-                    <td>
-                        <select name="PersonId" class="font2">
-                            <option value="0"></option>
-                            @foreach (SelectListItem option in ViewBag.Persons)
-                            {
-                                <option value="@option.Value">@option.Text</option>
-                            }
-                        </select>
-                      </td>
-                </tr>
-                <tr>
-                    <th class="head">Ombud:</th>
-                    <td>
-                        <select name="EmployeeId"
+else
+{
+    @if (ViewBag.NumberOfUnderlays > 0)
+    {
+        @if (ViewBag.NumberOfUnderlays == 1)
+        {
+            <h3><span class="label label-danger">Uppdraget har redan ett underlag!</span></h3>
+        }
+        else
+        {
+            <h3><span class="label label-danger">Uppdraget har redan @ViewBag.NumberOfUnderlays underlag!</span></h3>
+        }
+    }
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CaseId" value="@ViewBag.CaseId" />
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Mottagare:</th>
+                        <td>
+                            <select name="CourtId" class="font2">
+                                <option value="0"></option>
+                                @foreach (SelectListItem option in ViewBag.Courts)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <select name="PersonId" class="font2">
+                                <option value="0"></option>
+                                @foreach (SelectListItem option in ViewBag.Persons)
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ombud:</th>
+                        <td>
+                            <select name="EmployeeId"
                                 asp-for="EmployeeId" class="font2"
                                 asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Ort:</th>
-                    <td>
-                        <input name="Place" value="@ViewBag.Place" type="text" size="20" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Datum:</th>
-                    <td>
-                        <input name="UnderlayDate" value="@ViewBag.CurrentDate" type="date" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Moms:</th>
-                    <td>
-                        <input name="Vat" value="@ViewBag.Vat" type="text" size="5" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Skapa" class="btn btn-primary" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                            </select>
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ort:</th>
+                        <td>
+                            <input name="Place" value="@ViewBag.Place" type="text" size="20" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Datum:</th>
+                        <td>
+                            <input name="UnderlayDate" value="@ViewBag.CurrentDate" type="date" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Moms:</th>
+                        <td>
+                            <input name="Vat" value="@ViewBag.Vat" type="text" size="5" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Skapa" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
+}
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

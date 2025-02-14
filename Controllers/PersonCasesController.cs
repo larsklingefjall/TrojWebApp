@@ -49,6 +49,7 @@ namespace TrojWebApp.Controllers
 
             ViewBag.CaseId = currentCase.CaseId.ToString();
             ViewBag.CaseLinkText = currentCase.CaseType + "/" + currentCase.CaseId.ToString();
+            ViewBag.CaseActive = currentCase.Active;
 
             List<SelectListItem> personTypes = new List<SelectListItem>();
             var personTypesList = await _personTypesConnection.GetPersonTypes();

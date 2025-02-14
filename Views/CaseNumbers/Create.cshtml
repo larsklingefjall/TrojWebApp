@@ -17,40 +17,61 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText</h1>
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CaseId" value="@ViewBag.CaseId"/>
-            <table border="0" class="table table-condensed table-no-border">
-                <tr>
-                    <th class="head">Instans:</th>
-                    <td>
-                        <select name="CourtId"
+@if (ViewBag.CaseActive == false)
+{
+    <h3><span class="label label-danger">Uppdraget är inte aktivt, vill du addera målnummer, aktivera uppdraget på: @Html.ActionLink("Ändra uppdrag", "Edit", "Cases", new { id = @ViewBag.CaseId }, new { style = "color: black;" })</span></h3>
+    <br />
+}
+else
+{
+    @if (ViewBag.NumberOfCaseNumbers > 0)
+    {
+        @if (ViewBag.NumberOfCaseNumbers == 1)
+        {
+            <h3><span class="label label-danger">Det finns redan ett målnummer!</span></h3>
+        }
+        else
+        {
+            <h3><span class="label label-danger">Uppdraget har redan @ViewBag.NumberOfCaseNumbers målnummer!</span></h3>
+        }
+    }
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CaseId" value="@ViewBag.CaseId" />
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Instans:</th>
+                        <td>
+                            <select name="CourtId"
                                 asp-for="CourtId" class="font2"
                                 asp-items="@(new SelectList(ViewBag.Courts,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="CourtId" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Målnummer:</th>
-                    <td>
-                        <input asp-for="CaseNumber" size="40" class="font2" />
-                        <span asp-validation-for="CaseNumber" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Addera" class="btn btn-primary" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                            </select>
+                            <span asp-validation-for="CourtId" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Målnummer:</th>
+                        <td>
+                            <input asp-for="CaseNumber" size="40" class="font2" />
+                            <span asp-validation-for="CaseNumber" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Addera" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
+}
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

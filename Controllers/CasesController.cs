@@ -212,6 +212,8 @@ namespace TrojWebApp.Controllers
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
+            ViewBag.CaseActive = currentCase.Active;
+
             if (string.IsNullOrEmpty(currentCase.Title))
                 ViewBag.CaseTypeAndTitle = "Uppdrag: " + currentCase.CaseType + "/" + id;
             else

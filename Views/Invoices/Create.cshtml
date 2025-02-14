@@ -17,109 +17,118 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.CaseLinkText</h1>
-@if (ViewBag.NumberOfInvoices > 0)
+@if (ViewBag.UnderlayLocked)
 {
-    @if (ViewBag.NumberOfInvoices == 1)
-    {
-        <h2><span class="label label-danger">Underlaget har redan en faktura!</span></h2>
-    }
-    else
-    {
-        <h2><span class="label label-danger">Underlaget har redan @ViewBag.NumberOfInvoices fakturor!</span></h2>
-    }
+    <h3><span class="label label-danger">Underlaget är låst, vill du skapa en faktura, lås upp underlaget på: @Html.ActionLink("Ändra underlag", "Edit", "InvoiceUnderlays", new { id = @ViewBag.InvoiceUnderlayId }, new { style = "color: black;" })</span></h3>
+    <br />
 }
-<div class="row">
-    <div class="col-sm-1">
-        <table border="0" class="table table-condensed table-no-border">
-            <tr>
-                <td class="head">Klient:</td>
-                <td class="head">Underlag:</td>
-            </tr>
-            <tr>
-                <td class="font2" nowrap>@Html.ActionLink((string)ViewBag.ClientLinkText, "Details", "Persons", new { id = @ViewBag.PersonId })</td>
-                <td class="font2" nowrap>@Html.ActionLink((string)ViewBag.InvoiceUnderlayLinkText, "Details", "InvoiceUnderlays", new { id = @ViewBag.InvoiceUnderlayId })</td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-1">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="InvoiceUnderlayId" value="@ViewBag.InvoiceUnderlayId" />
+else
+{
+    @if (ViewBag.NumberOfInvoices > 0)
+    {
+        @if (ViewBag.NumberOfInvoices == 1)
+        {
+            <h3><span class="label label-danger">Underlaget har redan en faktura!</span></h3>
+        }
+        else
+        {
+            <h3><span class="label label-danger">Underlaget har redan @ViewBag.NumberOfInvoices fakturor!</span></h3>
+        }
+    }
+    <div class="row">
+        <div class="col-sm-1">
             <table border="0" class="table table-condensed table-no-border">
                 <tr>
-                    <th class="head">Ombud:</th>
-                    <td>
-                        <select name="EmployeeId" class="font2">
-                            @foreach (SelectListItem option in ViewBag.Employees)
-                            {
-                                if (option.Value == ViewBag.EmployeeId)
-                                {
-                                    <option value="@option.Value" selected="selected">@option.Text</option>
-                                }
-                                else
-                                {
-                                    <option value="@option.Value">@option.Text</option>
-                                }
-                            }
-                        </select>
-                    </td>
+                    <td class="head">Klient:</td>
+                    <td class="head">Underlag:</td>
                 </tr>
                 <tr>
-                    <th class="head">Ort:</th>
-                    <td>
-                        <input name="Place" value="@ViewBag.Place" type="text" size="20" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Fakturadatum:</th>
-                    <td>
-                        <input name="InvoiceDate" value="@ViewBag.CurrentDate" type="date" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Förfallodatum:</th>
-                    <td>
-                        <input name="ExpirationDate" value="@ViewBag.ExpirationDate" type="date" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Moms:</th>
-                    <td>
-                        <input name="Vat" value="@ViewBag.Vat" type="text" size="5" class="font2" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Procentfördelning:</th>
-                    <td>
-                        <input name="Division" value="100" type="text" size="5" class="font2" />
-                    </td>
-                </tr>
-                @if (@ViewBag.ClientFundingTotalSum > 0)
-                {
-                    <tr>
-                        <th class="head" nowrap>Tillgänligt klientmdel:</th>
-                        <td>
-                            <input name="ClientFundingTotalSum" value="@ViewBag.ClientFundingTotalSum" type="text" size="10" class="font2" />
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    <input type="hidden" name="ClientFundingTotalSum" value="0" />
-                }
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Skapa" class="btn btn-primary" />
-                        </div>
-                    </td>
+                    <td class="font2" nowrap>@Html.ActionLink((string)ViewBag.ClientLinkText, "Details", "Persons", new { id = @ViewBag.PersonId })</td>
+                    <td class="font2" nowrap>@Html.ActionLink((string)ViewBag.InvoiceUnderlayLinkText, "Details", "InvoiceUnderlays", new { id = @ViewBag.InvoiceUnderlayId })</td>
                 </tr>
             </table>
-        </form>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-sm-1">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="InvoiceUnderlayId" value="@ViewBag.InvoiceUnderlayId" />
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Ombud:</th>
+                        <td>
+                            <select name="EmployeeId" class="font2">
+                                @foreach (SelectListItem option in ViewBag.Employees)
+                                {
+                                    if (option.Value == ViewBag.EmployeeId)
+                                    {
+                                        <option value="@option.Value" selected="selected">@option.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@option.Value">@option.Text</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ort:</th>
+                        <td>
+                            <input name="Place" value="@ViewBag.Place" type="text" size="20" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Fakturadatum:</th>
+                        <td>
+                            <input name="InvoiceDate" value="@ViewBag.CurrentDate" type="date" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Förfallodatum:</th>
+                        <td>
+                            <input name="ExpirationDate" value="@ViewBag.ExpirationDate" type="date" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Moms:</th>
+                        <td>
+                            <input name="Vat" value="@ViewBag.Vat" type="text" size="5" class="font2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Procentfördelning:</th>
+                        <td>
+                            <input name="Division" value="100" type="text" size="5" class="font2" />
+                        </td>
+                    </tr>
+                    @if (@ViewBag.ClientFundingTotalSum > 0)
+                    {
+                        <tr>
+                            <th class="head" nowrap>Tillgänligt klientmdel:</th>
+                            <td>
+                                <input name="ClientFundingTotalSum" value="@ViewBag.ClientFundingTotalSum" type="text" size="10" class="font2" />
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="ClientFundingTotalSum" value="0" />
+                    }
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Skapa" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+}
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
