@@ -17,90 +17,131 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @ViewBag.InvoiceLinkText</h1>
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <table border="0" class="table table-condensed table-no-border">
-                <tr>
-                    <th class="head">Ombud:</th>
-                    <td>
-                        <select name="EmployeeId"
+@if (ViewBag.InvoiceLocked)
+{
+    <h3><span class="label label-danger">Fakturan är låst, vill du ändra, lås upp fakturan först!</span></h3>
+
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Unlock">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="InvoiceId" value="@Model.InvoiceId" />
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Fakturanummer:</th>
+                        <td>@Html.DisplayFor(model => model.InvoiceNumber)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Fakturadatum:</th>
+                        <td>@Html.DisplayFor(model => model.InvoiceDate)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Förfallodatum:</th>
+                        <td>@Html.DisplayFor(model => model.ExpirationDate)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ort:</th>
+                        <td>@Html.DisplayFor(model => model.InvoicePlace)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Låsa upp" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Ombud:</th>
+                        <td>
+                            <select name="EmployeeId"
                                 asp-for="EmployeeId " class="font2"
                                 asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Låst:</th>
-                    <td>
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Locked" />
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head" nowrap>Dölj klientmedel:</th>
-                    <td>
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="HideClientFunding" />
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Fakturadatum:</th>
-                    <td>
-                        <input asp-for="InvoiceDate" type="date" class="font2" />
-                        <span asp-validation-for="InvoiceDate" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Förfallodatum:</th>
-                    <td>
-                        <input asp-for="ExpirationDate" type="date" class="font2" />
-                        <span asp-validation-for="ExpirationDate" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Ort:</th>
-                    <td>
-                        <input asp-for="InvoicePlace" size="10" class="font2" />
-                        <span asp-validation-for="InvoicePlace" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Rubrik1:</th>
-                    <td>
-                        <input asp-for="Headline1" size="50" class="font2" />
-                        <span asp-validation-for="Headline1" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Rubrik2:</th>
-                    <td>
-                        <input asp-for="Headline2" size="50" class="font2" />
-                        <span asp-validation-for="Headline1" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Text:</th>
-                    <td>
-                        <input asp-for="Text1" size="50" class="font2" />
-                        <span asp-validation-for="Text1" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Spara" class="btn btn-primary" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                            </select>
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Låst:</th>
+                        <td>
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Locked" />
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head" nowrap>Dölj klientmedel:</th>
+                        <td>
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="HideClientFunding" />
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Fakturadatum:</th>
+                        <td>
+                            <input asp-for="InvoiceDate" type="date" class="font2" />
+                            <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Förfallodatum:</th>
+                        <td>
+                            <input asp-for="ExpirationDate" type="date" class="font2" />
+                            <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ort:</th>
+                        <td>
+                            <input asp-for="InvoicePlace" size="10" class="font2" />
+                            <span asp-validation-for="InvoicePlace" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Rubrik1:</th>
+                        <td>
+                            <input asp-for="Headline1" size="50" class="font2" />
+                            <span asp-validation-for="Headline1" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Rubrik2:</th>
+                        <td>
+                            <input asp-for="Headline2" size="50" class="font2" />
+                            <span asp-validation-for="Headline1" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Text:</th>
+                        <td>
+                            <input asp-for="Text1" size="50" class="font2" />
+                            <span asp-validation-for="Text1" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Spara" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
+}
 
 <div class="row">
     <table class="col-md-12" nowrap>

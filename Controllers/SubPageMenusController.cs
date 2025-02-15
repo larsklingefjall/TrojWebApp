@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
 
@@ -60,10 +59,14 @@ namespace TrojWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                subPageMenusModel.Changed = DateTime.Now;
-                subPageMenusModel.ChangedBy = UserName;
-                _context.Add(subPageMenusModel);
-                await _context.SaveChangesAsync();
+                bool exist = await _userConnection.MenuItemExist(subPageMenusModel.ParentPageId, subPageMenusModel.ChildPageId);
+                if (exist == false)
+                {
+                    subPageMenusModel.Changed = DateTime.Now;
+                    subPageMenusModel.ChangedBy = UserName;
+                    _context.Add(subPageMenusModel);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(subPageMenusModel);

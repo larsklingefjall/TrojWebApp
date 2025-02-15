@@ -192,7 +192,7 @@ namespace TrojWebApp.Services
             if (initials != "")
                 sql.AppendFormat(" AND Cases.Responsible = '{0}'", initials);
             if (firstName != "")
-                sql.AppendFormat(" AND CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) LIKE '{1}'", _cryKey,  firstName);
+                sql.AppendFormat(" AND CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) LIKE '{1}'", _cryKey, firstName);
             if (lastName != "")
                 sql.AppendFormat(" AND CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) LIKE '{1}'", _cryKey, lastName);
             sql.Append(" ORDER BY Cases.CaseDate DESC");
@@ -491,6 +491,17 @@ namespace TrojWebApp.Services
                     await DeleteCasePerson(personCase.PersonCaseId);
                 }
             }
+            return await GetCase(id);
+        }
+
+        public async Task<CasesViewModel> ActivateCase(int id, string userName)
+        {
+            StringBuilder sql = new StringBuilder("UPDATE Cases SET");
+            sql.Append(" Active = 1");
+            sql.AppendFormat(" ,Changed = '{0}'", DateTime.Now);
+            sql.AppendFormat(" ,ChangedBy = '{0}'", userName);
+            sql.AppendFormat(" WHERE CaseId = {0}", id);
+            await _context.Database.ExecuteSqlRawAsync(sql.ToString());
             return await GetCase(id);
         }
 

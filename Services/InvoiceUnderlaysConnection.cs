@@ -355,6 +355,8 @@ namespace TrojWebApp.Services
             if (primaryClient == null)
                 return null;
 
+            string underlayNumber = primaryClient.PersonId.ToString() + "-" + caseId.ToString(); //TODO: Remove InvoiceUnderlayId?
+
             InvoiceUnderlaysModel underlay = new InvoiceUnderlaysModel
             {
                 InvoiceUnderlayId = 0,
@@ -363,7 +365,8 @@ namespace TrojWebApp.Services
                 PersonAddressId = personAddressId,
                 EmployeeId = employeeId,
                 EmployeeTitle = employeeTitle,
-                Title = "Underlag",
+                UnderlayNumber = underlayNumber,
+                Title = "",
                 SignatureLink = signatureLink,
                 UnderlayPlace = underlayPlace,
                 ReceiverName = receiverName,
@@ -392,8 +395,6 @@ namespace TrojWebApp.Services
             if (newUnderlay == null)
                 return null;
 
-            string underlayNumber = primaryClient.PersonId.ToString() + "-" + caseId.ToString() + "-" + newUnderlay.InvoiceUnderlayId.ToString(); //TODO: Remove InvoiceUnderlayId?
-
             StringBuilder sql = new StringBuilder("DECLARE @ReceiverName nvarchar(512); ");
             sql.Append("DECLARE @CareOf nvarchar(512); ");
             sql.Append("DECLARE @StreetName nvarchar(256); ");
@@ -420,7 +421,7 @@ namespace TrojWebApp.Services
             sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", newUnderlay.InvoiceUnderlayId);
             await _context.Database.ExecuteSqlRawAsync(sql.ToString());
 
-            return underlay;
+            return newUnderlay;
         }
 
         public async Task<InvoiceUnderlaysModel> UpdateUnderlay(int id, int employeeId, string title, DateTime underlayDate, string underlayPlace, string headline1, string headline2, string workingReport, bool locked, InvoiceUnderlaysModel currentUnderlay, string userName = "")
@@ -487,6 +488,21 @@ namespace TrojWebApp.Services
                 return null;
             }
 
+            return await GetUnderlay2(id);
+        }
+
+        public async Task<InvoiceUnderlaysModel> Unlock(int id, string userName)
+        {
+            StringBuilder sql = new StringBuilder("UPDATE InvoiceUnderlays SET");
+            sql.Append(" Locked = 0");
+            sql.AppendFormat(" ,Changed = '{0}'", DateTime.Now);
+            sql.AppendFormat(" ,ChangedBy = '{0}'", userName);
+            sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", id);
+            int numberOfUpdated = await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+            if (numberOfUpdated != 1)
+            {
+                return null;
+            }
             return await GetUnderlay2(id);
         }
 

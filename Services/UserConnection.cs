@@ -270,6 +270,16 @@ namespace TrojWebApp.Services
             return true;
         }
 
+        public async Task<bool> MenuItemExist(int parentPageId, int childPageId)
+        {
+            StringBuilder sql = new StringBuilder("SELECT Count(SubPageMenus.SubPageMenuId) AS NumberOf");
+            sql.Append(" FROM SubPageMenus");
+            sql.AppendFormat(" WHERE ParentPageId = {0}", parentPageId);
+            sql.AppendFormat(" AND ChildPageId = {0}", childPageId);
+            NumberOfModel NumberOf = await _context.NumberOf.FromSqlRaw(sql.ToString()).FirstAsync();
+            return NumberOf.NumberOf > 0;
+        }
+
         public async Task<IEnumerable<SubPageMenusChildViewModel>> GetMenu(HttpRequest request, string userName)
         {
             string controller;
@@ -301,8 +311,12 @@ namespace TrojWebApp.Services
             if (page != null)
             {
                 sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages.Controller, SubPages.FileName AS Action, SubPages.Title, SubPages.Tip");
-                sql.Append(" FROM SubPages INNER JOIN SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId");
+                sql.Append(" FROM SubPages INNER JOIN ");
+                sql.Append(" SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId INNER JOIN ");
+                sql.Append(" SubPageUsers ON SubPages.SubPageId = SubPageUsers.SubPageId INNER JOIN ");
+                sql.Append(" Employees ON SubPageUsers.EmployeeId = Employees.EmployeeId ");
                 sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
+                sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
                 sql.Append(" ORDER BY SubPageMenus.Position");
                 try
                 {

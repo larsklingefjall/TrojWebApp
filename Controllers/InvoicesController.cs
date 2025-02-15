@@ -420,7 +420,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = newInvoice.InvoiceNumber + ": " + newInvoice.InvoiceDate.Year + "-" + newInvoice.InvoiceDate.Month + "-" + newInvoice.InvoiceDate.Day;
+                string menuTitle = newInvoice.InvoiceNumber + ": " + newInvoice.InvoiceDate.ToString("yyyy-MM-dd") + " / " + newInvoice.InvoiceId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, newInvoice.InvoiceId, UserName);
             }
 
@@ -436,6 +436,8 @@ namespace TrojWebApp.Controllers
             _currentInvoice = await _invoicesConnection.GetInvoice(id);
             if (_currentInvoice == null)
                 return NoContent();
+
+            ViewBag.InvoiceLocked = _currentInvoice.Locked;
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -500,11 +502,30 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = updatedInvoice.InvoiceNumber + ": " + updatedInvoice.InvoiceDate.Year + "-" + updatedInvoice.InvoiceDate.Month + "-" + updatedInvoice.InvoiceDate.Day;
+                string menuTitle = updatedInvoice.InvoiceNumber + ": " + updatedInvoice.InvoiceDate.ToString("yyyy-MM-dd") + " / " + updatedInvoice.InvoiceId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedInvoice.InvoiceId, UserName);
             }
 
             return RedirectToAction("Details", new { id = updatedInvoice.InvoiceId });
+        }
+
+        // POST: InvoicesController/Unlock
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Unlock(IFormCollection collection)
+        {
+            if (!collection.TryGetValue("InvoiceId", out StringValues invoiceId))
+                return NoContent();
+
+            InvoicesModel updatedInvoice = await _invoicesConnection.Unlock(Int32.Parse(invoiceId.ToString()), UserName);
+            if (updatedInvoice == null)
+                return NoContent();
+            else
+            {
+                string menuTitle = updatedInvoice.InvoiceNumber + ": " + updatedInvoice.InvoiceDate.ToString("yyyy-MM-dd") + " / " + updatedInvoice.InvoiceId;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedInvoice.InvoiceId, UserName);
+            }
+            return RedirectToAction("Edit", new { id = updatedInvoice.InvoiceId });
         }
 
         public ActionResult Reset()

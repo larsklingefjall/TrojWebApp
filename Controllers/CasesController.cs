@@ -313,7 +313,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = casesModel.CaseType + "/" + casesModel.CaseId;
+                string menuTitle = casesModel.CaseType + " / " + casesModel.CaseId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, casesModel.CaseId, UserName);
             }
 
@@ -329,6 +329,8 @@ namespace TrojWebApp.Controllers
             _currentCase = await _caseConnection.GetCase(id);
             if (_currentCase == null)
                 return NoContent();
+
+            ViewBag.CaseActive = _currentCase.Active;
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -393,11 +395,30 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = updatedCase.CaseType + "/" + updatedCase.CaseId;
+                string menuTitle = updatedCase.CaseType + " / " + updatedCase.CaseId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedCase.CaseId, UserName);
             }
 
             return RedirectToAction("Details", new { id = updatedCase.CaseId });
+        }
+
+        // POST: CasesController/Activate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Activate(IFormCollection collection)
+        {
+            if (!collection.TryGetValue("CaseId", out StringValues caseId))
+                return NoContent();
+
+            CasesViewModel updatedCase = await _caseConnection.ActivateCase(Int32.Parse(caseId.ToString()), UserName);
+            if (updatedCase == null)
+                return NoContent();
+            else
+            {
+                string menuTitle = updatedCase.CaseType + " / " + updatedCase.CaseId;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedCase.CaseId, UserName);
+            }
+            return RedirectToAction("Edit", new { id = updatedCase.CaseId });
         }
 
         // Get: CasesController/Reset

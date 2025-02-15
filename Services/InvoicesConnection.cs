@@ -403,7 +403,7 @@ namespace TrojWebApp.Services
             if (numberOfSaves != 1)
                 return null;
 
-            InvoicesModel newInvoice = await _context.Invoices.Where(i => i.InvoiceUnderlayId == invoiceUnderlayId).OrderByDescending(s => s.InvoiceUnderlayId).FirstAsync();
+            InvoicesModel newInvoice = await _context.Invoices.Where(i => i.InvoiceUnderlayId == invoiceUnderlayId).OrderByDescending(s => s.InvoiceId).FirstAsync();
             if (newInvoice == null)
                 return null;
 
@@ -617,6 +617,22 @@ namespace TrojWebApp.Services
             sql.Append(", ReceiverName = Null");
             sql.Append(", CareOf = Null");
             sql.Append(", StreetName = Null");
+            sql.AppendFormat(" WHERE InvoiceId = {0}", id);
+            int numberOfUpdated = await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+            if (numberOfUpdated != 1)
+            {
+                return null;
+            }
+
+            return await GetInvoice(id);
+        }
+
+        public async Task<InvoicesModel> Unlock(int id, string userName)
+        {
+            StringBuilder sql = new StringBuilder("UPDATE Invoices SET");
+            sql.Append(" Locked = 0");
+            sql.AppendFormat(" ,Changed = '{0}'", DateTime.Now);
+            sql.AppendFormat(" ,ChangedBy = '{0}'", userName);
             sql.AppendFormat(" WHERE InvoiceId = {0}", id);
             int numberOfUpdated = await _context.Database.ExecuteSqlRawAsync(sql.ToString());
             if (numberOfUpdated != 1)

@@ -52,7 +52,7 @@ namespace TrojWebApp.Controllers
 
 
             int currentEmployeeId = 0;
-            DateTime currentDate = DateTime.Parse(DateTime.Now.ToShortDateString());
+            DateTime currentDate = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd"));
 
             List<SelectListItem> employees = new List<SelectListItem>();
             IEnumerable<EmployeesModel> employeesList = await _employeeConnection.GetOnlyActiveEmployees();
@@ -86,7 +86,7 @@ namespace TrojWebApp.Controllers
                 }
                 else
                 {
-                    ViewBag.WhenDate = DateOnly.FromDateTime(DateTime.Now);
+                    ViewBag.WhenDate = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd"));
                     EmployeesModel employee = await _employeeConnection.GetEmployee(UserName);
                     if (employee != null)
                     {

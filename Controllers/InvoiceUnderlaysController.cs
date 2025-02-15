@@ -482,7 +482,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = newUnderlay.UnderlayNumber + ": " + newUnderlay.Title;
+                string menuTitle = newUnderlay.UnderlayNumber + ": " + newUnderlay.UnderlayDate.ToString("yyyy-MM-dd") + " / " + newUnderlay.InvoiceUnderlayId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, newUnderlay.InvoiceUnderlayId, UserName);
             }
 
@@ -498,6 +498,8 @@ namespace TrojWebApp.Controllers
             _currentUnderlay = await _invoiceUnderlaysConnection.GetUnderlay2(id);
             if (_currentUnderlay == null)
                 return NoContent();
+
+            ViewBag.UnderlayLocked = _currentUnderlay.Locked;
 
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
@@ -555,11 +557,30 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = updatedUnderlay.UnderlayNumber + ": " + updatedUnderlay.Title;
+                string menuTitle = updatedUnderlay.UnderlayNumber + ": " + updatedUnderlay.UnderlayDate.ToString("yyyy-MM-dd") + " / " + updatedUnderlay.InvoiceUnderlayId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedUnderlay.InvoiceUnderlayId, UserName);
             }
 
             return RedirectToAction("Details", new { id = updatedUnderlay.InvoiceUnderlayId });
+        }
+
+        // POST: InvoiceUnderlaysController/Unlock
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Unlock(IFormCollection collection)
+        {
+            if (!collection.TryGetValue("InvoiceUnderlayId", out StringValues invoiceUnderlayId))
+                return NoContent();
+
+            InvoiceUnderlaysModel updatedUnderlay = await _invoiceUnderlaysConnection.Unlock(Int32.Parse(invoiceUnderlayId.ToString()), UserName);
+            if (updatedUnderlay == null)
+                return NoContent();
+            else
+            {
+                string menuTitle = updatedUnderlay.UnderlayNumber + ": " + updatedUnderlay.UnderlayDate.ToString("yyyy-MM-dd") + " / " + updatedUnderlay.InvoiceUnderlayId;
+                await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, updatedUnderlay.InvoiceUnderlayId, UserName);
+            }
+            return RedirectToAction("Edit", new { id = updatedUnderlay.InvoiceUnderlayId });
         }
 
         public ActionResult Reset()

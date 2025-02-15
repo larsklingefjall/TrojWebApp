@@ -17,81 +17,130 @@
     </tr>
 </table>
 <h1>@ViewData["Title"]: @Model.CaseId</h1>
-<div class="row">
-    <div class="col-sm-2">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <table border="0" class="table table-condensed table-no-border">
-                <tr>
-                    <th class="head">Typ:</th>
-                    <td>
-                        <select name="CaseTypeId"
+@if (ViewBag.CaseActive == false)
+{
+    <h3><span class="label label-danger">Uppdraget är inte aktivt, vill du ändra, aktivera det först!</span></h3>
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Activate">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CaseId" value="@Model.CaseId" />
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Typ:</th>
+                        <td>@Html.DisplayFor(model => model.CaseType)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Titel:</th>
+                        <td>@Html.DisplayFor(model => model.Title)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ombud:</th>
+                        <td>@Html.DisplayFor(model => model.Responsible)</td>
+                    </tr>
+                    <tr>
+                        <th class="head" nowrap>Primär klient:</th>
+                        <td>@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Avslutad:</th>
+                        <td>@Html.DisplayFor(model => model.FinishedDate)</td>
+                    </tr>
+                    <tr>
+                        <th class="head">Information:</th>
+                        <td>@Html.DisplayFor(model => model.Comment)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Aktivera" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Typ:</th>
+                        <td>
+                            <select name="CaseTypeId"
                                 asp-for="CaseTypeId " class="font2"
                                 asp-items="@(new SelectList(ViewBag.CaseTypes,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="CaseTypeId" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Titel:</th>
-                    <td>
-                        <input asp-for="Title" class="font2" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Ombud:</th>
-                    <td>
-                        <select name="Responsible"
+                            </select>
+                            <span asp-validation-for="CaseTypeId" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Titel:</th>
+                        <td>
+                            <input asp-for="Title" class="font2" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Ombud:</th>
+                        <td>
+                            <select name="Responsible"
                                 asp-for="Responsible " class="font2"
                                 asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="Responsible" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head" nowrap>Primär klient:</th>
-                    <td>
-                        <select name="PersonId"
+                            </select>
+                            <span asp-validation-for="Responsible" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head" nowrap>Primär klient:</th>
+                        <td>
+                            <select name="PersonId"
                                 asp-for="PersonId " class="font2"
                                 asp-items="@(new SelectList(ViewBag.Persons,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="PersonId" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Aktiv:</th>
-                    <td>
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Active" />
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Avslutad:</th>
-                    <td>
-                        <input asp-for="FinishedDate" type="date" class="font2" />
-                        <span asp-validation-for="FinishedDate" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Information:</th>
-                    <td>
-                        <textarea name="Comment" class="font1" style="height:200px;width:550px;">@Html.DisplayFor(model => model.Comment)</textarea>
-                        <span asp-validation-for="Comment" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Spara" class="btn btn-primary" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                            </select>
+                            <span asp-validation-for="PersonId" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Aktiv:</th>
+                        <td>
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Active" />
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Avslutad:</th>
+                        <td>
+                            <input asp-for="FinishedDate" type="date" class="font2" />
+                            <span asp-validation-for="FinishedDate" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Information:</th>
+                        <td>
+                            <textarea name="Comment" class="font1" style="height:200px;width:550px;">@Html.DisplayFor(model => model.Comment)</textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Spara" class="btn btn-primary" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
+}
+
 <div class="row">
     <table class="col-md-12" nowrap>
         <tr>

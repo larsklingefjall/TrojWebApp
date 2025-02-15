@@ -266,7 +266,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = person.LastName + " " + person.FirstName;
+                string menuTitle = person.LastName + " " + person.FirstName + " / " + person.PersonId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, person.PersonId, UserName);
             }
 
@@ -322,7 +322,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             else
             {
-                string menuTitle = person.LastName + " " + person.FirstName;
+                string menuTitle = person.LastName + " " + person.FirstName + " / " + person.PersonId;
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, person.PersonId, UserName);
             }
 
