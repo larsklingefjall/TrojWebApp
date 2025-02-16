@@ -31,6 +31,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
 
             IEnumerable<SubPageUsersViewModel> subPageUsers = await _pageConnection.GetSubPageUsers();
             return View(subPageUsers);
@@ -40,6 +42,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetOnlySubPages();
@@ -65,6 +69,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SubPageUserId,SubPageId,EmployeeId")] SubPageUsersModel subPageUsersModel)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (ModelState.IsValid)
             {
                 subPageUsersModel.Changed = DateTime.Now;
@@ -79,12 +86,15 @@ namespace TrojWebApp.Controllers
         // GET: SubPageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
-
             if (id == null || _context.SubPageUsers == null)
             {
                 return NotFound();
             }
+
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             var subPageUsersModel = await _pageConnection.GetSubPageUser(id.Value);
             if (subPageUsersModel == null)
             {
@@ -103,6 +113,10 @@ namespace TrojWebApp.Controllers
             {
                 return Problem("Entity set 'TrojContext.SubPageUsers'  is null.");
             }
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             var subPageUsersModel = await _context.SubPageUsers.FindAsync(id);
             if (subPageUsersModel != null)
             {

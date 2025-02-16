@@ -26,6 +26,9 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             var list = await _context.Pages.ToListAsync();
             var sortedList = list.OrderBy(item => item.Position).ToList();
             return View(sortedList);
@@ -35,6 +38,9 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             return View();
         }
 
@@ -45,6 +51,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PageId,Title,Controller,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (ModelState.IsValid)
             {
                 pagesModel.Changed = DateTime.Now;
@@ -65,6 +74,8 @@ namespace TrojWebApp.Controllers
             }
 
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             var pagesModel = await _context.Pages.FindAsync(id);
             if (pagesModel == null)
@@ -85,6 +96,9 @@ namespace TrojWebApp.Controllers
             {
                 return NotFound();
             }
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             if (ModelState.IsValid)
             {

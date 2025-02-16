@@ -30,6 +30,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
 
             IEnumerable<SubPagesViewModel> subPages = await _pageConnection.GetSubPages();
             return View(subPages);
@@ -39,6 +41,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetPagesWhichHaveChild();
@@ -56,6 +60,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (ModelState.IsValid)
             {
                 subPagesModel.Changed = DateTime.Now;
@@ -71,12 +78,14 @@ namespace TrojWebApp.Controllers
         // GET: SubPages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
-
             if (id == null || _context.SubPages == null)
             {
                 return NotFound();
             }
+
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetPages();
@@ -103,6 +112,9 @@ namespace TrojWebApp.Controllers
             {
                 return NotFound();
             }
+
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             if (ModelState.IsValid)
             {

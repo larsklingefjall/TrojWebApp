@@ -29,6 +29,9 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             IEnumerable<SubPageMenusViewModel> menus = await _userConnection.GetMenus();
             return View(menus);
         }
@@ -37,6 +40,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> parents = new List<SelectListItem>();
             var parentList = await _pageConnection.GetSubPages();
@@ -60,6 +65,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SubPageMenuId,ParentPageId,ChildPageId,Position,Changed,ChangedBy")] SubPageMenusModel subPageMenusModel)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (ModelState.IsValid)
             {
                 bool exist = await _userConnection.MenuItemExist(subPageMenusModel.ParentPageId, subPageMenusModel.ChildPageId);
@@ -79,6 +87,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             if (id == null || _context.SubPageMenus == null)
             {
@@ -97,6 +107,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (_context.SubPageMenus == null)
             {
                 return Problem("Entity set 'TrojContext.SubPageMenus'  is null.");

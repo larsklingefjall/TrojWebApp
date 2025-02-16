@@ -31,6 +31,9 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             IEnumerable<PageUsersViewModel> pageUsers = await _pageConnection.GetPageUsers();
             return View(pageUsers);
         }
@@ -39,6 +42,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetPages();
@@ -63,6 +68,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PageUserId,PageId,EmployeeId")] PageUsersModel pageUsersModel)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (ModelState.IsValid)
             {
                 pageUsersModel.Changed = DateTime.Now;
@@ -83,6 +91,8 @@ namespace TrojWebApp.Controllers
             }
 
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
 
             var pageUsersModel = await _pageConnection.GetPageUser(id.Value);
             if (pageUsersModel == null)
@@ -98,6 +108,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             if (_context.PageUsers == null)
             {
                 return Problem("Entity set 'TrojContext.PageUsers'  is null.");

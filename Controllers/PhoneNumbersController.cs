@@ -19,6 +19,7 @@ namespace TrojWebApp.Controllers
         private readonly PersonsConnection _personConnection;
         private readonly PhoneNumberTypesConnection _phoneNumberTypesConnection;
         private readonly UserConnection _userConnection;
+        private static int _currentPersonId;
 
         public PhoneNumbersController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -32,6 +33,7 @@ namespace TrojWebApp.Controllers
         {
             if (id == null)
                 return NoContent();
+            _currentPersonId = id.Value;
 
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
@@ -62,7 +64,7 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Create(IFormCollection collection)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return RedirectToAction("Details", "Persons", new { id.Value });
+            if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
             if (!collection.TryGetValue("PersonId", out StringValues personId))
                 return NoContent();
