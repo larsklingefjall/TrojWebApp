@@ -124,6 +124,13 @@ namespace TrojWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: SubPageMenus
+        public async Task<IActionResult> Sql()
+        {
+            IEnumerable<SubPageMenusViewModel> menus = await _userConnection.GetMenus();
+            return View(menus);
+        }
+
         private bool SubPageMenusModelExists(int id)
         {
           return _context.SubPageMenus.Any(e => e.SubPageMenuId == id);

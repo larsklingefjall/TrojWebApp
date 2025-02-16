@@ -1,7 +1,7 @@
 USE [d000540]
 GO
 
-/****** Object:  Table [dbo].[SubPageMenus]    Script Date: 2025-02-15 17:24:43 ******/
+/****** Object:  Table [dbo].[SubPageMenus]    Script Date: 2025-02-17 00:23:19 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -22,18 +22,18 @@ CREATE TABLE [dbo].[SubPageMenus](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[SubPageMenus]  WITH CHECK ADD  CONSTRAINT [FK_SubPageMenu_ChildSubPages] FOREIGN KEY([ChildPageId])
-REFERENCES [dbo].[SubPages] ([SubPageId])
+ALTER TABLE [dbo].[SubPageMenus]  WITH CHECK ADD  CONSTRAINT [FK_SubPageMenu_ChildSubPages3] FOREIGN KEY([ChildPageId])
+REFERENCES [dbo].[SubPages3] ([SubPageId])
 GO
 
-ALTER TABLE [dbo].[SubPageMenus] CHECK CONSTRAINT [FK_SubPageMenu_ChildSubPages]
+ALTER TABLE [dbo].[SubPageMenus] CHECK CONSTRAINT [FK_SubPageMenu_ChildSubPages3]
 GO
 
-ALTER TABLE [dbo].[SubPageMenus]  WITH CHECK ADD  CONSTRAINT [FK_SubPageMenu_ParentSubPages] FOREIGN KEY([ParentPageId])
-REFERENCES [dbo].[SubPages] ([SubPageId])
+ALTER TABLE [dbo].[SubPageMenus]  WITH CHECK ADD  CONSTRAINT [FK_SubPageMenu_ParentSubPages3] FOREIGN KEY([ParentPageId])
+REFERENCES [dbo].[SubPages3] ([SubPageId])
 GO
 
-ALTER TABLE [dbo].[SubPageMenus] CHECK CONSTRAINT [FK_SubPageMenu_ParentSubPages]
+ALTER TABLE [dbo].[SubPageMenus] CHECK CONSTRAINT [FK_SubPageMenu_ParentSubPages3]
 GO
 
 
