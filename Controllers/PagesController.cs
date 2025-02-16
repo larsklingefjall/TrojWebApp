@@ -25,14 +25,16 @@ namespace TrojWebApp.Controllers
         // GET: Pages
         public async Task<IActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var list = await _context.Pages.ToListAsync();
             var sortedList = list.OrderBy(item => item.Position).ToList();
             return View(sortedList);
         }
 
         // GET: Pages/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             return View();
         }
 
@@ -61,6 +63,8 @@ namespace TrojWebApp.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
 
             var pagesModel = await _context.Pages.FindAsync(id);
             if (pagesModel == null)

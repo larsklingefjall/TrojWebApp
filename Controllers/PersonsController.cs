@@ -30,7 +30,8 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
-            var permission = _userConnection.AccessToIndexPage(HttpContext.Request, UserName);
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
             ViewBag.PersonMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
@@ -169,6 +170,7 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
@@ -225,8 +227,9 @@ namespace TrojWebApp.Controllers
         }
 
         // GET: PersonsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
@@ -276,6 +279,7 @@ namespace TrojWebApp.Controllers
         // GET: PersonsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id });
 

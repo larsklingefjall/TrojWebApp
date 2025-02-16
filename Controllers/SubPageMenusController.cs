@@ -28,6 +28,7 @@ namespace TrojWebApp.Controllers
         // GET: SubPageMenus
         public async Task<IActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             IEnumerable<SubPageMenusViewModel> menus = await _userConnection.GetMenus();
             return View(menus);
         }
@@ -35,6 +36,8 @@ namespace TrojWebApp.Controllers
         // GET: SubPageMenus/Create
         public async Task<IActionResult> Create()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             List<SelectListItem> parents = new List<SelectListItem>();
             var parentList = await _pageConnection.GetSubPages();
             foreach (var page in parentList)
@@ -75,6 +78,8 @@ namespace TrojWebApp.Controllers
         // GET: SubPageMenus/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             if (id == null || _context.SubPageMenus == null)
             {
                 return NotFound();

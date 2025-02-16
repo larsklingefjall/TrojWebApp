@@ -39,7 +39,7 @@
                 {
                     <tr>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ConfigKey)</td>
-                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.ConfigValue)</td>
+                        <td class="tablefont2">@Html.DisplayFor(modelItem => item.ConfigValue)</td>
                         <td class="tablefont2" nowrap>@Html.ActionLink("Ändra...", "Edit", new { id=item.ConfigurationId})</td>
                     </tr>
                 }

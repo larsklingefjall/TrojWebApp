@@ -33,6 +33,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             _currentPersonId = id.Value;
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentPersonId });
 
@@ -50,6 +51,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             _currentPersonId = id.Value;
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
@@ -115,6 +117,7 @@ namespace TrojWebApp.Controllers
             if (id == null)
                 return NoContent();
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id = personId });
 

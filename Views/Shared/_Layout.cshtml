@@ -12,6 +12,7 @@
     @{
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
+        IEnumerable<PagesModel> list = ViewBag.IndexPermissions;
     }
     <script>
         window.onload = function () {
@@ -34,106 +35,139 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index"><span class='glyphicon glyphicon-home' /></a></li>
                 </ul>
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="WorkingTimes" asp-action=".">Dagrapport</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Uppdrag<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Cases" asp-action=".">Lista</a></li>
-                            @if (ViewBag.CaseMenu != null)
-                            {
-                                @foreach (MenuPagesViewModel menu in ViewBag.CaseMenu)
-                                {
-                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
-                                }
-                            }
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personer<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Persons" asp-action=".">Lista</a></li>
-                            <li><a asp-area="" asp-controller="Persons" asp-action="Create">Skapa person</a></li>
-                            @if (ViewBag.PersonMenu != null)
-                            {
-                                @foreach (MenuPagesViewModel menu in ViewBag.PersonMenu)
-                                {
-                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
-                                }
-                            }
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Underlag<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="InvoiceUnderlays" asp-action=".">Lista</a></li>
-                            @if (ViewBag.UnderlayMenu != null)
-                            {
-                                @foreach (MenuPagesViewModel menu in ViewBag.UnderlayMenu)
-                                {
-                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
-                                }
-                            }
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fakturor<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Invoices" asp-action=".">Lista</a></li>
-                            @if (ViewBag.InvoiceMenu != null)
-                            {
-                                @foreach (MenuPagesViewModel menu in ViewBag.InvoiceMenu)
-                                {
-                                    <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
-                                }
-                            }
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personal<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Employees" asp-action=".">Lista</a></li>
-                            <li><a asp-area="" asp-controller="Employees" asp-action="Create">Addera personal</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tariff<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="TariffLevels" asp-action=".">Lista</a></li>
-                            <li><a asp-area="" asp-controller="TariffLevels" asp-action="Create">Skapa tariff</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Konfiguration<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Courts" asp-action=".">Domstolar</a></li>
-                            <li><a asp-area="" asp-controller="CaseTypes" asp-action=".">Uppdragstyper</a></li>
-                            <li><a asp-area="" asp-controller="TariffTypes" asp-action=".">Tarifftyper</a></li>
-                            <li><a asp-area="" asp-controller="PersonTypes" asp-action=".">Persontyper</a></li>
-                            <li><a asp-area="" asp-controller="PhoneNumberTypes" asp-action=".">Telefonnummertyp</a></li>
-                            <li><a asp-area="" asp-controller="Configurations" asp-action=".">Konfigurationer</a></li>
-                            <li><a asp-area="" asp-controller="Pages" asp-action=".">Sidor</a></li>
-                            <li><a asp-area="" asp-controller="SubPages" asp-action=".">Undersidor</a></li>
-                            <li><a asp-area="" asp-controller="PageUsers" asp-action=".">Användare för sidor</a></li>
-                            <li><a asp-area="" asp-controller="SubPageUsers" asp-action=".">Användare för undersidor</a></li>
-                            <li><a asp-area="" asp-controller="SubPageMenus" asp-action=".">Meny för undersidor</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ekonomi<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Economy" asp-action=".">Summering av åtgärder</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fortknox<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Fortknox" asp-action=".">Export</a></li>
-                            <li><a asp-area="" asp-controller="Fortknox" asp-action="Activate">Aktivera</a></li>
-                        </ul>
-                    </li>
-                    <partial name="_LoginPartial" />
-                </ul>
+                @if (list != null)
+                {
+                    <ul class="nav navbar-nav">
+                        @if (list.Any(u => u.Controller == "WorkingTimes"))
+                        {
+                            <li><a asp-area="" asp-controller="WorkingTimes" asp-action=".">Dagrapport</a></li>
+                        }
+                        @if (list.Any(u => u.Controller == "Cases"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Uppdrag<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Cases" asp-action=".">Lista</a></li>
+                                    @if (ViewBag.CaseMenu != null)
+                                    {
+                                        @foreach (MenuPagesViewModel menu in ViewBag.CaseMenu)
+                                        {
+                                            <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Persons"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personer<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Persons" asp-action=".">Lista</a></li>
+                                    <li><a asp-area="" asp-controller="Persons" asp-action="Create">Skapa person</a></li>
+                                    @if (ViewBag.PersonMenu != null)
+                                    {
+                                        @foreach (MenuPagesViewModel menu in ViewBag.PersonMenu)
+                                        {
+                                            <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "InvoiceUnderlays"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Underlag<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="InvoiceUnderlays" asp-action=".">Lista</a></li>
+                                    @if (ViewBag.UnderlayMenu != null)
+                                    {
+                                        @foreach (MenuPagesViewModel menu in ViewBag.UnderlayMenu)
+                                        {
+                                            <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Invoices"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fakturor<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Invoices" asp-action=".">Lista</a></li>
+                                    @if (ViewBag.InvoiceMenu != null)
+                                    {
+                                        @foreach (MenuPagesViewModel menu in ViewBag.InvoiceMenu)
+                                        {
+                                            <li class="subhead2" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = menu.Id })</li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Employees"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personal<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Employees" asp-action=".">Lista</a></li>
+                                    <li><a asp-area="" asp-controller="Employees" asp-action="Create">Addera personal</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "TariffLevels"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tariff<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="TariffLevels" asp-action=".">Lista</a></li>
+                                    <li><a asp-area="" asp-controller="TariffLevels" asp-action="Create">Skapa tariff</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Configurations"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Konfiguration<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Courts" asp-action=".">Domstolar</a></li>
+                                    <li><a asp-area="" asp-controller="CaseTypes" asp-action=".">Uppdragstyper</a></li>
+                                    <li><a asp-area="" asp-controller="TariffTypes" asp-action=".">Tarifftyper</a></li>
+                                    <li><a asp-area="" asp-controller="PersonTypes" asp-action=".">Persontyper</a></li>
+                                    <li><a asp-area="" asp-controller="PhoneNumberTypes" asp-action=".">Telefonnummertyp</a></li>
+                                    <li><a asp-area="" asp-controller="Configurations" asp-action=".">Konfigurationer</a></li>
+                                    <li><a asp-area="" asp-controller="Pages" asp-action=".">Sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPages" asp-action=".">Undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="PageUsers" asp-action=".">Användare för sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageUsers" asp-action=".">Användare för undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageMenus" asp-action=".">Meny för undersidor</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Economy"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ekonomi<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Economy" asp-action=".">Summering av åtgärder</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Controller == "Fortknox"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fortknox<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Fortknox" asp-action=".">Export</a></li>
+                                    <li><a asp-area="" asp-controller="Fortknox" asp-action="Activate">Aktivera</a></li>
+                                </ul>
+                            </li>
+                        }
+                        <partial name="_LoginPartial" />
+                    </ul>
+                }
             </div>
         </div>
     </nav>
@@ -213,7 +247,7 @@
         var elapsedTime = stopwatch.ElapsedMilliseconds;
     }
     <span class="footfont1b">
-        Rendering: @elapsedTime ms, 
+        Rendering: @elapsedTime ms,
         <span id="loadTime">Mäter laddningstid...</span>
         @if (ViewBag.LoadTime != null)
         {

@@ -34,6 +34,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             _currentInvoiceId = id.Value;
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Invoices", new { id = _currentInvoiceId });
 

@@ -26,6 +26,7 @@ namespace TrojWebApp.Controllers
         // GET: TariffTypesController
         public async Task<ActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
@@ -95,6 +96,7 @@ namespace TrojWebApp.Controllers
         // GET: TariffTypesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 

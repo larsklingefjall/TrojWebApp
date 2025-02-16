@@ -39,6 +39,7 @@ namespace TrojWebApp.Controllers
 
         public async Task<ActionResult> Index(IFormCollection collection)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
             ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
             ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);

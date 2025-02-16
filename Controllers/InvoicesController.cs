@@ -43,6 +43,7 @@ namespace TrojWebApp.Controllers
         // GET: InvoicesController
         public async Task<IActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
@@ -197,6 +198,7 @@ namespace TrojWebApp.Controllers
         // GET: InvoicesController/Details/5
         public async Task<IActionResult> Details(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
@@ -332,6 +334,7 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             _currentInvoiceUnderlaysId = id.Value;
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id = id.Value });
 
@@ -430,6 +433,7 @@ namespace TrojWebApp.Controllers
         // GET: InvoicesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Invoices", new { id });
 

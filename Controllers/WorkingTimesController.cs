@@ -47,6 +47,7 @@ namespace TrojWebApp.Controllers
         {
             var stopwatch = Stopwatch.StartNew();
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
@@ -289,6 +290,7 @@ namespace TrojWebApp.Controllers
         // GET: WorkingTimesController/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Cases", new { id });
 

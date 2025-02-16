@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -14,15 +13,21 @@ namespace TrojWebApp.Controllers
     public class ConfigurationsController : IdenityController
     {
         private readonly ConfigurationsConnection _connection;
+        private readonly UserConnection _userConnection;
 
         public ConfigurationsController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _connection = new ConfigurationsConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: ConfigurationsController
         public async Task<ActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             var configurations = await _connection.GetConfigurations();
             return View(configurations);
         }
@@ -55,6 +60,10 @@ namespace TrojWebApp.Controllers
         // GET: ConfigurationsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             var configuration = await _connection.GetConfiguration(id);
             return View(configuration);
         }

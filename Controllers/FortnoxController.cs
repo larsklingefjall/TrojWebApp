@@ -23,9 +23,8 @@ namespace TrojWebApp.Controllers
         private readonly ConfigurationsConnection _configurationsConnection;
         private readonly EmployeesConnection _employeeConnection;
         private readonly InvoicesConnection _invoicesConnection;
-        //private static InvoicesModel _currentInvoice;
         private readonly CasesConnection _caseConnection;
-
+        private readonly UserConnection _userConnection;
 
         public FortknoxController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -35,11 +34,16 @@ namespace TrojWebApp.Controllers
             _employeeConnection = new EmployeesConnection(context);
             _invoicesConnection = new InvoicesConnection(context, configuration["CryKey"]);
             _caseConnection = new CasesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: FortknoxController
         public async Task<IActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             if (HttpContext.Session.GetInt32("TrojInvoiceSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojInvoiceSize", 20);
@@ -183,10 +187,13 @@ namespace TrojWebApp.Controllers
             return View(invoices);
         }
 
-
         // GET: FortknoxController/Activate
-        public ActionResult Activate()
+        public async Task<IActionResult> Activate()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             return View();
         }
 

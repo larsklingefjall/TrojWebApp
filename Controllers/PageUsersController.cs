@@ -30,6 +30,7 @@ namespace TrojWebApp.Controllers
         // GET: PageUsers
         public async Task<IActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             IEnumerable<PageUsersViewModel> pageUsers = await _pageConnection.GetPageUsers();
             return View(pageUsers);
         }
@@ -37,6 +38,8 @@ namespace TrojWebApp.Controllers
         // GET: PageUsers/Create
         public async Task<IActionResult> Create()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetPages();
             foreach (var page in pageList)
@@ -79,6 +82,8 @@ namespace TrojWebApp.Controllers
                 return NotFound();
             }
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             var pageUsersModel = await _pageConnection.GetPageUser(id.Value);
             if (pageUsersModel == null)
             {
@@ -97,6 +102,9 @@ namespace TrojWebApp.Controllers
             {
                 return Problem("Entity set 'TrojContext.PageUsers'  is null.");
             }
+
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             var pageUsersModel = await _context.PageUsers.FindAsync(id);
             if (pageUsersModel != null)
             {

@@ -22,6 +22,7 @@ namespace TrojWebApp.Controllers
         // GET: PhoneNumberTypesController
         public async Task<IActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 

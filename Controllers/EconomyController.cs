@@ -25,6 +25,7 @@ namespace TrojWebApp.Controllers
         private readonly WorkingTimesConnection _workingTimesConnection;
         private readonly EconomyConnection _economyConnection;
         private readonly InvoicesConnection _invoicesConnection;
+        private readonly UserConnection _userConnection;
 
         public EconomyController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -36,11 +37,16 @@ namespace TrojWebApp.Controllers
             _workingTimesConnection = new WorkingTimesConnection(context, configuration["CryKey"]);
             _economyConnection = new EconomyConnection(context, configuration["CryKey"]);
             _invoicesConnection = new InvoicesConnection(context, configuration["CryKey"]);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: EconomyController
         public async Task<ActionResult> Index(int? page, int? size, int? reset, IFormCollection collection)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
             if (HttpContext.Session.GetInt32("TrojEconomyWorkingTimeSize").HasValue == false)
             {
                 HttpContext.Session.SetInt32("TrojEconomyWorkingTimeSize", 20);
@@ -193,6 +199,10 @@ namespace TrojWebApp.Controllers
         // GET: InvoicesController/Details/5
         public async Task<IActionResult> Details(int? id, int? reset, IFormCollection collection)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
             List<SelectListItem> clients = new List<SelectListItem>();
             var employeesList = await _personConnection.GetActivePersons();
             string firstClientId = "0";

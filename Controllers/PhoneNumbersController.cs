@@ -33,6 +33,10 @@ namespace TrojWebApp.Controllers
             if (id == null)
                 return NoContent();
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id.Value });
+
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
@@ -57,6 +61,9 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(IFormCollection collection)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id.Value });
+
             if (!collection.TryGetValue("PersonId", out StringValues personId))
                 return NoContent();
 
@@ -76,6 +83,9 @@ namespace TrojWebApp.Controllers
         // GET: PhoneNumbersController/Delete/5
         public async Task<ActionResult> Delete(int id, int personId)
         {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "Persons", new { id });
+
             var response = await _personConnection.DeletePhoneNumber(id);
             if (response == 0)
                 return NoContent();

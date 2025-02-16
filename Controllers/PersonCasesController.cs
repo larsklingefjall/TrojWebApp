@@ -41,6 +41,7 @@ namespace TrojWebApp.Controllers
             if (currentCase == null)
                 return NoContent();
 
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Cases", new { id = _currentCaseId });
 

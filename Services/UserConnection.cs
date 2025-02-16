@@ -89,6 +89,42 @@ namespace TrojWebApp.Services
             return true;
         }
 
+        public async Task<IEnumerable<PagesModel>> AccessToIndexPages(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return null;
+
+            StringBuilder sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql.Append(" FROM Employees");
+            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            EmployeesModel employee;
+            try
+            {
+                employee = await _context.Employees.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            if (employee == null) return null;
+            int employeeId = employee.EmployeeId;
+
+            sql = new("SELECT Pages.PageId,Pages.Title,Pages.FileName,Pages.Tip,Pages.Link,Pages.Position,Pages.Hidden,Pages.HasChild,Pages.Changed,Pages.ChangedBy,Pages.Controller,Pages.Action");
+            sql.Append(" FROM Pages INNER JOIN PageUsers ON Pages.PageId = PageUsers.PageId");
+            sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
+            IEnumerable<PagesModel> permissions;
+            try
+            {
+                permissions = await _context.Pages.FromSqlRaw(sql.ToString()).ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            return permissions;
+        }
+
         public bool AccessToSubPage(HttpRequest request, string userName)
         {
             string controller;

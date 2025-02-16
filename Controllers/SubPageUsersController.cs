@@ -17,17 +17,21 @@ namespace TrojWebApp.Controllers
         private readonly TrojContext _context;
         private readonly PageConnection _pageConnection;
         private readonly EmployeesConnection _employeeConnection;
+        private readonly UserConnection _userConnection;
 
         public SubPageUsersController(TrojContext context, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
             _pageConnection = new PageConnection(context);
             _employeeConnection = new EmployeesConnection(context);
+            _userConnection = new UserConnection(context);
         }
 
         // GET: SubPageUsers
         public async Task<IActionResult> Index()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             IEnumerable<SubPageUsersViewModel> subPageUsers = await _pageConnection.GetSubPageUsers();
             return View(subPageUsers);
         }
@@ -35,6 +39,8 @@ namespace TrojWebApp.Controllers
         // GET: SubPageUsers/Create
         public async Task<IActionResult> Create()
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetOnlySubPages();
             foreach (var page in pageList)
@@ -73,6 +79,8 @@ namespace TrojWebApp.Controllers
         // GET: SubPageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+
             if (id == null || _context.SubPageUsers == null)
             {
                 return NotFound();
