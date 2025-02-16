@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrojWebApp.Models
 {
-    public class PageUsersModel
+    public class PageUsers3Model
     {
         [Key]
         public int PageUserId { get; set; }
 
-        [ForeignKey("Pages")]
+        [ForeignKey("Pages3")]
         public int PageId { get; set; }
 
         [ForeignKey("Employees")]

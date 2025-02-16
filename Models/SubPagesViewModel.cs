@@ -9,7 +9,7 @@ namespace TrojWebApp.Models
         [Key]
         public int SubPageId { get; set; }
 
-        [ForeignKey("Pages")]
+        [ForeignKey("Pages3")]
         public int PageId { get; set; }
         public string PageTitle { get; set; }
         public string Controller { get; set; }

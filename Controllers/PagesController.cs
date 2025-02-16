@@ -29,7 +29,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
-            var list = await _context.Pages.ToListAsync();
+            var list = await _context.Pages3.ToListAsync();
             var sortedList = list.OrderBy(item => item.Position).ToList();
             return View(sortedList);
         }
@@ -68,7 +68,7 @@ namespace TrojWebApp.Controllers
         // GET: Pages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Pages == null)
+            if (id == null || _context.Pages3 == null)
             {
                 return NotFound();
             }
@@ -77,7 +77,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
-            var pagesModel = await _context.Pages.FindAsync(id);
+            var pagesModel = await _context.Pages3.FindAsync(id);
             if (pagesModel == null)
             {
                 return NotFound();
@@ -127,7 +127,7 @@ namespace TrojWebApp.Controllers
 
         private bool PagesModelExists(int id)
         {
-          return _context.Pages.Any(e => e.PageId == id);
+          return _context.Pages3.Any(e => e.PageId == id);
         }
     }
 }

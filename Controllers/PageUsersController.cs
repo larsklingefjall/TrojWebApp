@@ -66,7 +66,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PageUserId,PageId,EmployeeId")] PageUsersModel pageUsersModel)
+        public async Task<IActionResult> Create([Bind("PageUserId,PageId,EmployeeId")] PageUsers3Model pageUsersModel)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
@@ -85,7 +85,7 @@ namespace TrojWebApp.Controllers
         // GET: PageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.PageUsers == null)
+            if (id == null || _context.PageUsers3 == null)
             {
                 return NotFound();
             }
@@ -111,17 +111,17 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
-            if (_context.PageUsers == null)
+            if (_context.PageUsers3 == null)
             {
-                return Problem("Entity set 'TrojContext.PageUsers'  is null.");
+                return Problem("Entity set 'TrojContext.PageUsers3'  is null.");
             }
 
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
 
-            var pageUsersModel = await _context.PageUsers.FindAsync(id);
+            var pageUsersModel = await _context.PageUsers3.FindAsync(id);
             if (pageUsersModel != null)
             {
-                _context.PageUsers.Remove(pageUsersModel);
+                _context.PageUsers3.Remove(pageUsersModel);
             }
             
             await _context.SaveChangesAsync();
@@ -130,7 +130,7 @@ namespace TrojWebApp.Controllers
 
         private bool PageUsersModelExists(int id)
         {
-          return _context.PageUsers.Any(e => e.PageUserId == id);
+          return _context.PageUsers3.Any(e => e.PageUserId == id);
         }
     }
 }

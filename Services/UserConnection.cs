@@ -36,13 +36,13 @@ namespace TrojWebApp.Services
                 return false;
 
             StringBuilder sql = new("SELECT PageId, Title, Controller, Action, Tip, Position, HasChild, Changed, ChangedBy");
-            sql.Append(" FROM Pages");
+            sql.Append(" FROM Pages3");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
             sql.AppendFormat(" AND Action = '{0}'", action);
             Pages3Model page;
             try
             {
-                page = _context.Pages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                page = _context.Pages3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -71,13 +71,13 @@ namespace TrojWebApp.Services
 
 
             sql = new("SELECT PageUserId, PageId, EmployeeId, Changed, ChangedBy");
-            sql.Append(" FROM PageUsers");
+            sql.Append(" FROM PageUsers3");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND PageId = {0}", pageId);
-            PageUsersModel permission;
+            PageUsers3Model permission;
             try
             {
-                permission = _context.PageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                permission = _context.PageUsers3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -109,13 +109,13 @@ namespace TrojWebApp.Services
             if (employee == null) return null;
             int employeeId = employee.EmployeeId;
 
-            sql = new("SELECT Pages.PageId,Pages.Title,Pages.Controller,Pages.Action,Pages.Tip,Pages.Position,Pages.HasChild,Pages.Changed,Pages.ChangedBy");
-            sql.Append(" FROM Pages INNER JOIN PageUsers ON Pages.PageId = PageUsers.PageId");
+            sql = new("SELECT Pages3.PageId,Pages3.Title,Pages3.Controller,Pages3.Action,Pages3.Tip,Pages3.Position,Pages3.HasChild,Pages3.Changed,Pages3.ChangedBy");
+            sql.Append(" FROM Pages3 INNER JOIN PageUsers3 ON Pages3.PageId = PageUsers3.PageId");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             IEnumerable<Pages3Model> permissions;
             try
             {
-                permissions = await _context.Pages.FromSqlRaw(sql.ToString()).ToListAsync();
+                permissions = await _context.Pages3.FromSqlRaw(sql.ToString()).ToListAsync();
             }
             catch (Exception)
             {

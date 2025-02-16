@@ -20,8 +20,8 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<SubPagesViewModel>> GetSubPages()
         {
-            StringBuilder sql = new StringBuilder("SELECT SubPages.*, Pages.Title AS PageTitle");
-            sql.Append(" FROM SubPages INNER JOIN Pages ON SubPages.PageId = Pages.PageId");
+            StringBuilder sql = new StringBuilder("SELECT SubPages.*, Pages3.Title AS PageTitle");
+            sql.Append(" FROM SubPages INNER JOIN Pages3 ON SubPages.PageId = Pages3.PageId");
             sql.Append(" WHERE Version = 3");
             sql.Append(" ORDER BY SubPages.Controller, SubPages.Position");
             return await _context.SubPagesView.FromSqlRaw(sql.ToString()).ToListAsync();
@@ -29,7 +29,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<Pages3Model>> GetPages()
         {
-            return await _context.Pages.OrderBy(s => s.Title).ToListAsync();
+            return await _context.Pages3.OrderBy(s => s.Title).ToListAsync();
         }
 
         public async Task<IEnumerable<SubPagesModel>> GetOnlySubPages()
@@ -39,26 +39,26 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<Pages3Model>> GetPagesWhichHaveChild()
         {
-            return await _context.Pages.OrderBy(s => s.Title).Where(s => s.HasChild == true).ToListAsync();
+            return await _context.Pages3.OrderBy(s => s.Title).Where(s => s.HasChild == true).ToListAsync();
         }
 
         public async Task<IEnumerable<PageUsersViewModel>> GetPageUsers()
         {
-            StringBuilder sql = new StringBuilder("SELECT PageUsers.*, Pages.Title, Pages.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
-            sql.Append(" FROM PageUsers INNER JOIN");
-            sql.Append(" Pages ON PageUsers.PageId = Pages.PageId INNER JOIN");
-            sql.Append(" Employees ON PageUsers.EmployeeId = Employees.EmployeeId");
-            sql.Append(" ORDER BY Pages.Position");
+            StringBuilder sql = new StringBuilder("SELECT PageUsers3.*, Pages3.Title, Pages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM PageUsers3 INNER JOIN");
+            sql.Append(" Pages3 ON PageUsers3.PageId = Pages3.PageId INNER JOIN");
+            sql.Append(" Employees ON PageUsers3.EmployeeId = Employees.EmployeeId");
+            sql.Append(" ORDER BY Pages3.Position");
             return await _context.PageUsersView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
         public async Task<PageUsersViewModel> GetPageUser(int id)
         {
-            StringBuilder sql = new StringBuilder("SELECT PageUsers.*, Pages.Title, Pages.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
-            sql.Append(" FROM PageUsers INNER JOIN");
-            sql.Append(" Pages ON PageUsers.PageId = Pages.PageId INNER JOIN");
-            sql.Append(" Employees ON PageUsers.EmployeeId = Employees.EmployeeId");
-            sql.AppendFormat(" WHERE PageUsers.PageUserId = {0}", id);
+            StringBuilder sql = new StringBuilder("SELECT PageUsers3.*, Pages3.Title, Pages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM PageUsers3 INNER JOIN");
+            sql.Append(" Pages3 ON PageUsers3.PageId = Pages3.PageId INNER JOIN");
+            sql.Append(" Employees ON PageUsers3.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE PageUsers3.PageUserId = {0}", id);
             return await _context.PageUsersView.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
