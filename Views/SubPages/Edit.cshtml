@@ -1,4 +1,4 @@
-﻿@model TrojWebApp.Models.SubPagesModel
+﻿@model TrojWebApp.Models.SubPages3Model
 
 @{
     ViewData["Title"] = "Ändra undersida";
@@ -42,10 +42,10 @@
                 </td>
             </tr>
             <tr>
-                <th class="head">Filnamn:</th>
+                <th class="head">Aktion:</th>
                 <td>
-                    <input asp-for="FileName" class="font2" size="40" />
-                    <span asp-validation-for="FileName" class="text-danger"></span>
+                    <input asp-for="Action" class="font2" size="40" />
+                    <span asp-validation-for="Action" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
@@ -63,25 +63,11 @@
                 </td>
             </tr>
             <tr>
-                <th class="head">Parameter:</th>
-                <td>
-                    <input asp-for="Parameter" class="font2" size="40" />
-                    <span asp-validation-for="Parameter" class="text-danger"></span>
-                </td>
-            </tr>
-            <tr>
                 <th class="head">Synlig:</th>
                 <td>
                     <label class="form-check-label">
                         <input class="form-check-input" asp-for="IsVisible" />
                     </label>
-                </td>
-            </tr>
-            <tr>
-                <th class="head" nowrap>TROJ version:</th>
-                <td>
-                    <input asp-for="Version" class="font2" size="10" />
-                    <span asp-validation-for="Version" class="text-danger"></span>
                 </td>
             </tr>
             <tr>

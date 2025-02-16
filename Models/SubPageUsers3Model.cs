@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrojWebApp.Models
 {
-    public class SubPageUsersModel
+    public class SubPageUsers3Model
     {
         [Key]
         public int SubPageUserId { get; set; }

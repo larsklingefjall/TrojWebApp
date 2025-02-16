@@ -46,13 +46,13 @@ namespace TrojWebApp.Controllers
             List<SelectListItem> parents = new List<SelectListItem>();
             var parentList = await _pageConnection.GetSubPages();
             foreach (var page in parentList)
-                parents.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.FileName });
+                parents.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.Action });
             ViewBag.Parents = parents;
 
             List<SelectListItem> children = new List<SelectListItem>();
             var cildrenList = await _pageConnection.GetSubPages();
             foreach (var page in cildrenList)
-                children.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.FileName });
+                children.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.Action });
             ViewBag.Children = children;
 
             return View();

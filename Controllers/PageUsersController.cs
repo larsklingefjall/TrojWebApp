@@ -34,7 +34,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
-            IEnumerable<PageUsersViewModel> pageUsers = await _pageConnection.GetPageUsers();
+            IEnumerable<PageUsersView3Model> pageUsers = await _pageConnection.GetPageUsers();
             return View(pageUsers);
         }
 

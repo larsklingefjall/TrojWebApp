@@ -139,14 +139,14 @@ namespace TrojWebApp.Services
             else
                 return false;
 
-            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
-            sql.Append(" FROM SubPages");
+            StringBuilder sql = new("SELECT SubPageId, PageId, Title, Controller, Action, Tip, Position, IsVisible, Changed, ChangedBy");
+            sql.Append(" FROM SubPages3");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
-            sql.AppendFormat(" AND FileName = '{0}'", action);
-            SubPagesModel subPage;
+            sql.AppendFormat(" AND Action = '{0}'", action);
+            SubPages3Model subPage;
             try
             {
-                subPage = _context.SubPages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                subPage = _context.SubPages3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -173,13 +173,13 @@ namespace TrojWebApp.Services
             int employeeId = employee.EmployeeId;
 
             sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
-            sql.Append(" FROM SubPageUsers");
+            sql.Append(" FROM SubPageUsers3");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND SubPageId = {0}", subPageId);
-            SubPageUsersModel permission;
+            SubPageUsers3Model permission;
             try
             {
-                permission = _context.SubPageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                permission = _context.SubPageUsers3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -199,14 +199,14 @@ namespace TrojWebApp.Services
             else
                 return false;
 
-            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
-            sql.Append(" FROM SubPages");
+            StringBuilder sql = new("SELECT SubPageId, PageId, Title, Controller, Action, Tip, Position, IsVisible, Changed, ChangedBy");
+            sql.Append(" FROM SubPages3");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
-            sql.AppendFormat(" AND FileName = '{0}'", action);
-            SubPagesModel subPage;
+            sql.AppendFormat(" AND Action = '{0}'", action);
+            SubPages3Model subPage;
             try
             {
-                subPage = _context.SubPages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                subPage = _context.SubPages3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -233,13 +233,13 @@ namespace TrojWebApp.Services
             int employeeId = employee.EmployeeId;
 
             sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
-            sql.Append(" FROM SubPageUsers");
+            sql.Append(" FROM SubPageUsers3");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND SubPageId = {0}", subPageId);
-            SubPageUsersModel permission;
+            SubPageUsers3Model permission;
             try
             {
-                permission = _context.SubPageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                permission = _context.SubPageUsers3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -254,14 +254,14 @@ namespace TrojWebApp.Services
 
         public bool AccessToSubPage(string controller, string action, string userName)
         {
-            StringBuilder sql = new("SELECT SubPageId, PageId, Controller, Title, FileName, Tip, Position, Parameter, IsVisible, Version, Changed, ChangedBy");
-            sql.Append(" FROM SubPages");
+            StringBuilder sql = new("SELECT SubPageId, PageId, Title, Controller, Action, Tip, Position, IsVisible, Changed, ChangedBy");
+            sql.Append(" FROM SubPages3");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
-            sql.AppendFormat(" AND FileName = '{0}'", action);
-            SubPagesModel subPage;
+            sql.AppendFormat(" AND Action = '{0}'", action);
+            SubPages3Model subPage;
             try
             {
-                subPage = _context.SubPages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                subPage = _context.SubPages3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -288,13 +288,13 @@ namespace TrojWebApp.Services
             int employeeId = employee.EmployeeId;
 
             sql = new("SELECT SubPageUserId, SubPageId, EmployeeId, Changed, ChangedBy");
-            sql.Append(" FROM SubPageUsers");
+            sql.Append(" FROM SubPageUsers3");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
             sql.AppendFormat(" AND SubPageId = {0}", subPageId);
-            SubPageUsersModel permission;
+            SubPageUsers3Model permission;
             try
             {
-                permission = _context.SubPageUsers.FromSqlRaw(sql.ToString()).FirstAsync().Result;
+                permission = _context.SubPageUsers3.FromSqlRaw(sql.ToString()).FirstAsync().Result;
             }
             catch (Exception ex)
             {
@@ -332,9 +332,9 @@ namespace TrojWebApp.Services
 
             IdModel page;
             StringBuilder sql = new StringBuilder("SELECT SubPageId AS Id");
-            sql.Append(" FROM SubPages");
+            sql.Append(" FROM SubPages3");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
-            sql.AppendFormat(" AND FileName = '{0}'", action);
+            sql.AppendFormat(" AND Action = '{0}'", action);
             try
             {
                 page = await _context.Id.FromSqlRaw(sql.ToString()).FirstAsync();
@@ -346,11 +346,11 @@ namespace TrojWebApp.Services
 
             if (page != null)
             {
-                sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages.Controller, SubPages.FileName AS Action, SubPages.Title, SubPages.Tip");
-                sql.Append(" FROM SubPages INNER JOIN ");
-                sql.Append(" SubPageMenus ON SubPages.SubPageId = SubPageMenus.ChildPageId INNER JOIN ");
-                sql.Append(" SubPageUsers ON SubPages.SubPageId = SubPageUsers.SubPageId INNER JOIN ");
-                sql.Append(" Employees ON SubPageUsers.EmployeeId = Employees.EmployeeId ");
+                sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPages3.Controller, SubPages3.Action, SubPages3.Title, SubPages3.Tip");
+                sql.Append(" FROM SubPages3 INNER JOIN ");
+                sql.Append(" SubPageMenus ON SubPages3.SubPageId = SubPageMenus.ChildPageId INNER JOIN ");
+                sql.Append(" SubPageUsers3 ON SubPages3.SubPageId = SubPageUsers3.SubPageId INNER JOIN ");
+                sql.Append(" Employees ON SubPageUsers3.EmployeeId = Employees.EmployeeId ");
                 sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
                 sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
                 sql.Append(" ORDER BY SubPageMenus.Position");
@@ -372,23 +372,23 @@ namespace TrojWebApp.Services
         public async Task<IEnumerable<SubPageMenusViewModel>> GetMenus()
         {
             StringBuilder sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPageMenus.ParentPageId, SubPageMenus.ChildPageId, SubPageMenus.Changed, SubPageMenus.ChangedBy, SubPageMenus.Position, ");
-            sql.Append(" SubPages_1.Controller, SubPages_1.FileName AS Action, SubPages_1.Title,");
-            sql.Append(" SubPages.Controller AS ChildController, SubPages.FileName AS ChildAction, SubPages.Title AS ChildTitle");
+            sql.Append(" SubPages_1.Controller, SubPages_1.Action, SubPages_1.Title,");
+            sql.Append(" SubPages3.Controller AS ChildController, SubPages3.Action AS ChildAction, SubPages3.Title AS ChildTitle");
             sql.Append(" FROM SubPageMenus INNER JOIN");
-            sql.Append(" dbo.SubPages ON dbo.SubPageMenus.ChildPageId = dbo.SubPages.SubPageId INNER JOIN");
-            sql.Append(" dbo.SubPages AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
-            sql.Append(" ORDER BY SubPages_1.Controller, SubPages_1.FileName, SubPageMenus.Position");
+            sql.Append(" dbo.SubPages3 ON dbo.SubPageMenus.ChildPageId = dbo.SubPages3.SubPageId INNER JOIN");
+            sql.Append(" dbo.SubPages3 AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
+            sql.Append(" ORDER BY SubPages_1.Controller, SubPages_1.Action, SubPageMenus.Position");
             return await _context.SubPageMenusView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
         public async Task<SubPageMenusViewModel> GetMenu(int id)
         {
             StringBuilder sql = new StringBuilder("SELECT SubPageMenus.SubPageMenuId, SubPageMenus.ParentPageId, SubPageMenus.ChildPageId, SubPageMenus.Changed, SubPageMenus.ChangedBy, SubPageMenus.Position, ");
-            sql.Append(" SubPages_1.Controller, SubPages_1.FileName AS Action, SubPages_1.Title,");
-            sql.Append(" SubPages.Controller AS ChildController, SubPages.FileName AS ChildAction, SubPages.Title AS ChildTitle");
+            sql.Append(" SubPages_1.Controller, SubPages_1.Action, SubPages_1.Title,");
+            sql.Append(" SubPages3.Controller AS ChildController, SubPages3.Action AS ChildAction, SubPages3.Title AS ChildTitle");
             sql.Append(" FROM SubPageMenus INNER JOIN");
-            sql.Append(" dbo.SubPages ON dbo.SubPageMenus.ChildPageId = dbo.SubPages.SubPageId INNER JOIN");
-            sql.Append(" dbo.SubPages AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
+            sql.Append(" dbo.SubPages3 ON dbo.SubPageMenus.ChildPageId = dbo.SubPages3.SubPageId INNER JOIN");
+            sql.Append(" dbo.SubPages3 AS SubPages_1 ON dbo.SubPageMenus.ParentPageId = SubPages_1.SubPageId");
             sql.AppendFormat(" WHERE SubPageMenus.SubPageMenuId = {0}", id);
             return await _context.SubPageMenusView.FromSqlRaw(sql.ToString()).FirstAsync();
         }

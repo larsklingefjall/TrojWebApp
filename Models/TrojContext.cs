@@ -69,13 +69,13 @@ namespace TrojWebApp.Models
 
         public DbSet<Pages3Model> Pages3 { get; set; } = null!;
         public DbSet<PageUsers3Model> PageUsers3 { get; set; } = null!;
-        public DbSet<PageUsersViewModel> PageUsersView { get; set; } = null!;
+        public DbSet<PageUsersView3Model> PageUsersView3 { get; set; } = null!;
 
 
-        public DbSet<SubPagesModel> SubPages { get; set; } = null!;
-        public DbSet<SubPagesViewModel> SubPagesView { get; set; } = null!;
-        public DbSet<SubPageUsersModel> SubPageUsers { get; set; } = null!;
-        public DbSet<SubPageUsersViewModel> SubPageUsersView { get; set; } = null!;
+        public DbSet<SubPages3Model> SubPages3 { get; set; } = null!;
+        public DbSet<SubPagesView3Model> SubPagesView3 { get; set; } = null!;
+        public DbSet<SubPageUsers3Model> SubPageUsers3 { get; set; } = null!;
+        public DbSet<SubPageUsersView3Model> SubPageUsersView3 { get; set; } = null!;
 
 
         public DbSet<SubPageMenusModel> SubPageMenus { get; set; } = null!;

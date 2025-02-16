@@ -9,10 +9,10 @@ namespace TrojWebApp.Models
         [Key]
         public int SubPageMenuId { get; set; }
 
-        [ForeignKey("SubPages")]
+        [ForeignKey("SubPages3")]
         public int ParentPageId { get; set; }
 
-        [ForeignKey("SubPages")]
+        [ForeignKey("SubPages3")]
         public int ChildPageId { get; set; }
 
         public int Position { get; set; }

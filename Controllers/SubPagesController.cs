@@ -33,7 +33,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
-            IEnumerable<SubPagesViewModel> subPages = await _pageConnection.GetSubPages();
+            IEnumerable<SubPagesView3Model> subPages = await _pageConnection.GetSubPages();
             return View(subPages);
         }
 
@@ -58,7 +58,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPagesModel subPagesModel)
+        public async Task<IActionResult> Create([Bind("SubPageId,PageId,Title,Controller,Action,Tip,Position,IsVisible,Changed,ChangedBy")] SubPages3Model subPagesModel)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
@@ -67,7 +67,6 @@ namespace TrojWebApp.Controllers
             {
                 subPagesModel.Changed = DateTime.Now;
                 subPagesModel.ChangedBy = UserName;
-                subPagesModel.Version = 3;
                 _context.Add(subPagesModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -78,7 +77,7 @@ namespace TrojWebApp.Controllers
         // GET: SubPages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.SubPages == null)
+            if (id == null || _context.SubPages3 == null)
             {
                 return NotFound();
             }
@@ -93,7 +92,7 @@ namespace TrojWebApp.Controllers
                 pages.Add(new SelectListItem { Value = page.PageId.ToString(), Text = page.Title });
             ViewBag.Pages = pages;
 
-            var subPagesModel = await _context.SubPages.FindAsync(id);
+            var subPagesModel = await _context.SubPages3.FindAsync(id);
             if (subPagesModel == null)
             {
                 return NotFound();
@@ -106,7 +105,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Controller,Title,FileName,Tip,Position,Parameter,IsVisible,Version,Changed,ChangedBy")] SubPagesModel subPagesModel)
+        public async Task<IActionResult> Edit(int id, [Bind("SubPageId,PageId,Title,Controller,Action,Tip,Position,Parameter,IsVisible,Changed,ChangedBy")] SubPages3Model subPagesModel)
         {
             if (id != subPagesModel.SubPageId)
             {
@@ -143,7 +142,7 @@ namespace TrojWebApp.Controllers
 
         private bool SubPagesModelExists(int id)
         {
-            return _context.SubPages.Any(e => e.SubPageId == id);
+            return _context.SubPages3.Any(e => e.SubPageId == id);
         }
     }
 }

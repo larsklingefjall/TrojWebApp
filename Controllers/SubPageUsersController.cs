@@ -34,7 +34,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
-            IEnumerable<SubPageUsersViewModel> subPageUsers = await _pageConnection.GetSubPageUsers();
+            IEnumerable<SubPageUsersView3Model> subPageUsers = await _pageConnection.GetSubPageUsers();
             return View(subPageUsers);
         }
 
@@ -48,7 +48,7 @@ namespace TrojWebApp.Controllers
             List<SelectListItem> pages = new List<SelectListItem>();
             var pageList = await _pageConnection.GetOnlySubPages();
             foreach (var page in pageList)
-                pages.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.FileName });
+                pages.Add(new SelectListItem { Value = page.SubPageId.ToString(), Text = page.Controller + "/" + page.Action });
             ViewBag.Pages = pages;
 
             List<SelectListItem> employees = new List<SelectListItem>();
@@ -67,7 +67,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubPageUserId,SubPageId,EmployeeId")] SubPageUsersModel subPageUsersModel)
+        public async Task<IActionResult> Create([Bind("SubPageUserId,SubPageId,EmployeeId")] SubPageUsers3Model subPageUsersModel)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
@@ -86,7 +86,7 @@ namespace TrojWebApp.Controllers
         // GET: SubPageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.SubPageUsers == null)
+            if (id == null || _context.SubPageUsers3 == null)
             {
                 return NotFound();
             }
@@ -109,18 +109,18 @@ namespace TrojWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.SubPageUsers == null)
+            if (_context.SubPageUsers3 == null)
             {
-                return Problem("Entity set 'TrojContext.SubPageUsers'  is null.");
+                return Problem("Entity set 'TrojContext.SubPageUsers3'  is null.");
             }
 
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
-            var subPageUsersModel = await _context.SubPageUsers.FindAsync(id);
+            var subPageUsersModel = await _context.SubPageUsers3.FindAsync(id);
             if (subPageUsersModel != null)
             {
-                _context.SubPageUsers.Remove(subPageUsersModel);
+                _context.SubPageUsers3.Remove(subPageUsersModel);
             }
             
             await _context.SaveChangesAsync();
@@ -129,7 +129,7 @@ namespace TrojWebApp.Controllers
 
         private bool SubPageUsersModelExists(int id)
         {
-          return _context.SubPageUsers.Any(e => e.SubPageUserId == id);
+          return _context.SubPageUsers3.Any(e => e.SubPageUserId == id);
         }
     }
 }

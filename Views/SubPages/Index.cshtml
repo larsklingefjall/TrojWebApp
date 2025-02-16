@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TrojWebApp.Models.SubPagesViewModel>
+﻿@model IEnumerable<TrojWebApp.Models.SubPagesView3Model>
 
 @{
     ViewData["Title"] = "Undersidor";
@@ -19,10 +19,9 @@
         <tr>
             <th class="tablehead2">Title:</th>
             <th class="tablehead2">Kontroller:</th>
-            <th class="tablehead2">Filnamn:</th>
+            <th class="tablehead2">Aktion:</th>
             <th class="tablehead2">Tips:</th>
             <th class="tablehead2">Position:</th>
-            <th class="tablehead2">Parameter:</th>
             <th class="tablehead2">Synlig:</th>
             <th class="tablehead2">Ändrad:</th>
             <th class="tablehead2" nowrap>Ändrad av:</th>
@@ -40,16 +39,13 @@
                     @Html.DisplayFor(modelItem => item.Controller)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.FileName)
+                    @Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Tip)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Position)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Parameter)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.IsVisible)
