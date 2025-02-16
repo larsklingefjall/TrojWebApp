@@ -153,7 +153,8 @@ namespace TrojWebApp.Controllers
                 string lastName = HttpContext.Session.GetString("TrojWorkingTimeLastName");
                 workingTimes = await _workingTimesConnection.GetFilteredWorkingTimes(caseId, whenDate, caseTypeId, title, employeeId, firstName, lastName, iOffset, iSize);
                 numberOfWorkingTimes = await _workingTimesConnection.GetNumberOfFilteredWorkingTimes(caseId, whenDate, caseTypeId, title, employeeId, firstName, lastName);
-                caseList = await _caseConnection.GetFilteredCasesAndClient(caseId, caseTypeId, title, employeeId, firstName, lastName);
+                //caseList = await _caseConnection.GetFilteredCasesAndClient(caseId, caseTypeId, title, employeeId, firstName, lastName); TODO Filter popup list of cases
+                //ViewBag.NumberOfCases = caseList.Count();
                 totalSumModel = await _workingTimesConnection.GetFilteredTotalSum(caseId, whenDate, caseTypeId, title, employeeId, firstName, lastName);
                 ViewBag.CaseId = caseId;
                 ViewBag.WhenDate = whenDate;
@@ -171,7 +172,8 @@ namespace TrojWebApp.Controllers
             {
                 workingTimes = await _workingTimesConnection.GetWorkingTimesForCurrentDay(currentDate, nextDate, iOffset, iSize);
                 numberOfWorkingTimes = await _workingTimesConnection.GetNumberOfWorkingTimesForCurrentDay(currentDate, nextDate);
-                caseList = await _caseConnection.GetCasesAndClient();
+                //caseList = await _caseConnection.GetCasesAndClient();
+                //ViewBag.NumberOfCases = caseList.Count();
                 totalSumModel = await _workingTimesConnection.GetTotalSum(currentDate, nextDate);
                 ViewBag.CaseId = "";
                 ViewBag.WhenDate = "";
@@ -211,6 +213,8 @@ namespace TrojWebApp.Controllers
                 caseTypes.Add(new SelectListItem { Value = caseType.CaseTypeId.ToString(), Text = caseType.CaseType });
             ViewBag.CaseTypes = caseTypes;
 
+            caseList = await _caseConnection.GetCasesAndClient();
+            ViewBag.NumberOfCases = caseList.Count();
             List<SelectListItem> cases = new List<SelectListItem>();
             foreach (var item in caseList)
                 cases.Add(new SelectListItem { Value = item.CaseId.ToString(), Text = item.LastName + ", " + item.FirstName + "/" + item.PersonId + " | " + item.CaseType + "/" + item.CaseId });
