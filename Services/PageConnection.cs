@@ -27,7 +27,7 @@ namespace TrojWebApp.Services
             return await _context.SubPagesView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
-        public async Task<IEnumerable<PagesModel>> GetPages()
+        public async Task<IEnumerable<Pages3Model>> GetPages()
         {
             return await _context.Pages.OrderBy(s => s.Title).ToListAsync();
         }
@@ -37,7 +37,7 @@ namespace TrojWebApp.Services
             return await _context.SubPages.Where(s => s.Version==3).OrderBy(s => s.Controller).ThenBy(s => s.FileName).ToListAsync();
         }
 
-        public async Task<IEnumerable<PagesModel>> GetPagesWhichHaveChild()
+        public async Task<IEnumerable<Pages3Model>> GetPagesWhichHaveChild()
         {
             return await _context.Pages.OrderBy(s => s.Title).Where(s => s.HasChild == true).ToListAsync();
         }

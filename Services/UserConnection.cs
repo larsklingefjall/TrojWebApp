@@ -35,11 +35,11 @@ namespace TrojWebApp.Services
             else
                 return false;
 
-            StringBuilder sql = new("SELECT PageId, Title, FileName, Tip, Link, Position, Hidden, HasChild, Controller, Action, Changed, ChangedBy");
+            StringBuilder sql = new("SELECT PageId, Title, Controller, Action, Tip, Position, HasChild, Changed, ChangedBy");
             sql.Append(" FROM Pages");
             sql.AppendFormat(" WHERE Controller = '{0}'", controller);
             sql.AppendFormat(" AND Action = '{0}'", action);
-            PagesModel page;
+            Pages3Model page;
             try
             {
                 page = _context.Pages.FromSqlRaw(sql.ToString()).FirstAsync().Result;
@@ -89,7 +89,7 @@ namespace TrojWebApp.Services
             return true;
         }
 
-        public async Task<IEnumerable<PagesModel>> AccessToIndexPages(string userName)
+        public async Task<IEnumerable<Pages3Model>> AccessToIndexPages(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 return null;
@@ -109,10 +109,10 @@ namespace TrojWebApp.Services
             if (employee == null) return null;
             int employeeId = employee.EmployeeId;
 
-            sql = new("SELECT Pages.PageId,Pages.Title,Pages.FileName,Pages.Tip,Pages.Link,Pages.Position,Pages.Hidden,Pages.HasChild,Pages.Changed,Pages.ChangedBy,Pages.Controller,Pages.Action");
+            sql = new("SELECT Pages.PageId,Pages.Title,Pages.Controller,Pages.Action,Pages.Tip,Pages.Position,Pages.HasChild,Pages.Changed,Pages.ChangedBy");
             sql.Append(" FROM Pages INNER JOIN PageUsers ON Pages.PageId = PageUsers.PageId");
             sql.AppendFormat(" WHERE EmployeeId = {0}", employeeId);
-            IEnumerable<PagesModel> permissions;
+            IEnumerable<Pages3Model> permissions;
             try
             {
                 permissions = await _context.Pages.FromSqlRaw(sql.ToString()).ToListAsync();

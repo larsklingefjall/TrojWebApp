@@ -1,4 +1,4 @@
-﻿@model TrojWebApp.Models.PagesModel
+﻿@model TrojWebApp.Models.Pages3Model
 
 @{
     ViewData["Title"] = "Ändra huvudsida";
@@ -33,10 +33,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="head">Filnamn:</th>
+                    <th class="head">Aktion:</th>
                     <td>
-                        <input asp-for="FileName" class="font2" size="40" />
-                        <span asp-validation-for="FileName" class="text-danger"></span>
+                        <input asp-for="Action" class="font2" size="40" />
+                        <span asp-validation-for="Action" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
@@ -47,24 +47,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="head">Länk:</th>
-                    <td>
-                        <input asp-for="Link" class="font2" size="40" />
-                        <span asp-validation-for="Link" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
                     <th class="head">Position:</th>
                     <td>
                         <input asp-for="Position" class="font2" size="10" />
                         <span asp-validation-for="Position" class="text-danger"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="head">Dölj:</th>
-                    <td>
-                        <input asp-for="Hidden" class="font2" size="40" />
-                        <span asp-validation-for="Hidden" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>

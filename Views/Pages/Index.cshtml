@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TrojWebApp.Models.PagesModel>
+﻿@model IEnumerable<TrojWebApp.Models.Pages3Model>
 
 @{
     ViewData["Title"] = "Huvudsidor";
@@ -19,11 +19,9 @@
         <tr>
             <th class="tablehead2">Title:</th>
             <th class="tablehead2">Kontroller:</th>
-            <th class="tablehead2">Filnamn:</th>
+            <th class="tablehead2">Aktion:</th>
             <th class="tablehead2">Tips:</th>
-            <th class="tablehead2">Länk:</th>
             <th class="tablehead2">Position:</th>
-            <th class="tablehead2">Döljas:</th>
             <th class="tablehead2">Barn:</th>
             <th class="tablehead2">Ändrad:</th>
             <th class="tablehead2" nowrap>Ändrad av:</th>
@@ -41,19 +39,13 @@
                     @Html.DisplayFor(modelItem => item.Controller)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.FileName)
+                    @Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Tip)
                 </td>
                 <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Link)
-                </td>
-                <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.Position)
-                </td>
-                <td class="tablefont2" nowrap>
-                    @Html.DisplayFor(modelItem => item.Hidden)
                 </td>
                 <td class="tablefont2" nowrap>
                     @Html.DisplayFor(modelItem => item.HasChild)

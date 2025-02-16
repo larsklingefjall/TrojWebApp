@@ -49,7 +49,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PageId,Title,Controller,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
+        public async Task<IActionResult> Create([Bind("PageId,Title,Controller,Action,Tip,Position,HasChild,Changed,ChangedBy")] Pages3Model pagesModel)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
@@ -90,7 +90,7 @@ namespace TrojWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PageId,Title,Controller,FileName,Tip,Link,Position,Hidden,HasChild,Changed,ChangedBy")] PagesModel pagesModel)
+        public async Task<IActionResult> Edit(int id, [Bind("PageId,Title,Controller,Action,Tip,Position,HasChild,Changed,ChangedBy")] Pages3Model pagesModel)
         {
             if (id != pagesModel.PageId)
             {

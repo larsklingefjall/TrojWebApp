@@ -67,7 +67,7 @@ namespace TrojWebApp.Models
         public DbSet<MaxMinDateModel> MaxMinDate { get; set; } = null!;
 
 
-        public DbSet<PagesModel> Pages { get; set; } = null!;
+        public DbSet<Pages3Model> Pages { get; set; } = null!;
         public DbSet<PageUsersModel> PageUsers { get; set; } = null!;
         public DbSet<PageUsersViewModel> PageUsersView { get; set; } = null!;
 
