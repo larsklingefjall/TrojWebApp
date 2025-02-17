@@ -77,7 +77,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<EmployeesModel> UpdateEmployee(int id, string firstName, string lastName, string initials, string mailAddress, string title, bool represent, bool active, bool readOnly, string userName = "")
+        public async Task<EmployeesModel> UpdateEmployee(int id, string firstName, string lastName, string initials, string mailAddress, string link, string title, bool represent, bool active, bool readOnly, string userName = "")
         {
             EmployeesModel employee = new EmployeesModel
             {
@@ -87,6 +87,7 @@ namespace TrojWebApp.Services
                 Initials = initials,
                 MailAddress = mailAddress,
                 EmployeeTitle = title,
+                SignatureLink = link,
                 Represent = represent,
                 Active = active,
                 ReadOnly = readOnly,

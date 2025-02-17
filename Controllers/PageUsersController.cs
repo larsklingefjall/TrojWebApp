@@ -88,7 +88,7 @@ namespace TrojWebApp.Controllers
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            //if (!permission) return RedirectToAction("Index");
+            if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> employees = new List<SelectListItem>();
             var employeesList = await _employeeConnection.GetActiveEmployees();
@@ -108,8 +108,8 @@ namespace TrojWebApp.Controllers
         public async Task<IActionResult> Copy(int fromEmployeeId, int toEmployeeId)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            //if (!permission) return RedirectToAction("Index");
-            bool succeed = await _pageConnection.Copy(fromEmployeeId, toEmployeeId, UserName);
+            if (!permission) return RedirectToAction("Index");
+            bool succeed = await _pageConnection.CopyPageUsers(fromEmployeeId, toEmployeeId, UserName);
             return RedirectToAction(nameof(Index));
         }
 

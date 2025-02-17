@@ -84,6 +84,36 @@ namespace TrojWebApp.Controllers
             return View(subPageUsersModel);
         }
 
+        // GET: SubPageUsers/Copy
+        public async Task<IActionResult> Copy()
+        {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+
+            List<SelectListItem> employees = new List<SelectListItem>();
+            var employeesList = await _employeeConnection.GetActiveEmployees();
+            employees.Add(new SelectListItem { Value = "", Text = "" });
+            foreach (var employee in employeesList)
+                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.Initials });
+            ViewBag.Employees = employees;
+
+            return View();
+        }
+
+        // POST: PageUsers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Copy(int fromEmployeeId, int toEmployeeId)
+        {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index");
+            bool succeed = await _pageConnection.CopySubPageUsers(fromEmployeeId, toEmployeeId, UserName);
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: SubPageUsers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

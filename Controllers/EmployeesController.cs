@@ -30,6 +30,9 @@ namespace TrojWebApp.Controllers
 
             ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
 
+            var request = HttpContext.Request;
+            ViewBag.Url = $"{request.Scheme}://{request.Host}/images/";
+
             var employees = await _employeesConnection.GetEmployees();
             return View(employees);
         }
@@ -115,6 +118,9 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("EmployeeTitle", out StringValues title))
                 return NoContent();
 
+            if (!collection.TryGetValue("SignatureLink", out StringValues signatureLink))
+                return NoContent();
+
             bool active = false;
             if (collection["Active"].ToArray().Length > 1)
             {
@@ -138,7 +144,8 @@ namespace TrojWebApp.Controllers
                     firstName.ToString(), 
                     lastName.ToString(), 
                     initials.ToString(), 
-                    mailAddress.ToString(), 
+                    mailAddress.ToString(),
+                    signatureLink.ToString(),
                     title.ToString(), 
                     represent, 
                     active,
@@ -148,7 +155,7 @@ namespace TrojWebApp.Controllers
             if (employeesModel == null)
                 return NoContent();
 
-            return View("Edit", employeesModel);
+            return RedirectToAction("Index");
         }
     }
 }

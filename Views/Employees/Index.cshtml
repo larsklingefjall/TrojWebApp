@@ -50,7 +50,7 @@
                             @Html.DisplayFor(modelItem => item.ReadOnly)
                         </td>
                         <td class="tablefont2" nowrap>
-                            @Html.DisplayFor(modelItem => item.SignatureLink)
+                            <img src="@ViewBag.Url@item.SignatureLink" alt="Ingen signatur" border="0">
                         </td>
                         @if (ViewBag.EditPermission)
                         {
