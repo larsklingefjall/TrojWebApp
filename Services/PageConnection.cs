@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 
@@ -59,6 +62,11 @@ namespace TrojWebApp.Services
             return await _context.PageUsersView3.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
+        public async Task<IEnumerable<PageUsers3Model>> GetPageUser4Employee(int id)
+        {
+            return await _context.PageUsers3.Where(s => s.EmployeeId == id).ToListAsync();
+        }
+
         public async Task<IEnumerable<SubPageUsersView3Model>> GetSubPageUsers()
         {
             StringBuilder sql = new StringBuilder("SELECT SubPageUsers3.*, SubPages3.Title, SubPages3.Controller, SubPages3.Action, SubPages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
@@ -77,6 +85,28 @@ namespace TrojWebApp.Services
             sql.Append(" Employees ON SubPageUsers3.EmployeeId = Employees.EmployeeId");
             sql.AppendFormat(" WHERE SubPageUsers3.SubPageUserId = {0}", id);
             return await _context.SubPageUsersView3.FromSqlRaw(sql.ToString()).FirstAsync();
+        }
+
+        public async Task<bool> Copy(int fromEmployeeId, int toEmployeeId, string userName)
+        {
+            IEnumerable<PageUsers3Model> list = await GetPageUser4Employee(fromEmployeeId);
+            foreach (PageUsers3Model model in list)
+            {
+                StringBuilder sql = new StringBuilder("INSERT INTO PageUsers3 (PageId,EmployeeId,Changed,ChangedBy) VALUES(");
+                sql.AppendFormat("{0},", model.PageId);
+                sql.AppendFormat("{0},", toEmployeeId);
+                sql.AppendFormat("'{0}',", DateTime.Now);
+                sql.AppendFormat("'{0}')", userName);
+                try
+                {
+                    await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }
