@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -36,17 +37,6 @@ namespace TrojWebApp.Controllers
             ViewBag.CreatePermission = _userConnection.AccessToSubPage(HttpContext.Request, "Create", UserName);
             ViewBag.EditPermission = _userConnection.AccessToSubPage(HttpContext.Request, "Edit", UserName);
 
-            var tariffLevels = await _tariffLevelsConnection.GetTariffLevels();
-            return View(tariffLevels);
-        }
-
-        // GET: TariffLevelsController/Create
-        public async Task<ActionResult> Create()
-        {
-            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
-            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
-            if (!permission) return RedirectToAction("Index");
-
             @ViewBag.StartDate = DateTime.Now.Year + "-01-01";
             @ViewBag.EndDate = DateTime.Now.Year + "-12-31";
 
@@ -56,7 +46,8 @@ namespace TrojWebApp.Controllers
                 tariffTypes.Add(new SelectListItem { Value = tariffType.TariffTypeId.ToString(), Text = tariffType.TariffType });
             ViewBag.TariffTypes = tariffTypes;
 
-            return View();
+            var tariffLevels = await _tariffLevelsConnection.GetTariffLevels();
+            return View(tariffLevels);
         }
 
         // POST: TariffLevelsController/Create
@@ -91,12 +82,6 @@ namespace TrojWebApp.Controllers
             if (tariffLevelsModel == null)
                 return NoContent();
 
-            List<SelectListItem> tariffTypes = new List<SelectListItem>();
-            var tariffTypeList = await _tariffTypesConnection.GetTariffTypes();
-            foreach (var tariffType in tariffTypeList)
-                tariffTypes.Add(new SelectListItem { Value = tariffType.TariffTypeId.ToString(), Text = tariffType.TariffType });
-            ViewBag.TariffTypes = tariffTypes;
-
             return RedirectToAction("Index");
         }
 
@@ -107,7 +92,7 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
-            TariffLevelsModel tariffLevelsModel = await _tariffLevelsConnection.GetTariffLevel(id);
+            TariffLevelsViewModel tariffLevelsModel = await _tariffLevelsConnection.GetTariffLevelView(id);
             if (tariffLevelsModel == null)
                 return NoContent();
 
@@ -160,6 +145,21 @@ namespace TrojWebApp.Controllers
                 return NoContent();
 
             return RedirectToAction("Index");
+        }
+
+        // POST: CasesController/MakeValid
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MakeValid(IFormCollection collection)
+        {
+            if (!collection.TryGetValue("TariffLevelId", out StringValues tariffLevelId))
+                return NoContent();
+
+            TariffLevelsViewModel tariffLevelsModel = await _tariffLevelsConnection.MakeTariffLevelValid(Int32.Parse(tariffLevelId.ToString()), UserName);
+            if (tariffLevelsModel == null)
+                return NoContent();
+
+            return RedirectToAction("Edit", new { id = Int32.Parse(tariffLevelId.ToString()) });
         }
     }
 }

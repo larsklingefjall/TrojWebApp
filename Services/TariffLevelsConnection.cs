@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -23,7 +21,7 @@ namespace TrojWebApp.Services
         {
             StringBuilder sql = new StringBuilder("SELECT TariffLevels.*, TariffTypes.TariffType");
             sql.Append(" FROM TariffLevels INNER JOIN TariffTypes ON TariffLevels.TariffTypeId = TariffTypes.TariffTypeId");
-            sql.Append(" ORDER BY TariffTypes.TariffType, TariffLevels.ValidFrom DESC");
+            sql.Append(" ORDER BY TariffLevels.ValidFrom DESC, TariffTypes.TariffType");
 
             IEnumerable<TariffLevelsViewModel> list;
             try
@@ -41,6 +39,26 @@ namespace TrojWebApp.Services
         public async Task<TariffLevelsModel> GetTariffLevel(int id)
         {
             return await _context.TariffLevels.FindAsync(id);
+        }
+
+        public async Task<TariffLevelsViewModel> GetTariffLevelView(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT TariffLevels.*, TariffTypes.TariffType");
+            sql.Append(" FROM TariffLevels INNER JOIN TariffTypes ON TariffLevels.TariffTypeId = TariffTypes.TariffTypeId");
+            sql.AppendFormat(" WHERE TariffLevels.TariffLevelId = {0}", id);
+
+            TariffLevelsViewModel result;
+            try
+            {
+                result = await _context.TariffLevelsView.FromSqlRaw(sql.ToString()).FirstAsync();
+            }
+            catch (Exception e)
+            {
+                string lastSqlCommand = sql.ToString();
+                Console.WriteLine("SQL:{0}/n {1} Exception caught.", lastSqlCommand, e);
+                return null;
+            }
+            return result;
         }
 
         public async Task<TariffLevelsModel> GetValidTariffLevel(int tariffTypeId)
@@ -95,5 +113,18 @@ namespace TrojWebApp.Services
             else
                 return null;
         }
+
+        public async Task<TariffLevelsViewModel> MakeTariffLevelValid(int id, string userName)
+        {
+
+            StringBuilder sql = new StringBuilder("UPDATE TariffLevels SET");
+            sql.Append(" Valid = 1");
+            sql.AppendFormat(" ,Changed = '{0}'", DateTime.Now);
+            sql.AppendFormat(" ,ChangedBy = '{0}'", userName);
+            sql.AppendFormat(" WHERE TariffLevelId = {0}", id);
+            await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+            return await GetTariffLevelView(id);
+        }
+
     }
 }

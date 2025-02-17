@@ -4,6 +4,38 @@
     ViewData["Title"] = "Addera / ändra tariffer";
 }
 <h1>@ViewData["Title"]</h1>
+
+@if (@ViewBag.CreatePermission)
+{
+    <div class="row">
+        <div class="col-sm-2">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <table border="0" class="table table-condensed table-no-border">
+                    <tr>
+                        <th class="head">Tariff:</th>
+                        <th class="head">Nivå:</th>
+                        <th class="head">Från:</th>
+                        <th class="head">Till:</th>
+                        <th class="head"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="TariffTypeId"
+                                asp-items="@(new SelectList(ViewBag.TariffTypes,"Value","Text"))">
+                            </select>
+                        </td>
+                        <td><input name="TariffLevel" size="10" class="font2" /></td>
+                        <td><input name="ValidFrom" type="date" value="@ViewBag.StartDate" class="font2" /></td>
+                        <td><input name="ValidTo" type="date" value="@ViewBag.EndDate" class="font2" /></td>
+                        <td><input type="submit" value="Skapa" class="btn btn-primary" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+}
+
 <div class="row">
     <div class="col-sm-6">
         <table class="table table-condensed">

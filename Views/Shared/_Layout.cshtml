@@ -38,11 +38,11 @@
                 @if (list != null)
                 {
                     <ul class="nav navbar-nav">
-                        @if (list.Any(u => u.Controller == "WorkingTimes"))
+                        @if (list.Any(u => u.Title == "Dagrapport"))
                         {
                             <li><a asp-area="" asp-controller="WorkingTimes" asp-action=".">Dagrapport</a></li>
                         }
-                        @if (list.Any(u => u.Controller == "Cases"))
+                        @if (list.Any(u => u.Title == "Uppdrag"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Uppdrag<span class="caret"></span></a>
@@ -58,7 +58,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "Persons"))
+                        @if (list.Any(u => u.Title == "Personer"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personer<span class="caret"></span></a>
@@ -75,7 +75,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "InvoiceUnderlays"))
+                        @if (list.Any(u => u.Title == "Underlag"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Underlag<span class="caret"></span></a>
@@ -91,7 +91,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "Invoices"))
+                        @if (list.Any(u => u.Title == "Faktura"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fakturor<span class="caret"></span></a>
@@ -107,7 +107,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "Employees"))
+                        @if (list.Any(u => u.Title == "Personal"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Personal<span class="caret"></span></a>
@@ -117,36 +117,7 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "TariffLevels"))
-                        {
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tariff<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a asp-area="" asp-controller="TariffLevels" asp-action=".">Lista</a></li>
-                                    <li><a asp-area="" asp-controller="TariffLevels" asp-action="Create">Skapa tariff</a></li>
-                                </ul>
-                            </li>
-                        }
-                        @if (list.Any(u => u.Controller == "Configurations"))
-                        {
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Konfiguration<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a asp-area="" asp-controller="Courts" asp-action=".">Domstolar</a></li>
-                                    <li><a asp-area="" asp-controller="CaseTypes" asp-action=".">Uppdragstyper</a></li>
-                                    <li><a asp-area="" asp-controller="TariffTypes" asp-action=".">Tarifftyper</a></li>
-                                    <li><a asp-area="" asp-controller="PersonTypes" asp-action=".">Persontyper</a></li>
-                                    <li><a asp-area="" asp-controller="PhoneNumberTypes" asp-action=".">Telefonnummertyp</a></li>
-                                    <li><a asp-area="" asp-controller="Configurations" asp-action=".">Konfigurationer</a></li>
-                                    <li><a asp-area="" asp-controller="Pages" asp-action=".">Sidor</a></li>
-                                    <li><a asp-area="" asp-controller="SubPages" asp-action=".">Undersidor</a></li>
-                                    <li><a asp-area="" asp-controller="PageUsers" asp-action=".">Användare för sidor</a></li>
-                                    <li><a asp-area="" asp-controller="SubPageUsers" asp-action=".">Användare för undersidor</a></li>
-                                    <li><a asp-area="" asp-controller="SubPageMenus" asp-action=".">Meny för undersidor</a></li>
-                                </ul>
-                            </li>
-                        }
-                        @if (list.Any(u => u.Controller == "Economy"))
+                        @if (list.Any(u => u.Title == "Ekonomi"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ekonomi<span class="caret"></span></a>
@@ -155,13 +126,60 @@
                                 </ul>
                             </li>
                         }
-                        @if (list.Any(u => u.Controller == "Fortknox"))
+                        @if (list.Any(u => u.Title == "Fortnox"))
                         {
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fortknox<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a asp-area="" asp-controller="Fortknox" asp-action=".">Export</a></li>
                                     <li><a asp-area="" asp-controller="Fortknox" asp-action="Activate">Aktivera</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Title == "Konfiguration"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Konfiguration<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="TariffLevels" asp-action=".">Tariff</a></li>
+                                    <li><a asp-area="" asp-controller="Courts" asp-action=".">Domstolar</a></li>
+                                    <li><a asp-area="" asp-controller="CaseTypes" asp-action=".">Uppdragstyper</a></li>
+                                    <li><a asp-area="" asp-controller="TariffTypes" asp-action=".">Tarifftyper</a></li>
+                                    <li><a asp-area="" asp-controller="PersonTypes" asp-action=".">Persontyper</a></li>
+                                    <li><a asp-area="" asp-controller="PhoneNumberTypes" asp-action=".">Telefonnummertyp</a></li>
+                                    <li><a asp-area="" asp-controller="Configurations" asp-action=".">Konfigurationer</a></li>
+
+                                    <li><a asp-area="" asp-controller="Pages" asp-action=".">Sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPages" asp-action=".">Undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="PageUsers" asp-action=".">Användare för sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageUsers" asp-action=".">Användare för undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageMenus" asp-action=".">Meny för undersidor</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Title == "Administration"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administration<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Pages" asp-action=".">Sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPages" asp-action=".">Undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="PageUsers" asp-action=".">Användare för sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageUsers" asp-action=".">Användare för undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageMenus" asp-action=".">Meny för undersidor</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (list.Any(u => u.Title == "SQL"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">SQL<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-area="" asp-controller="Pages" asp-action="Sql">Sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPages" asp-action="Sql">Undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="PageUsers" asp-action="Sql">Användare för sidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageUsers" asp-action="Sql">Användare för undersidor</a></li>
+                                    <li><a asp-area="" asp-controller="SubPageMenus" asp-action="Sql">Meny</a></li>
                                 </ul>
                             </li>
                         }
