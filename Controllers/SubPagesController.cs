@@ -140,6 +140,14 @@ namespace TrojWebApp.Controllers
             return View(subPagesModel);
         }
 
+        // GET: SubPages/Sql
+        public async Task<IActionResult> Sql()
+        {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+            var list = await _context.SubPages3.ToListAsync();
+            return View(list);
+        }
         private bool SubPagesModelExists(int id)
         {
             return _context.SubPages3.Any(e => e.SubPageId == id);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -123,6 +124,15 @@ namespace TrojWebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(pagesModel);
+        }
+
+        // GET: Pages/Sql
+        public async Task<IActionResult> Sql()
+        {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+            var list = await _context.Pages3.ToListAsync();
+            return View(list);
         }
 
         private bool PagesModelExists(int id)

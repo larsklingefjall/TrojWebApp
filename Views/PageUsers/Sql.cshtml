@@ -1,7 +1,6 @@
-﻿@model IEnumerable<TrojWebApp.Models.SubPageMenusModel>
-
+﻿@model IEnumerable<TrojWebApp.Models.PageUsers3Model>
 @{
-    ViewData["Title"] = "Insert into SubPageMenus";
+    ViewData["Title"] = "Insert into PageUsers3";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>@ViewData["Title"]</h1>
@@ -10,11 +9,10 @@
     {
         <tr>
             <td class="subhead2" nowrap>
-                INSERT INTO SubPageMenus (ParentPageId,ChildPageId,Position,Changed,ChangedBy)
+                INSERT INTO PageUsers3 (PageId,EmployeeId,Changed,ChangedBy)
                 VALUES(
-                @item.ParentPageId,
-                @item.ChildPageId,
-                @item.Position,
+                @item.PageId,
+                @item.EmployeeId,
                 '@item.Changed',
                 '@item.ChangedBy'
                 );

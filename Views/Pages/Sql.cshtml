@@ -1,0 +1,34 @@
+﻿@model IEnumerable<TrojWebApp.Models.Pages3Model>
+
+@{
+    ViewData["Title"] = "Insert into Pages3";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>@ViewData["Title"]</h1>
+<table class="table table-condensed table-no-border">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="subhead2" nowrap>
+                INSERT INTO Pages3 (Title,Controller,Action,Tip,Position,HasChild,Changed,ChangedBy)
+                VALUES(
+                '@item.Title',
+                '@item.Controller',
+                '@item.Action',
+                '@item.Tip',
+                @item.Position,
+                @if (@item.HasChild)
+                {
+                    <span>1</span>
+                }
+                else
+                {
+                    <span>0</span>
+                }
+                '@item.Changed',
+                '@item.ChangedBy'
+                );
+            </td>
+        </tr>
+    }
+</table>

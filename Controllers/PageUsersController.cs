@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
 
@@ -126,6 +127,15 @@ namespace TrojWebApp.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: PageUsers/Sql
+        public async Task<IActionResult> Sql()
+        {
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+            var list = await _context.PageUsers3.ToListAsync();
+            return View(list);
         }
 
         private bool PageUsersModelExists(int id)

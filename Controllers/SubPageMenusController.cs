@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
 
@@ -124,11 +125,13 @@ namespace TrojWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: SubPageMenus
+        // GET: SubPageMenus/Sql
         public async Task<IActionResult> Sql()
         {
-            IEnumerable<SubPageMenusViewModel> menus = await _userConnection.GetMenus();
-            return View(menus);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+            var list = await _context.SubPageMenus.ToListAsync();
+            return View(list);
         }
 
         private bool SubPageMenusModelExists(int id)
