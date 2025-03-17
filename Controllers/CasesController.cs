@@ -216,10 +216,20 @@ namespace TrojWebApp.Controllers
 
             ViewBag.CaseActive = currentCase.Active;
 
+            ViewBag.CaseSecrecy = false;
             if (string.IsNullOrEmpty(currentCase.Title))
                 ViewBag.CaseTypeAndTitle = "Uppdrag: " + currentCase.CaseType + "/" + id;
             else
+            {
                 ViewBag.CaseTypeAndTitle = "Uppdrag: " + currentCase.CaseType + "/" + id + ", " + currentCase.Title;
+                if (currentCase.Title.ToUpper().Contains("SEKRETESS"))
+                {
+                    ViewBag.CaseSecrecy = true;
+                }
+            }
+
+            if (currentCase.Secrecy)
+                ViewBag.CaseSecrecy = currentCase.Secrecy;
 
             ViewBag.Client = currentCase.FirstName + " " + currentCase.LastName;
             if (currentCase.Comment != null)
@@ -384,17 +394,20 @@ namespace TrojWebApp.Controllers
                 return NoContent();
 
             bool active = false;
-            string[] str = collection["Active"].ToArray();
-            if (str.Length > 1)
-            {
+            string[] str1 = collection["Active"].ToArray();
+            if (str1.Length > 1)
                 active = true;
-            }
+
+            bool secrecy = false;
+            string[] str2 = collection["Secrecy"].ToArray();
+            if (str2.Length > 1)
+                secrecy = true;
 
             DateTime? inputFinishedDate = null;
             if (finishedDate != "")
                 inputFinishedDate = DateTime.Parse(finishedDate);
 
-            CasesViewModel updatedCase = await _caseConnection.UpdateCase(id, int.Parse(caseTypeId.ToString()), title.ToString(), responsible.ToString(), active, inputFinishedDate, comment.ToString(), int.Parse(personId.ToString()), _currentCase, UserName);
+            CasesViewModel updatedCase = await _caseConnection.UpdateCase(id, int.Parse(caseTypeId.ToString()), title.ToString(), responsible.ToString(), active, secrecy, inputFinishedDate, comment.ToString(), int.Parse(personId.ToString()), _currentCase, UserName);
             if (updatedCase == null)
                 return NoContent();
             else

@@ -90,6 +90,7 @@
                     <th class="tablehead2">Titel:</th>
                     <th class="tablehead2">Ombud:</th>
                     <th class="tablehead2">Aktiv:</th>
+                    <th class="tablehead2">Sekretess:</th>
                     <th class="tablehead2">Klient:</th>
                 </tr>
             </thead>
@@ -102,7 +103,8 @@
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Title)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Responsible)</td>
                         <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Active)</td>
-                        <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId, "Details", "Persons", new { id=item.PersonId })</td>
+                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Secrecy)</td>
+                        <td class="tablefont2" nowrap>@Html.ActionLink(item.FirstName + " " + item.LastName + "/" + item.PersonId, "Details", "Persons", new { id = item.PersonId })</td>
                     </tr>
 
                 }

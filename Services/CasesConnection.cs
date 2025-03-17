@@ -30,7 +30,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<CasesViewModel>> GetCases(int offset, int size)
         {
-            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
+            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, Cases.Secrecy, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
             sql.AppendFormat(", CONVERT(nvarchar(512), DecryptByPassphrase('{0}', TitleCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Title", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(4000), DecryptByPassphrase('{0}', CommentCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Comment", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
@@ -161,7 +161,7 @@ namespace TrojWebApp.Services
 
         public async Task<CasesViewModel> GetCase(int id)
         {
-            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
+            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, Cases.Secrecy, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
             sql.AppendFormat(", CONVERT(nvarchar(512), DecryptByPassphrase('{0}', TitleCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Title", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(4000), DecryptByPassphrase('{0}', CommentCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Comment", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
@@ -174,7 +174,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<CasesViewModel>> GetFilteredCases(string caseId, string whenDate, string caseTypeId, string title, string initials, string firstName, string lastName, int offset, int size)
         {
-            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
+            StringBuilder sql = new StringBuilder("SELECT Cases.CaseId, Cases.CaseTypeId, CaseTypes.CaseType, CaseDate, Cases.Responsible, Cases.Active, Cases.Secrecy, FinishedDate, Cases.Changed, Cases.ChangedBy, PersonCases.PersonId, PersonCases.PersonCaseId");
             sql.AppendFormat(", CONVERT(nvarchar(512), DecryptByPassphrase('{0}', TitleCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Title", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(4000), DecryptByPassphrase('{0}', CommentCry, 1, CONVERT(varbinary, Cases.CaseId))) AS Comment", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
@@ -271,6 +271,7 @@ namespace TrojWebApp.Services
                 CaseDate = DateTime.Now,
                 Responsible = responsible,
                 Active = true,
+                Secrecy = false,
                 FinishedDate = null,
                 Comment = "",
                 Changed = DateTime.Now,
@@ -428,7 +429,7 @@ namespace TrojWebApp.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<CasesViewModel> UpdateCase(int id, int caseTypeId, string title, string responsible, bool active, DateTime? finishedDate, string comment, int personId, CasesViewModel currentCase, string userName = "")
+        public async Task<CasesViewModel> UpdateCase(int id, int caseTypeId, string title, string responsible, bool active, bool secrecy, DateTime? finishedDate, string comment, int personId, CasesViewModel currentCase, string userName = "")
         {
             CasesModel casesModel = new CasesModel
             {
@@ -438,6 +439,7 @@ namespace TrojWebApp.Services
                 CaseDate = currentCase.CaseDate,
                 Responsible = responsible,
                 Active = active,
+                Secrecy = secrecy,
                 FinishedDate = finishedDate,
                 Comment = comment,
                 Changed = DateTime.Now,

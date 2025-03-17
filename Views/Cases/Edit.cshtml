@@ -73,8 +73,8 @@ else
                         <th class="head">Typ:</th>
                         <td>
                             <select name="CaseTypeId"
-                                asp-for="CaseTypeId " class="font2"
-                                asp-items="@(new SelectList(ViewBag.CaseTypes,"Value","Text"))">
+                                    asp-for="CaseTypeId " class="font2"
+                                    asp-items="@(new SelectList(ViewBag.CaseTypes,"Value","Text"))">
                             </select>
                             <span asp-validation-for="CaseTypeId" class="text-danger"></span>
                         </td>
@@ -90,8 +90,8 @@ else
                         <th class="head">Ombud:</th>
                         <td>
                             <select name="Responsible"
-                                asp-for="Responsible " class="font2"
-                                asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
+                                    asp-for="Responsible " class="font2"
+                                    asp-items="@(new SelectList(ViewBag.Employees,"Value","Text"))">
                             </select>
                             <span asp-validation-for="Responsible" class="text-danger"></span>
                         </td>
@@ -100,8 +100,8 @@ else
                         <th class="head" nowrap>Primär klient:</th>
                         <td>
                             <select name="PersonId"
-                                asp-for="PersonId " class="font2"
-                                asp-items="@(new SelectList(ViewBag.Persons,"Value","Text"))">
+                                    asp-for="PersonId " class="font2"
+                                    asp-items="@(new SelectList(ViewBag.Persons,"Value","Text"))">
                             </select>
                             <span asp-validation-for="PersonId" class="text-danger"></span>
                         </td>
@@ -111,6 +111,14 @@ else
                         <td>
                             <label class="form-check-label">
                                 <input class="form-check-input" asp-for="Active" />
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="head">Sekretess:</th>
+                        <td>
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Secrecy" />
                             </label>
                         </td>
                     </tr>

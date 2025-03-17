@@ -15,6 +15,7 @@ namespace TrojWebApp.Models
         public DateTime CaseDate { get; set; }
         public string Responsible { get; set; }
         public bool Active { get; set; }
+        public bool Secrecy { get; set; }
         public DateTime? FinishedDate { get; set; }
         public string Comment { get; set; }
         public DateTime Changed { get; set; }
