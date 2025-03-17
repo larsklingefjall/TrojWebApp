@@ -1,7 +1,8 @@
-﻿@model TrojWebApp.Models.PhoneNumbersModel
+﻿@model TrojWebApp.Models.MailAddressesModel
 
 @{
-    ViewData["Title"] = "Skapa telefonnummer för " + @ViewBag.PersonName;
+    ViewData["Title"] = "Addera mail för " + @ViewBag.PersonName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <table border="0" class="table table-condensed table-no-border">
     <tr>
@@ -21,23 +22,20 @@
     <div class="col-sm-2">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PersonId" value="@ViewBag.PersonId"/>
+            <input type="hidden" asp-for="PersonId" value="@ViewBag.PersonId" />
             <table border="0" class="table table-condensed table-no-border">
                 <tr>
-                    <th class="head">Typ:</th>
+                    <th class="head">Mail:</th>
                     <td>
-                        <select name="PhoneNumberTypeId"
-                                asp-for="PhoneNumberTypeId" class="font2"
-                                asp-items="@(new SelectList(ViewBag.PhoneNumberTypes,"Value","Text"))">
-                        </select>
-                        <span asp-validation-for="PhoneNumberTypeId" class="text-danger"></span>
+                        <input asp-for="MailAddress" size="40" class="font2" />
+                        <span asp-validation-for="MailAddress" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
-                    <th class="head">Nummer:</th>
+                    <th class="head">Kommentar:</th>
                     <td>
-                        <input asp-for="PhoneNumber" size="40" class="font2" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        <input asp-for="Comment" size="40" class="font2" />
+                        <span asp-validation-for="Comment" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>

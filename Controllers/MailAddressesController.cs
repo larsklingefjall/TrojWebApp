@@ -1,38 +1,32 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
 
 namespace TrojWebApp.Controllers
 {
     [Authorize]
-    public class PhoneNumbersController : IdenityController
+    public class MailAddressesController : IdenityController
     {
         private readonly PersonsConnection _personConnection;
-        private readonly PhoneNumberTypesConnection _phoneNumberTypesConnection;
         private readonly UserConnection _userConnection;
         private readonly TrojContext _context;
-
         private static int _currentPersonId;
 
-        public PhoneNumbersController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
+
+        public MailAddressesController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
             _context = context;
             _personConnection = new PersonsConnection(context, configuration["CryKey"]);
-            _phoneNumberTypesConnection = new PhoneNumberTypesConnection(context);
             _userConnection = new UserConnection(context);
         }
 
-        // GET: PhoneNumbersController/Create
+        // GET: MailAddresses/Create
         public async Task<ActionResult> Create(int? id)
         {
             if (id == null)
@@ -53,55 +47,45 @@ namespace TrojWebApp.Controllers
                 return NoContent();
             ViewBag.PersonName = currentPerson.FirstName + " " + currentPerson.LastName;
 
-            List<SelectListItem> phoneNumberTypes = new List<SelectListItem>();
-            var phoneNumberList = await _phoneNumberTypesConnection.GetPhoneNumberTypes();
-            foreach (var type in phoneNumberList)
-                phoneNumberTypes.Add(new SelectListItem { Value = type.PhoneNumberTypeId.ToString(), Text = type.PhoneNumberType });
-            ViewBag.PhoneNumberTypes = phoneNumberTypes;
-
             return View();
         }
 
-        // POST: PhoneNumbersController/Create
+        // POST: MailAddresses/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("MailAddressId,PersonId,MailAddress,Comment,Changed,ChangedBy")] MailAddressesModel mailAddressesModel)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
 
-            if (!collection.TryGetValue("PersonId", out StringValues personId))
-                return NoContent();
-
-            if (!collection.TryGetValue("PhoneNumberTypeId", out StringValues phoneNumberTypeId))
-                return NoContent();
-
-            if (!collection.TryGetValue("PhoneNumber", out StringValues phoneNumber))
-                return NoContent();
-
-            PhoneNumbersViewModel newNumber = await _personConnection.CreatePhoneNumber(Int32.Parse(personId.ToString()), Int32.Parse(phoneNumberTypeId.ToString()), phoneNumber.ToString(), UserName);
-            if (newNumber == null)
-                return NoContent();
-
-            return RedirectToAction("Details", "Persons", new { id = newNumber.PersonId });
+            if (ModelState.IsValid)
+            {
+                MailAddressesModel newMail = await _personConnection.CreateMailAddress(mailAddressesModel.PersonId, mailAddressesModel.MailAddress.ToString(), mailAddressesModel.Comment, UserName);
+                if (newMail == null)
+                    return NoContent();
+            }
+            return RedirectToAction("Details", "Persons", new { id = _currentPersonId });
         }
 
-        // GET: PhoneNumbersController/Delete/5
-        public async Task<ActionResult> Delete(int id, int personId)
+        // GET: MailAddresses/Delete/5
+        public async Task<IActionResult> Delete(int id, int personId)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "Persons", new { id = personId });
 
-            var phoneNumberModel = await _context.PhoneNumbers.FirstOrDefaultAsync(m => m.PhoneNumberId == id);
-            if (phoneNumberModel == null)
+            var mailAddressesModel = await _context.MailAddresses.FirstOrDefaultAsync(m => m.MailAddressId == id);
+            if (mailAddressesModel == null)
             {
                 return NotFound();
             }
             else
             {
-                await _personConnection.DeletePhoneNumber(id);
+                await _personConnection.DeleteMail(id);
             }
             return RedirectToAction("Details", "Persons", new { id = personId });
         }
+
     }
 }

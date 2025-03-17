@@ -34,6 +34,7 @@ namespace TrojWebApp.Models
         public DbSet<PhoneNumberTypesModel> PhoneNumberTypes { get; set; } = null!;
         public DbSet<PhoneNumbersModel> PhoneNumbers { get; set; } = null!;
         public DbSet<PhoneNumbersViewModel> PhoneNumbersView { get; set; } = null!;
+        public DbSet<MailAddressesModel> MailAddresses { get; set; } = null!;
         public DbSet<CaseNumbersModel> CaseNumbers { get; set; } = null!;
         public DbSet<CaseNumbersViewModel> CaseNumbersView { get; set; } = null!;
         public DbSet<CaseLogsModel> CaseLogs { get; set; } = null!;

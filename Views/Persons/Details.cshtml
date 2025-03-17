@@ -35,6 +35,41 @@
     </div>
 </div>
 @{
+    if (ViewBag.MailAddresses != null)
+    {
+        <div class="row">
+            <div class="col-sm-2">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="tablehead2">Mail:</th>
+                            <th class="tablehead2">Kommentar:</th>
+                            <th class="tablehead2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (MailAddressesModel item in ViewBag.MailAddresses)
+                        {
+                            <tr>
+                                <td class="tablefont2" nowrap>@item.MailAddress</td>
+                                <td class="tablefont2" nowrap>@item.Comment</td>
+                                @if (ViewBag.DeleteMailPermission)
+                                {
+                                    <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "MailAddresses", new { id = @item.MailAddressId, personId = Model.PersonId })</td>
+                                }
+                                else
+                                {
+                                    <td class="tablefont2"></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+@{
     if (ViewBag.PhoneNumbers != null)
     {
         <div class="row">
@@ -51,7 +86,14 @@
                         {
                             <tr>
                                 <td class="tablefont2" nowrap>@item.PhoneNumberType @item.PhoneNumber</td>
-                                <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PhoneNumbers",  new { id = @item.PhoneNumberId, personId = Model.PersonId })</td>
+                                @if (ViewBag.DeletePhoneNumberPermission)
+                                {
+                                    <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PhoneNumbers",  new { id = @item.PhoneNumberId, personId = Model.PersonId })</td>
+                                }
+                                else
+                                {
+                                    <td class="tablefont2"></td>
+                                }
                             </tr>
                         }
                     </tbody>

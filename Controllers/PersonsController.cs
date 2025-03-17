@@ -176,6 +176,8 @@ namespace TrojWebApp.Controllers
 
             ViewBag.EditAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Edit", UserName);
             ViewBag.DeleteAddressPermission = _userConnection.AccessToSubPage("PersonAddresses", "Delete", UserName);
+            ViewBag.DeletePhoneNumberPermission = _userConnection.AccessToSubPage("PhoneNumbers", "Delete", UserName);
+            ViewBag.DeleteMailPermission = _userConnection.AccessToSubPage("MailAddresses", "Delete", UserName);
 
             ViewBag.PersonMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
             ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
@@ -205,6 +207,16 @@ namespace TrojWebApp.Controllers
                 ViewBag.Addresses = addresses;
             }
 
+            var mails = await _connection.GeMailsForPerson(id);
+            if (mails.Count() == 0)
+            {
+                ViewBag.MailAddresses = null;
+            }
+            else
+            {
+                ViewBag.MailAddresses = mails;
+            }
+
             var phoneNumbers = await _connection.GetPhoneNumbersForPerson(id);
             if (phoneNumbers.Count() == 0)
             {
@@ -214,6 +226,7 @@ namespace TrojWebApp.Controllers
             {
                 ViewBag.PhoneNumbers = phoneNumbers;
             }
+
             var cases = await _connection.GetPersonAtCases(id);
             if (cases.Count() == 0)
             {

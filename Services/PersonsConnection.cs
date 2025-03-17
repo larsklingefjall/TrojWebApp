@@ -246,6 +246,16 @@ namespace TrojWebApp.Services
             return await _context.PhoneNumbersView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
+        public async Task<IEnumerable<MailAddressesModel>> GeMailsForPerson(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT MailAddressId, PersonId, Changed, ChangedBy");
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MailAddressCry, 1 , CONVERT(varbinary, MailAddressId))) AS MailAddress", _cryKey);
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', CommentCry, 1 , CONVERT(varbinary, MailAddressId))) AS Comment", _cryKey);
+            sql.Append(" FROM MailAddresses");
+            sql.AppendFormat(" WHERE PersonId = {0}", id.ToString());
+            return await _context.MailAddresses.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
         public async Task<IEnumerable<PersonCasesViewModel>> GetCasesForPerson(int personId)
         {
             StringBuilder sql = new StringBuilder("SELECT PersonCaseId, PersonCases.PersonId, PersonCases.CaseId, PersonCases.PersonTypeId, PersonCases.Responsible, PersonCases.Changed, PersonCases.ChangedBy");
@@ -299,6 +309,16 @@ namespace TrojWebApp.Services
             sql.Append(" FROM PhoneNumberTypes INNER JOIN PhoneNumbers ON PhoneNumberTypes.PhoneNumberTypeId = PhoneNumbers.PhoneNumberTypeId");
             sql.AppendFormat(" WHERE PhoneNumbers.PhoneNumberId = {0}", id.ToString());
             return await _context.PhoneNumbersView.FromSqlRaw(sql.ToString()).FirstAsync();
+        }
+
+        public async Task<MailAddressesModel> GetMailAddress(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT MailAddressId, PersonId, Changed, ChangedBy");
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MailAddressCry, 1 , CONVERT(varbinary, MailAddressId))) AS MailAddress", _cryKey);
+            sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', CommentCry, 1 , CONVERT(varbinary, MailAddressId))) AS Comment", _cryKey);
+            sql.Append(" FROM MailAddresses");
+            sql.AppendFormat(" WHERE MailAddressId = {0}", id.ToString());
+            return await _context.MailAddresses.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
         public async Task<PersonsModel> CreatePerson(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string userName = "")
@@ -441,7 +461,7 @@ namespace TrojWebApp.Services
             if (numberOfSaves != 1)
                 return null;
 
-            PhoneNumbersModel newNumber = _context.PhoneNumbers.OrderByDescending(p => p.PhoneNumberTypeId).FirstOrDefault();
+            PhoneNumbersModel newNumber = _context.PhoneNumbers.OrderByDescending(p => p.PhoneNumberId).FirstOrDefault();
             if (newNumber == null)
                 return null;
 
@@ -457,6 +477,48 @@ namespace TrojWebApp.Services
             await _context.Database.ExecuteSqlRawAsync(sql.ToString());
 
             return await GetPhoneNumber(newNumber.PhoneNumberId);
+        }
+
+        public async Task<MailAddressesModel> CreateMailAddress(int personId, string mailAddress, string comment, string userName)
+        {
+            MailAddressesModel mail = new MailAddressesModel
+            {
+                MailAddressId = 0,
+                PersonId = personId,
+                Comment = "",
+                MailAddress = "",
+                Changed = DateTime.Now,
+                ChangedBy = userName
+            };
+            _context.MailAddresses.Add(mail);
+            int numberOfSaves = await _context.SaveChangesAsync();
+            if (numberOfSaves != 1)
+                return null;
+
+            MailAddressesModel newMail = _context.MailAddresses.OrderByDescending(p => p.MailAddressId).FirstOrDefault();
+            if (newMail == null)
+                return null;
+
+            StringBuilder sql = new StringBuilder("");
+            sql.Append("DECLARE @MailAddress nvarchar(1024); ");
+            sql.Append("DECLARE @Comment nvarchar(1024); ");
+            sql.AppendFormat("SET @MailAddress = '{0}'; ", mailAddress);
+            sql.AppendFormat("SET @Comment = '{0}'; ", comment);
+            sql.Append(" UPDATE MailAddresses SET ");
+            if (string.IsNullOrEmpty(mailAddress))
+                sql.Append(" MailAddressCry = Null");
+            else
+                sql.AppendFormat(" MailAddressCry = EncryptByPassPhrase('{0}', @MailAddress, 1, CONVERT( varbinary, MailAddressId))", _cryKey);
+            if (string.IsNullOrEmpty(comment))
+                sql.Append(" ,CommentCry = Null");
+            else
+                sql.AppendFormat(" ,CommentCry = EncryptByPassPhrase('{0}', @Comment, 1, CONVERT( varbinary, MailAddressId))", _cryKey);
+            sql.Append(", MailAddress = Null");
+            sql.Append(", Comment = Null");
+            sql.AppendFormat(" WHERE MailAddressId = {0}", newMail.MailAddressId);
+            await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+
+            return await GetMailAddress(newMail.MailAddressId);
         }
 
         public async Task<PersonsModel> UpdatePerson(int id, string firstName, string lastName, string middleName, string personNumber, string mailAddress, bool active, string userName = "")
@@ -601,5 +663,13 @@ namespace TrojWebApp.Services
             sql.AppendFormat(" WHERE PhoneNumberId = {0}", id);
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString());
         }
+
+        public async Task<int> DeleteMail(int id)
+        {
+            StringBuilder sql = new StringBuilder("DELETE FROM MailAddresses");
+            sql.AppendFormat(" WHERE MailAddressId = {0}", id);
+            return await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+        }
+
     }
 }
