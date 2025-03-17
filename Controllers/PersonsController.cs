@@ -95,12 +95,14 @@ namespace TrojWebApp.Controllers
                 collection.TryGetValue("PersonNumber", out StringValues personNumber);
                 collection.TryGetValue("MailAddress", out StringValues mailAddress);
                 collection.TryGetValue("Active", out StringValues active);
+                collection.TryGetValue("NeedInterpreter", out StringValues needInterpreter);
                 HttpContext.Session.SetString("TrojPersonFirstName", firstName.ToString());
                 HttpContext.Session.SetString("TrojPersonLastName", lastName.ToString());
                 HttpContext.Session.SetString("TrojPersonMiddleName", middleName.ToString());
                 HttpContext.Session.SetString("TrojPersonPersonNumber", personNumber.ToString());
                 HttpContext.Session.SetString("TrojPersonMailAddress", mailAddress.ToString());
                 HttpContext.Session.SetString("TrojPersonActive", active.ToString());
+                HttpContext.Session.SetString("TrojPersonNeedInterpreter", needInterpreter.ToString());
             }
 
             if (reset != null)
@@ -112,6 +114,7 @@ namespace TrojWebApp.Controllers
                 HttpContext.Session.Remove("TrojPersonPersonNumber");
                 HttpContext.Session.Remove("TrojPersonMailAddress");
                 HttpContext.Session.Remove("TrojPersonActive");
+                HttpContext.Session.Remove("TrojPersonNeedInterpreter");
             }
 
             IEnumerable<PersonsModel> persons;
@@ -124,14 +127,16 @@ namespace TrojWebApp.Controllers
                 string personNumber = HttpContext.Session.GetString("TrojPersonPersonNumber");
                 string mailAddress = HttpContext.Session.GetString("TrojPersonMailAddress");
                 string active = HttpContext.Session.GetString("TrojPersonActive");
-                persons = await _connection.GetFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active, iOffset, iSize);
-                numberOfPerson = await _connection.GetNumberOfFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active);
+                string needInterpreter = HttpContext.Session.GetString("TrojPersonNeedInterpreter");
+                persons = await _connection.GetFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active, needInterpreter, iOffset, iSize);
+                numberOfPerson = await _connection.GetNumberOfFilteredPersons(firstName, lastName, middleName, personNumber, mailAddress, active, needInterpreter);
                 ViewBag.FirstName = firstName;
                 ViewBag.LastName = lastName;
                 ViewBag.MiddleName = middleName;
                 ViewBag.PersonNumber = personNumber;
                 ViewBag.MailAddress = mailAddress;
                 ViewBag.Active = active;
+                ViewBag.NeedInterpreter = needInterpreter;
             }
             else
             {
@@ -143,6 +148,7 @@ namespace TrojWebApp.Controllers
                 ViewBag.PersonNumber = "";
                 ViewBag.MailAddress = "";
                 ViewBag.Active = "";
+                ViewBag.NeedInterpreter = "";
             }
 
             ViewBag.NumberOfPersons = numberOfPerson;
@@ -286,7 +292,7 @@ namespace TrojWebApp.Controllers
                 await _userConnection.CreateMenuItem(HttpContext.Request, menuTitle, person.PersonId, UserName);
             }
 
-            return View("Edit", person);
+            return RedirectToAction("Details", new { id = person.PersonId });
         }
 
         // GET: PersonsController/Edit/5
@@ -327,13 +333,20 @@ namespace TrojWebApp.Controllers
                 return NoContent();
 
             bool active = false;
-            string[] str = collection["Active"].ToArray();
-            if (str.Length > 1)
+            string[] str1 = collection["Active"].ToArray();
+            if (str1.Length > 1)
             {
                 active = true;
             }
 
-            PersonsModel person = await _connection.UpdatePerson(id, firstName.ToString(), lastName.ToString(), middleName.ToString(), personNumber.ToString(), mailAddress.ToString(), active, UserName);
+            bool needInterpreter = false;
+            string[] str2 = collection["NeedInterpreter"].ToArray();
+            if (str2.Length > 1)
+            {
+                needInterpreter = true;
+            }
+
+            PersonsModel person = await _connection.UpdatePerson(id, firstName.ToString(), lastName.ToString(), middleName.ToString(), personNumber.ToString(), mailAddress.ToString(), active, needInterpreter, UserName);
 
             if (person == null)
                 return NoContent();

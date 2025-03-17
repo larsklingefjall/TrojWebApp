@@ -1,10 +1,7 @@
-﻿using Microsoft.CodeAnalysis.Operations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Composition;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -24,7 +21,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<PersonsModel>> GetActivePersons()
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -38,7 +35,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<PersonsModel>> GetFilteredActivePersons(string firstName, string lastName)
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -66,7 +63,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<PersonsModel>> GetActivePersonsNotInCase(int caseId)
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -81,7 +78,7 @@ namespace TrojWebApp.Services
 
         public async Task<IEnumerable<PersonsModel>> GetPersons(int offset, int size)
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -101,9 +98,9 @@ namespace TrojWebApp.Services
             return NumberOf.NumberOf;
         }
 
-        public async Task<IEnumerable<PersonsModel>> GetFilteredPersons(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string active, int offset, int size)
+        public async Task<IEnumerable<PersonsModel>> GetFilteredPersons(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string active, string needInterpreter, int offset, int size)
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -148,6 +145,13 @@ namespace TrojWebApp.Services
                 else
                     where.AppendFormat(" WHERE Active = {0}", active);
             }
+            if (needInterpreter != "-1")
+            {
+                if (where.Length > 0)
+                    where.AppendFormat(" AND NeedInterpreter = {0}", needInterpreter);
+                else
+                    where.AppendFormat(" WHERE NeedInterpreter = {0}", needInterpreter);
+            }
             if (where.Length > 0)
                 sql.AppendFormat(" {0}", where.ToString());
             sql.Append(" ORDER BY LastName, FirstName");
@@ -155,7 +159,7 @@ namespace TrojWebApp.Services
             return await _context.Persons.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
-        public async Task<int> GetNumberOfFilteredPersons(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string active)
+        public async Task<int> GetNumberOfFilteredPersons(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string active, string needInterpreter)
         {
             StringBuilder sql = new StringBuilder("SELECT Count(PersonId) AS NumberOf");
             sql.Append(" FROM Persons");
@@ -196,6 +200,13 @@ namespace TrojWebApp.Services
                     where.AppendFormat(" AND Active = {0}", active);
                 else
                     where.AppendFormat(" WHERE Active = {0}", active);
+            }
+            if (needInterpreter != "-1")
+            {
+                if (where.Length > 0)
+                    where.AppendFormat(" AND NeedInterpreter = {0}", needInterpreter);
+                else
+                    where.AppendFormat(" WHERE NeedInterpreter = {0}", needInterpreter);
             }
             if (where.Length > 0)
                 sql.AppendFormat(" {0}", where.ToString());
@@ -281,7 +292,7 @@ namespace TrojWebApp.Services
 
         public async Task<PersonsModel> GetPerson(int id)
         {
-            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, Changed, ChangedBy");
+            StringBuilder sql = new StringBuilder("SELECT PersonId, Active, NeedInterpreter, Changed, ChangedBy");
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', FirstNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS FirstName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', LastNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS LastName", _cryKey);
             sql.AppendFormat(", CONVERT(nvarchar(256), DecryptByPassphrase('{0}', MiddleNameCry, 1 , CONVERT(varbinary, Persons.PersonId))) AS MiddleName", _cryKey);
@@ -332,6 +343,7 @@ namespace TrojWebApp.Services
                 PersonNumber = personNumber,
                 MailAddress = mailAddress,
                 Active = true,
+                NeedInterpreter = false,
                 Changed = DateTime.Now,
                 ChangedBy = userName
             };
@@ -521,7 +533,7 @@ namespace TrojWebApp.Services
             return await GetMailAddress(newMail.MailAddressId);
         }
 
-        public async Task<PersonsModel> UpdatePerson(int id, string firstName, string lastName, string middleName, string personNumber, string mailAddress, bool active, string userName = "")
+        public async Task<PersonsModel> UpdatePerson(int id, string firstName, string lastName, string middleName, string personNumber, string mailAddress, bool active, bool needInterpreter, string userName = "")
         {
             PersonsModel person = new PersonsModel
             {
@@ -532,6 +544,7 @@ namespace TrojWebApp.Services
                 PersonNumber = personNumber,
                 MailAddress = mailAddress,
                 Active = active,
+                NeedInterpreter = needInterpreter,
                 Changed = DateTime.Now,
                 ChangedBy = userName
             };

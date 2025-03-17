@@ -13,6 +13,7 @@ namespace TrojWebApp.Models
         public string PersonNumber { get; set; }
         public string MailAddress { get; set; }
         public bool Active { get; set; }
+        public bool NeedInterpreter { get; set; }
         public DateTime Changed { get; set; }
         public string ChangedBy { get; set; }
     }
