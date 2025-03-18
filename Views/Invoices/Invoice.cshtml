@@ -1,13 +1,8 @@
 ﻿@model TrojWebApp.Models.InvoicesViewModel
-
-@{
-    Layout = "/Views/Shared/_Invoice.cshtml";
-}
-
 @{
     ViewData["Title"] = "Faktura";
+    Layout = "/Views/Shared/_Invoice.cshtml";
 }
-
 <div id="bodyUpperDiv">
     <table border="0" cellpadding="1" cellspacing="0">
         <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.InvoicePlace) @string.Format("{0:yyyy-MM-dd}", Model.InvoiceDate)</td></tr>

@@ -1,38 +1,64 @@
 ﻿@model TrojWebApp.Models.InvoiceUnderlaysViewModel
-
-@{
-    Layout = "/Views/Shared/_CostReport.cshtml";
-}
-
 @{
     ViewData["Title"] = "Arbetsredogörelse";
+    Layout = "/Views/Shared/_CostReport.cshtml";
 }
-
+@{
+    var underlayDate = "";
+    if (@ViewBag.Date == false)
+    {
+        underlayDate = ", " + string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate);
+    }
+}
 <div id="bodyUpperDiv">
     <table border="0" class="table table-report">
-        <tr><td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE, @string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate)</td></tr>
+        <tr>
+            <td class="avaFont5" valign="top" align="left" nowrap>ARBETSREDOGÖRELSE @underlayDate</td>
+        </tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="5"></td></tr>
     </table>
     <table border="0" class="table table-report">
 
         <tr>
             <td class="avaHeadPrint" valign="top" align="left" nowrap>Referens:</td>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>Uppdrag:</td>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>Ombud:</td>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>Målnummer:</td>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>Klient:</td>
+            @if (@ViewBag.Case == false)
+            {
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>Uppdrag:</td>
+            }
+            @if (@ViewBag.Employee == false)
+            {
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>Ombud:</td>
+            }
+            @if (@ViewBag.CaseNumber == false)
+            {
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>Målnummer:</td>
+            }
+            @if (@ViewBag.Client == false)
+            {
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>Klient:</td>
+            }
         </tr>
         <tr>
             <td class="avaFont3" nowrap>@Html.DisplayFor(model => model.UnderlayNumber)</td>
-            <td class="avaFont3" nowrap>@Html.DisplayFor(model => model.CaseId)-@Html.DisplayFor(model => model.CaseType)</td>
-            <td class="avaFont3" nowrap>@ViewBag.EmployeeFirstName @ViewBag.EmployeeLastName</td>
-                @{
-                    if (ViewBag.CaseNumbers != "")
-                    {
+            @if (@ViewBag.Case == false)
+            {
+                <td class="avaFont3" nowrap>@Html.DisplayFor(model => model.CaseId)-@Html.DisplayFor(model => model.CaseType)</td>
+            }
+            @if (@ViewBag.Employee == false)
+            {
+                <td class="avaFont3" nowrap>@ViewBag.EmployeeFirstName @ViewBag.EmployeeLastName</td>
+            }
+            @if (@ViewBag.CaseNumber == false)
+            {
+                @if (ViewBag.CaseNumbers != "")
+                {
                     <td class="avaFont3" nowrap>@ViewBag.CaseNumbers</td>
-                    }
                 }
-            <td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) /@Html.DisplayFor(model => model.PersonId)</td>
+            }
+            @if (@ViewBag.Client == false)
+            {
+                <td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) /@Html.DisplayFor(model => model.PersonId)</td>
+            }
         </tr>
     </table>
 

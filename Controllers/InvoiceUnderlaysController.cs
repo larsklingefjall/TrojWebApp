@@ -28,6 +28,7 @@ namespace TrojWebApp.Controllers
         private static InvoiceUnderlaysModel _currentUnderlay;
         private readonly UserConnection _userConnection;
         private static int _currentCaseId;
+        private static int _currentUnderlayId;
 
         public InvoiceUnderlaysController(TrojContext context, IConfiguration configuration, UserManager<IdentityUser> userManager) : base(userManager)
         {
@@ -259,11 +260,110 @@ namespace TrojWebApp.Controllers
             return View(underlay);
         }
 
+        public async Task<IActionResult> Print(int id)
+        {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems(HttpContext.Request, UserName);
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
+
+            _currentUnderlayId = id;
+            ViewBag.InvoiceUnderlayId = id;
+            ViewBag.UnderlayPageTitle = "Skriv ut kostnadsräkning och arbetsredogörelse";
+            IEnumerable <InvoicePrintingFieldsModel> fields = await _invoiceUnderlaysConnection.GetInvoicePrintingFields(id);
+
+            ViewBag.Case = false;
+            ViewBag.Employee = false;
+            ViewBag.Date = false;
+            ViewBag.Client = true;
+            ViewBag.Address = false;
+            ViewBag.CaseNumber = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)           
+                ViewBag.Case = true;      
+            if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)  
+                ViewBag.Employee = true;      
+            if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)   
+                ViewBag.Date = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Client") != null)
+                ViewBag.Client = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "Address") != null)
+                ViewBag.Address = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "CaseNumber") != null)
+                ViewBag.CaseNumber = true;
+            
+            return View(fields);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Case(bool isChecked)
+        {
+            await _invoiceUnderlaysConnection.SetField(_currentUnderlayId, "Case", UserName);
+            return RedirectToAction("Print", new { id = _currentUnderlayId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Emplyee(bool isChecked)
+        {
+            await _invoiceUnderlaysConnection.SetField(_currentUnderlayId, "Employee", UserName);
+            return RedirectToAction("Print", new { id = _currentUnderlayId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Date(bool isChecked)
+        {
+            await _invoiceUnderlaysConnection.SetField(_currentUnderlayId, "Date", UserName);
+            return RedirectToAction("Print", new { id = _currentUnderlayId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Client(bool isChecked)
+        {
+            await _invoiceUnderlaysConnection.SetField(_currentUnderlayId, "Client", UserName);
+            return RedirectToAction("Print", new { id = _currentUnderlayId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CaseNumber(bool isChecked)
+        {
+            await _invoiceUnderlaysConnection.SetField(_currentUnderlayId, "CaseNumber", UserName);
+            return RedirectToAction("Print", new { id = _currentUnderlayId });
+        }
+
         // GET: InvoiceUnderlaysController/Costreport/5
         public async Task<IActionResult> Costreport(int id)
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
+            IEnumerable<InvoicePrintingFieldsModel> fields = await _invoiceUnderlaysConnection.GetInvoicePrintingFields(id);
+            ViewBag.Case = false;
+            ViewBag.Employee = false;
+            ViewBag.Date = false;
+            ViewBag.Client = true;
+            ViewBag.Address = false;
+            ViewBag.CaseNumber = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)            
+                ViewBag.Case = true;       
+            if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)
+                ViewBag.Employee = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)
+                ViewBag.Date = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Client") != null)
+                ViewBag.Client = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "CaseNumber") != null)
+                ViewBag.CaseNumber = true;
 
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)
@@ -327,6 +427,24 @@ namespace TrojWebApp.Controllers
         {
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Details", "InvoiceUnderlays", new { id });
+
+            IEnumerable<InvoicePrintingFieldsModel> fields = await _invoiceUnderlaysConnection.GetInvoicePrintingFields(id);
+            ViewBag.Case = false;
+            ViewBag.Employee = false;
+            ViewBag.Date = false;
+            ViewBag.Client = true;
+            ViewBag.Address = false;
+            ViewBag.CaseNumber = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)
+                ViewBag.Case = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)
+                ViewBag.Employee = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)
+                ViewBag.Date = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Client") != null)
+                ViewBag.Client = false;
+            if (fields.FirstOrDefault(u => u.FieldName == "CaseNumber") != null)
+                ViewBag.CaseNumber = true;
 
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(id);
             if (underlay == null)

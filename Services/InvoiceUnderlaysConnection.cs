@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 using System.Text;
@@ -686,5 +687,48 @@ namespace TrojWebApp.Services
             }
             return true;
         }
+
+        public async Task<IEnumerable<InvoicePrintingFieldsModel>> GetInvoicePrintingFields(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT InvoicePrintingField, InvoiceUnderlayId, FieldName, Changed, ChangedBy");
+            sql.Append(" FROM InvoicePrintingFields");
+            sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", id);
+            return await _context.InvoicePrintingFields.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<IEnumerable<InvoicePrintingFieldsModel>> GetInvoicePrintingFields(int id, string field)
+        {
+            StringBuilder sql = new StringBuilder("SELECT InvoicePrintingField, InvoiceUnderlayId, FieldName, Changed, ChangedBy");
+            sql.Append(" FROM InvoicePrintingFields");
+            sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", id);
+            sql.AppendFormat(" AND FieldName = '{0}'", field);
+            return await _context.InvoicePrintingFields.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<int> SetField(int id, string field, string userName)
+        {
+            var existing = await GetInvoicePrintingFields(id, field);
+            if (existing != null && existing.Count() > 0)
+            {
+                StringBuilder sql = new StringBuilder("DELETE FROM InvoicePrintingFields");
+                sql.AppendFormat(" WHERE InvoiceUnderlayId = {0}", id);
+                sql.AppendFormat(" AND FieldName = '{0}'", field);
+                return await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+            }
+            else
+            {
+                InvoicePrintingFieldsModel printingField = new InvoicePrintingFieldsModel
+                {
+                    InvoicePrintingField = 0,
+                    InvoiceUnderlayId = id,
+                    FieldName = field,
+                    Changed = DateTime.Now,
+                    ChangedBy = userName
+                };
+                _context.InvoicePrintingFields.Add(printingField);
+                return await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

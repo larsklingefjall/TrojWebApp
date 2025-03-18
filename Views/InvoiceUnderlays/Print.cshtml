@@ -1,0 +1,79 @@
+﻿@model IEnumerable<TrojWebApp.Models.InvoicePrintingFieldsModel>
+@{
+    ViewData["Title"] = @ViewBag.UnderlayPageTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="InvoiceUnderlays" asp-action="Details" asp-route-id=@ViewBag.InvoiceUnderlayId title="Tillbaka till underlag"><span class='glyphicon glyphicon-home' /></a></td>
+        @if (ViewBag.Menu != null)
+        {
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString(), new { id = ViewBag.InvoiceUnderlayId })</td>
+            }
+        }
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table border="0" class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Uppdrag:</td>
+                <td class="head">Ombud:</td>
+                <td class="head">Datum:</td>
+                <td class="head">Klient:</td>
+                <td class="head">Målnummer:</td>
+            </tr>
+            <tr>
+                <td class="font2">
+                    @using (Html.BeginForm("Case", "InvoiceUnderlays", FormMethod.Post))
+                    {
+                        <label>
+                            @Html.CheckBox("isChecked", @ViewBag.Case, new { @onchange = "this.form.submit();" })
+                        </label>
+                    }
+                </td>
+                <td class="font2">
+                    @using (Html.BeginForm("Emplyee", "InvoiceUnderlays", FormMethod.Post))
+                    {
+                        <label>
+                            @Html.CheckBox("isChecked", @ViewBag.Employee, new { @onchange = "this.form.submit();" })
+                        </label>
+                    }
+                </td>
+                <td class="font2">
+                    @using (Html.BeginForm("Date", "InvoiceUnderlays", FormMethod.Post))
+                    {
+                        <label>
+                            @Html.CheckBox("isChecked", @ViewBag.Date, new { @onchange = "this.form.submit();" })
+                        </label>
+                    }
+                </td>
+                <td class="font2">
+                    @{
+                        var client = !ViewBag.Client;
+                    }
+                    @using (Html.BeginForm("Client", "InvoiceUnderlays", FormMethod.Post))
+                    {
+                        <label>
+                            @Html.CheckBox("isChecked", client, new { @onchange = "this.form.submit();" })
+                        </label>
+                    }
+                </td>
+                <td class="font2">
+                    @using (Html.BeginForm("CaseNumber", "InvoiceUnderlays", FormMethod.Post))
+                    {
+                        <label>
+                            @Html.CheckBox("isChecked", @ViewBag.CaseNumber, new { @onchange = "this.form.submit();" })
+                        </label>
+                    }
+                </td>
+                <td class="font2">@Html.ActionLink("Kostnadsräkning", "Costreport", "InvoiceUnderlays", new { id = ViewBag.InvoiceUnderlayId }, new { @class = "btn btn-primary" })</td>
+                <td class="font2">@Html.ActionLink("Arbetsredogörelse", "Workingreport", "InvoiceUnderlays", new { id = ViewBag.InvoiceUnderlayId }, new { @class = "btn btn-primary" })</td>
+            </tr>
+        </table>
+    </div>
+</div>

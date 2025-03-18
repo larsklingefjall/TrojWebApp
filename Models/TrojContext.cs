@@ -46,6 +46,7 @@ namespace TrojWebApp.Models
         public DbSet<InvoiceUnderlaysViewModel> InvoiceUnderlaysView { get; set; } = null!;
         public DbSet<InvoiceUnderlaysPartialViewModel> InvoiceUnderlaysPartialView { get; set; } = null!;
         public DbSet<InvoiceUnderlaySummarysModel> InvoiceUnderlaySummaries { get; set; } = null!;
+        public DbSet<InvoicePrintingFieldsModel> InvoicePrintingFields { get; set; } = null!;
         public DbSet<TotalSumModel> UnderlaySummariesTotalSum { get; set; } = null!;
         public DbSet<InvoiceWorkingTimesModel> InvoiceWorkingTimes { get; set; } = null!;
         public DbSet<InvoiceWorkingTimesViewModel> InvoiceWorkingTimesView { get; set; } = null!;

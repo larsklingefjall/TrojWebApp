@@ -1,38 +1,40 @@
 ﻿@model TrojWebApp.Models.InvoiceUnderlaysViewModel
-
-@{
-    Layout = "/Views/Shared/_CostReport.cshtml";
-}
-
 @{
     ViewData["Title"] = "Kostnadsräkning";
+    Layout = "/Views/Shared/_CostReport.cshtml";
 }
-
 <div id="bodyUpperDiv">
     <table border="0" cellpadding="1" cellspacing="0">
-        <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.UnderlayPlace) @string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate)</td></tr>
+        @if (@ViewBag.Date == false)
+        {
+            <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.UnderlayPlace) @string.Format("{0:yyyy-MM-dd}", Model.UnderlayDate)</td></tr>
+        }
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="30"></td></tr>
         <tr><td class="avaFont5" valign="top" align="left" nowrap>KOSTNADSRÄKNING</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="15"></td></tr>
-        <tr>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>
-                Målnummer:
-                @{
-                    if (ViewBag.CaseNumbers != null)
+        @if (@ViewBag.CaseNumber == false)
+        {
+            <tr>
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>
+                    Målnummer:
+                    @if (ViewBag.CaseNumbers != null)
                     {
                         @foreach (CaseNumbersViewModel item in ViewBag.CaseNumbers)
                         {
                             @item.CaseNumber
                         }
                     }
-                }
-            </td>
-        </tr>
+                </td>
+            </tr>
+        }
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="5"></td></tr>
         <tr><td class="avaFont4" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.Headline1)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
-        <tr><td class="avaFont3" valign="top" align="left" nowrap>Klient/Uppdrag: @Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) / @Html.DisplayFor(model => model.CaseType)</td></tr>
-        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
+        @if (@ViewBag.Client == false)
+        {
+            <tr><td class="avaFont3" valign="top" align="left" nowrap>Klient/Uppdrag: @Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName) / @Html.DisplayFor(model => model.CaseType)</td></tr>
+            <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
+        }
         <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Referens: @Html.DisplayFor(model => model.UnderlayNumber) (anges vid betalning)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
         <tr><td class="avaHeadPrint" valign="top" align="left" nowrap>Arbetsredogörelse:</td></tr>
