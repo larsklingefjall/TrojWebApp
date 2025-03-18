@@ -62,6 +62,18 @@ namespace TrojWebApp.Services
             return await _context.PageUsersView3.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
+        public async Task<bool> HavePageUser(int employeeId, int pageId)
+        {
+            StringBuilder sql = new StringBuilder("SELECT PageUsers3.*, Pages3.Title, Pages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM PageUsers3 INNER JOIN");
+            sql.Append(" Pages3 ON PageUsers3.PageId = Pages3.PageId INNER JOIN");
+            sql.Append(" Employees ON PageUsers3.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE PageUsers3.EmployeeId = {0}", employeeId);
+            sql.AppendFormat(" AND PageUsers3.PageId = {0}", pageId);
+            var list = await _context.PageUsersView3.FromSqlRaw(sql.ToString()).ToListAsync();
+            return list.Count > 0;
+        }
+
         public async Task<IEnumerable<PageUsers3Model>> GetPageUser4Employee(int id)
         {
             return await _context.PageUsers3.Where(s => s.EmployeeId == id).ToListAsync();
@@ -82,6 +94,17 @@ namespace TrojWebApp.Services
             return await _context.SubPageUsersView3.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
+        public async Task<IEnumerable<SubPageUsersView3Model>> GetSubPageUsers(int id)
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageUsers3.*, SubPages3.Title, SubPages3.Controller, SubPages3.Action, SubPages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM SubPageUsers3 INNER JOIN");
+            sql.Append(" SubPages3 ON SubPageUsers3.SubPageId = SubPages3.SubPageId INNER JOIN");
+            sql.Append(" Employees ON SubPageUsers3.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE Employees.EmployeeId = {0}", id);
+            sql.Append(" ORDER BY SubPages3.Controller, SubPages3.Action");
+            return await _context.SubPageUsersView3.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
         public async Task<SubPageUsersView3Model> GetSubPageUser(int id)
         {
             StringBuilder sql = new StringBuilder("SELECT SubPageUsers3.*, SubPages3.Title, SubPages3.Controller, SubPages3.Action, SubPages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
@@ -92,23 +115,38 @@ namespace TrojWebApp.Services
             return await _context.SubPageUsersView3.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
+        public async Task<bool> HaveSubPageUser(int employeeId, int subPageId)
+        {
+            StringBuilder sql = new StringBuilder("SELECT SubPageUsers3.*, SubPages3.Title, SubPages3.Controller, SubPages3.Action, SubPages3.Position, Employees.FirstName, Employees.LastName, Employees.Initials");
+            sql.Append(" FROM SubPageUsers3 INNER JOIN");
+            sql.Append(" SubPages3 ON SubPageUsers3.SubPageId = SubPages3.SubPageId INNER JOIN");
+            sql.Append(" Employees ON SubPageUsers3.EmployeeId = Employees.EmployeeId");
+            sql.AppendFormat(" WHERE SubPageUsers3.EmployeeId = {0}", employeeId);
+            sql.AppendFormat(" AND SubPageUsers3.SubPageId = {0}", subPageId);
+            var list = await _context.SubPageUsersView3.FromSqlRaw(sql.ToString()).ToListAsync();
+            return list.Count > 0;
+        }
+
         public async Task<bool> CopyPageUsers(int fromEmployeeId, int toEmployeeId, string userName)
         {
             IEnumerable<PageUsers3Model> list = await GetPageUser4Employee(fromEmployeeId);
             foreach (PageUsers3Model model in list)
             {
-                StringBuilder sql = new StringBuilder("INSERT INTO PageUsers3 (PageId,EmployeeId,Changed,ChangedBy) VALUES(");
-                sql.AppendFormat("{0},", model.PageId);
-                sql.AppendFormat("{0},", toEmployeeId);
-                sql.AppendFormat("'{0}',", DateTime.Now);
-                sql.AppendFormat("'{0}')", userName);
-                try
+                if (await HavePageUser(toEmployeeId, model.PageId) == false)
                 {
-                    await _context.Database.ExecuteSqlRawAsync(sql.ToString());
-                }
-                catch (Exception)
-                {
-                    return false;
+                    StringBuilder sql = new StringBuilder("INSERT INTO PageUsers3 (PageId,EmployeeId,Changed,ChangedBy) VALUES(");
+                    sql.AppendFormat("{0},", model.PageId);
+                    sql.AppendFormat("{0},", toEmployeeId);
+                    sql.AppendFormat("'{0}',", DateTime.Now);
+                    sql.AppendFormat("'{0}')", userName);
+                    try
+                    {
+                        await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -119,18 +157,21 @@ namespace TrojWebApp.Services
             IEnumerable<SubPageUsers3Model> list = await GetSubPageUser4Employee(fromEmployeeId);
             foreach (SubPageUsers3Model model in list)
             {
-                StringBuilder sql = new StringBuilder("INSERT INTO SubPageUsers3 (SubPageId,EmployeeId,Changed,ChangedBy) VALUES(");
-                sql.AppendFormat("{0},", model.SubPageId);
-                sql.AppendFormat("{0},", toEmployeeId);
-                sql.AppendFormat("'{0}',", DateTime.Now);
-                sql.AppendFormat("'{0}')", userName);
-                try
+                if (await HaveSubPageUser(toEmployeeId, model.SubPageId) == false)
                 {
-                    await _context.Database.ExecuteSqlRawAsync(sql.ToString());
-                }
-                catch (Exception)
-                {
-                    return false;
+                    StringBuilder sql = new StringBuilder("INSERT INTO SubPageUsers3 (SubPageId,EmployeeId,Changed,ChangedBy) VALUES(");
+                    sql.AppendFormat("{0},", model.SubPageId);
+                    sql.AppendFormat("{0},", toEmployeeId);
+                    sql.AppendFormat("'{0}',", DateTime.Now);
+                    sql.AppendFormat("'{0}')", userName);
+                    try
+                    {
+                        await _context.Database.ExecuteSqlRawAsync(sql.ToString());
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;

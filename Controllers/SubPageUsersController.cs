@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using TrojWebApp.Models;
 using TrojWebApp.Services;
 
@@ -29,13 +32,49 @@ namespace TrojWebApp.Controllers
         }
 
         // GET: SubPageUsers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? reset, IFormCollection collection)
         {
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
 
-            IEnumerable<SubPageUsersView3Model> subPageUsers = await _pageConnection.GetSubPageUsers();
+            if (collection.Count > 0)
+            {
+                HttpContext.Session.SetString("TrojSubPageUserFilter", "Set");
+                collection.TryGetValue("EmployeeId", out StringValues employeeId);
+                HttpContext.Session.SetString("TrojSubPageUser", employeeId.ToString());
+            }
+
+            if (reset != null)
+            {
+                HttpContext.Session.SetString("TrojSubPageUserFilter", "Reset");
+                HttpContext.Session.Remove("TrojSubPageUser");
+            }
+
+            IEnumerable<SubPageUsersView3Model> subPageUsers;
+            int numberItems;
+            if (HttpContext.Session.GetString("TrojSubPageUserFilter") == "Set")
+            {
+                string employeeId = HttpContext.Session.GetString("TrojSubPageUser");
+                subPageUsers = await _pageConnection.GetSubPageUsers(Int32.Parse(employeeId.ToString()));
+                numberItems = subPageUsers.Count();
+                ViewBag.Initials = employeeId;
+            }
+            else
+            {
+                subPageUsers = await _pageConnection.GetSubPageUsers();
+                numberItems = subPageUsers.Count();
+                ViewBag.Initials = "";
+            }
+            ViewBag.NumberOfItems = numberItems;
+
+            List<SelectListItem> employees = new List<SelectListItem>();
+            var employeesList = await _employeeConnection.GetActiveEmployees();
+            employees.Add(new SelectListItem { Value = "", Text = "" });
+            foreach (var employee in employeesList)
+                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.FirstName + " " + employee.LastName });
+            ViewBag.Employees = employees;
+
             return View(subPageUsers);
         }
 
@@ -56,9 +95,8 @@ namespace TrojWebApp.Controllers
             var employeesList = await _employeeConnection.GetActiveEmployees();
             employees.Add(new SelectListItem { Value = "", Text = "" });
             foreach (var employee in employeesList)
-                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.Initials });
+                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.FirstName + " " + employee.LastName });
             ViewBag.Employees = employees;
-
 
             return View();
         }
@@ -95,7 +133,7 @@ namespace TrojWebApp.Controllers
             var employeesList = await _employeeConnection.GetActiveEmployees();
             employees.Add(new SelectListItem { Value = "", Text = "" });
             foreach (var employee in employeesList)
-                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.Initials });
+                employees.Add(new SelectListItem { Value = employee.EmployeeId.ToString(), Text = employee.FirstName + " " + employee.LastName });
             ViewBag.Employees = employees;
 
             return View();
@@ -153,7 +191,7 @@ namespace TrojWebApp.Controllers
             {
                 _context.SubPageUsers3.Remove(subPageUsersModel);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -168,7 +206,12 @@ namespace TrojWebApp.Controllers
 
         private bool SubPageUsersModelExists(int id)
         {
-          return _context.SubPageUsers3.Any(e => e.SubPageUserId == id);
+            return _context.SubPageUsers3.Any(e => e.SubPageUserId == id);
+        }
+
+        public ActionResult Reset()
+        {
+            return RedirectToAction("Index", new { reset = 1 });
         }
     }
 }

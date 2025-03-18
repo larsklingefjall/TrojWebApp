@@ -4,6 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>@ViewData["Title"]</h1>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista med undersidor", "Index")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa undersida", "Create")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista med huvudsidor", "Index", "Pages")</td>
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
 <table class="table table-condensed table-no-border">
     @foreach (var item in Model)
     {

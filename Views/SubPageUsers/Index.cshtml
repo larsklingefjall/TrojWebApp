@@ -6,11 +6,63 @@
 <h1>@ViewData["Title"]</h1>
 <table border="0" class="table table-condensed table-no-border">
     <tr>
-        <td class="subhead" nowrap>@Html.ActionLink("Skapa", "Create")</td>
-        <td class="subhead" nowrap>@Html.ActionLink("Undersidor", "Index", "SubPages")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa användare för undersida", "Create")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Kopiera användare till undersidor", "Copy")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Skapa SQL kommandon", "Sql")</td>
+        <td class="subhead" nowrap>@Html.ActionLink("Lista med undersidor", "Index", "SubPages")</td>
         <td class="subhead" nowrap style="width: 100%;"></td>
     </tr>
 </table>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Användare:</td>
+                <td class="head"></td>
+            </tr>
+            <tr>
+                <form asp-action="Index">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <select name="EmployeeId" class="font2">
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.Initials)
+                                {
+                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
+                </form>
+                <form asp-action="Reset">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Antal poster: @ViewBag.NumberOfItems</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 <table class="table table-condensed table-no-border">
     <thead>
         <tr>
