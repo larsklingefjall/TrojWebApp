@@ -204,9 +204,9 @@ namespace TrojWebApp.Controllers
             if (!permission) return RedirectToAction("Index");
 
             List<SelectListItem> clients = new List<SelectListItem>();
-            var employeesList = await _personConnection.GetActivePersons();
+            var personList = await _personConnection.GetActivePersons();
             string firstClientId = "0";
-            foreach (var item in employeesList)
+            foreach (var item in personList)
             {
                 if(firstClientId.Equals("0"))
                     firstClientId = item.PersonId.ToString();
