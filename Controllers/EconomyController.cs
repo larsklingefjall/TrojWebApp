@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
@@ -46,6 +47,14 @@ namespace TrojWebApp.Controllers
             ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index", "Home");
+
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+
+            IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
+            ViewBag.Menu = menu;
 
             if (HttpContext.Session.GetInt32("TrojEconomyWorkingTimeSize").HasValue == false)
             {
@@ -114,7 +123,7 @@ namespace TrojWebApp.Controllers
             IEnumerable<WorkingTimesEconomyModel> workingTimes;
             IEnumerable<SumOfWorkingTimesModel> sumOfWorkingTimesBefore;
             IEnumerable<SumOfWorkingTimesModel> sumOfUnderlay;
-            IEnumerable<InvoiceEconomyModel> invoices;
+            IEnumerable<InvoiceAndCaseModel> invoices;
             IEnumerable<WorkingTimesPeriodEconomyModel> periods;
             TotalSumAndHoursModel totalSumModel;
             string startWhenDate;
@@ -203,12 +212,17 @@ namespace TrojWebApp.Controllers
             var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
             if (!permission) return RedirectToAction("Index");
 
+            ViewBag.CaseMenu = await _userConnection.GetMenuItems("Cases", UserName);
+            ViewBag.PersonMenu = await _userConnection.GetMenuItems("Persons", UserName);
+            ViewBag.UnderlayMenu = await _userConnection.GetMenuItems("InvoiceUnderlays", UserName);
+            ViewBag.InvoiceMenu = await _userConnection.GetMenuItems("Invoices", UserName);
+
             List<SelectListItem> clients = new List<SelectListItem>();
             var personList = await _personConnection.GetActivePersons();
             string firstClientId = "0";
             foreach (var item in personList)
             {
-                if(firstClientId.Equals("0"))
+                if (firstClientId.Equals("0"))
                     firstClientId = item.PersonId.ToString();
                 clients.Add(new SelectListItem { Value = item.PersonId.ToString(), Text = item.FirstName + " " + item.LastName });
             }
@@ -297,6 +311,74 @@ namespace TrojWebApp.Controllers
             ViewBag.NumberOf = numberOf;
 
             return View();
+        }
+
+
+        // GET: EconomyController/Bargain
+        public async Task<ActionResult> Bargain(int? size, int? reset, IFormCollection collection)
+        {
+            ViewBag.IndexPermissions = await _userConnection.AccessToIndexPages(UserName);
+            var permission = _userConnection.AccessToSubPage(HttpContext.Request, UserName);
+            if (!permission) return RedirectToAction("Index", "Home");
+
+            if (collection.Count > 0)
+            {
+                HttpContext.Session.SetString("TrojEconomyWorkingTimeFilter", "Set");
+                collection.TryGetValue("StartWhenDate", out StringValues inputStartDate);
+                collection.TryGetValue("EndWhenDate", out StringValues inputEndDate);
+                collection.TryGetValue("Initial", out StringValues inputInitial);
+                HttpContext.Session.SetString("TrojEconomyWorkingTimeStartWhenDate", inputStartDate.ToString());
+                HttpContext.Session.SetString("TrojEconomyWorkingTimeEndWhenDate", inputEndDate.ToString());
+                HttpContext.Session.SetString("TrojEconomyWorkingTimeInitial", inputInitial.ToString());
+            }
+
+            if (reset != null)
+            {
+                HttpContext.Session.SetString("TrojEconomyWorkingTimeFilter", "Reset");
+                HttpContext.Session.Remove("TrojEconomyWorkingTimeStartWhenDate");
+                HttpContext.Session.Remove("TrojEconomyWorkingTimeEndWhenDate");
+                HttpContext.Session.Remove("TrojEconomyWorkingTimeInitial");
+            }
+
+            string startWhenDate;
+            string endWhenDate;
+            string initial;
+            if (HttpContext.Session.GetString("TrojEconomyWorkingTimeFilter") == "Set")
+            {
+                startWhenDate = HttpContext.Session.GetString("TrojEconomyWorkingTimeStartWhenDate");
+                endWhenDate = HttpContext.Session.GetString("TrojEconomyWorkingTimeEndWhenDate");
+                initial = HttpContext.Session.GetString("TrojEconomyWorkingTimeInitial");
+            }
+            else
+            {
+                startWhenDate = new DateTime(DateTime.Now.Year, 1, 1).ToString("yyyy-MM-dd");
+                endWhenDate = DateTime.Now.ToString("yyyy-MM-dd");
+                initial = "";
+            }
+            IEnumerable<InvoiceUnderlaysCaseViewModel> list = await _economyConnection.GetUnderlayForYearAndEmployee(startWhenDate, endWhenDate, initial);
+            ViewBag.StartWhenDate = startWhenDate;
+            ViewBag.EndWhenDate = endWhenDate;
+            ViewBag.Initial = initial;
+            ViewBag.NumberofUnderlays = list.Count();
+
+            IEnumerable<InvoiceAndInvoiceUnderlayModel> invoices = await _economyConnection.GetInvoicesForYear(startWhenDate, endWhenDate, initial);
+            ViewBag.Invoices = invoices;
+
+            IEnumerable<TotalSumIdModel> underlays = await _economyConnection.GetUnderlaySum(startWhenDate, endWhenDate, initial);
+            ViewBag.Underlays = underlays;
+
+            List<SelectListItem> employees = new List<SelectListItem>();
+            var employeesList = await _employeeConnection.GetActiveEmployees();
+            foreach (var item in employeesList)
+                employees.Add(new SelectListItem { Value = item.Initials.ToString(), Text = item.FirstName + " " + item.LastName });
+            ViewBag.Employees = employees;
+
+            return View(list);
+        }
+
+        public ActionResult ResetBargain()
+        {
+            return RedirectToAction("Bargain", new { reset = 1 });
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using TrojWebApp.Models;
 
 namespace TrojWebApp.Services
@@ -96,7 +98,7 @@ namespace TrojWebApp.Services
             return await _context.SumOfWorkingTimes.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
-        public async Task<IEnumerable<InvoiceEconomyModel>> GetInvoices(string startDate, string endDate, string employeeId)
+        public async Task<IEnumerable<InvoiceAndCaseModel>> GetInvoices(string startDate, string endDate, string employeeId)
         {
             StringBuilder sql = new StringBuilder("SELECT DISTINCT Invoices.InvoiceId, InvoiceUnderlays.CaseId, Invoices.InvoiceNumber, Invoices.Sum, Invoices.Vat");
             sql.Append(" FROM Invoices INNER JOIN");
@@ -113,9 +115,56 @@ namespace TrojWebApp.Services
             }
             sql.Append(" )");
             sql.Append(" ORDER BY Invoices.InvoiceNumber");
-            return await _context.InvoiceEconomy.FromSqlRaw(sql.ToString()).ToListAsync();
+            return await _context.InvoiceAndCase.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
+        public async Task<IEnumerable<InvoiceUnderlaysCaseViewModel>> GetUnderlayForYearAndEmployee(string startDate, string endDate, string initial)
+        {
+            StringBuilder sql = new StringBuilder("SELECT InvoiceUnderlays.InvoiceUnderlayId, Cases.CaseId, CaseTypes.CaseType, Cases.Responsible, Employees.FirstName, Employees.LastName, InvoiceUnderlays.UnderlayDate");
+            sql.Append(" FROM Cases INNER JOIN");
+            sql.Append(" InvoiceUnderlays ON Cases.CaseId = InvoiceUnderlays.CaseId INNER JOIN");
+            sql.Append(" Employees ON Cases.Responsible = Employees.Initials INNER JOIN");
+            sql.Append(" CaseTypes ON Cases.CaseTypeId = CaseTypes.CaseTypeId");
+            sql.AppendFormat(" WHERE InvoiceUnderlays.UnderlayDate >= '{0}'", startDate);
+            sql.AppendFormat(" AND InvoiceUnderlays.UnderlayDate <= '{0}'", endDate);
+            if (!string.IsNullOrEmpty(initial))
+            {
+                sql.AppendFormat(" AND Cases.Responsible = '{0}'", initial);
+            }
+            sql.Append(" ORDER BY InvoiceUnderlays.UnderlayDate DESC");
+            return await _context.InvoiceUnderlaysCaseView.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<IEnumerable<InvoiceAndInvoiceUnderlayModel>> GetInvoicesForYear(string startDate, string endDate, string initial)
+        {
+            StringBuilder sql = new StringBuilder("SELECT Invoices.InvoiceId, Invoices.InvoiceUnderlayId, Invoices.InvoiceNumber, Invoices.Vat, Invoices.Sum");
+            sql.Append(" FROM Invoices INNER JOIN");
+            sql.Append(" InvoiceUnderlays ON Invoices.InvoiceUnderlayId = InvoiceUnderlays.InvoiceUnderlayId INNER JOIN");
+            sql.Append(" Cases ON InvoiceUnderlays.CaseId = Cases.CaseId");
+            sql.AppendFormat(" WHERE InvoiceUnderlays.UnderlayDate >= '{0}'", startDate);
+            sql.AppendFormat(" AND InvoiceUnderlays.UnderlayDate <= '{0}'", endDate);
+            if (!string.IsNullOrEmpty(initial))
+            {
+                sql.AppendFormat(" AND Cases.Responsible = '{0}'", initial);
+            }
+            return await _context.InvoiceAndInvoiceUnderlay.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
+
+        public async Task<IEnumerable<TotalSumIdModel>> GetUnderlaySum(string startDate, string endDate, string initial)
+        {
+            StringBuilder sql = new StringBuilder("SELECT InvoiceUnderlays.InvoiceUnderlayId AS Id, Sum(InvoiceWorkingTimes.Sum) AS TotalSum");
+            sql.Append(" FROM InvoiceWorkingTimes INNER JOIN");
+            sql.Append(" InvoiceUnderlays ON InvoiceWorkingTimes.InvoiceUnderlayId = InvoiceUnderlays.InvoiceUnderlayId INNER JOIN");
+            sql.Append(" Cases ON InvoiceUnderlays.CaseId = Cases.CaseId");
+            sql.AppendFormat(" WHERE InvoiceUnderlays.UnderlayDate >= '{0}'", startDate);
+            sql.AppendFormat(" AND InvoiceUnderlays.UnderlayDate <= '{0}'", endDate);
+            if (!string.IsNullOrEmpty(initial))
+            {
+                sql.AppendFormat(" AND Cases.Responsible = '{0}'", initial);
+            }
+            sql.Append(" GROUP BY InvoiceUnderlays.InvoiceUnderlayId");
+            return await _context.InvoiceUnderlaysTotalSum.FromSqlRaw(sql.ToString()).ToListAsync();
+        }
 
     }
 }

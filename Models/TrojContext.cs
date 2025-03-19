@@ -45,6 +45,8 @@ namespace TrojWebApp.Models
         public DbSet<InvoiceUnderlaysModel> InvoiceUnderlays { get; set; } = null!;
         public DbSet<InvoiceUnderlaysViewModel> InvoiceUnderlaysView { get; set; } = null!;
         public DbSet<InvoiceUnderlaysPartialViewModel> InvoiceUnderlaysPartialView { get; set; } = null!;
+        public DbSet<InvoiceUnderlaysCaseViewModel> InvoiceUnderlaysCaseView { get; set; } = null!;
+        public DbSet<TotalSumIdModel> InvoiceUnderlaysTotalSum { get; set; } = null!;
         public DbSet<InvoiceUnderlaySummarysModel> InvoiceUnderlaySummaries { get; set; } = null!;
         public DbSet<InvoicePrintingFieldsModel> InvoicePrintingFields { get; set; } = null!;
         public DbSet<TotalSumModel> UnderlaySummariesTotalSum { get; set; } = null!;
@@ -65,7 +67,8 @@ namespace TrojWebApp.Models
         public DbSet<WorkingTimesEconomyModel> WorkingTimesEconomy { get; set; } = null!;
         public DbSet<WorkingTimesPeriodEconomyModel> WorkingTimesPeriodEconomy { get; set; } = null!;
         public DbSet<SumOfWorkingTimesModel> SumOfWorkingTimes { get; set; } = null!;
-        public DbSet<InvoiceEconomyModel> InvoiceEconomy { get; set; } = null!;
+        public DbSet<InvoiceAndCaseModel> InvoiceAndCase { get; set; } = null!;
+        public DbSet<InvoiceAndInvoiceUnderlayModel> InvoiceAndInvoiceUnderlay { get; set; } = null!;
         public DbSet<MaxMinDateModel> MaxMinDate { get; set; } = null!;
 
 

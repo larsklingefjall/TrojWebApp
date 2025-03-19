@@ -1,0 +1,172 @@
+﻿@using System.Linq
+@using Microsoft.AspNetCore.Html
+@model IEnumerable<TrojWebApp.Models.InvoiceUnderlaysCaseViewModel>
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="Economy" asp-action="Index" title="Summering av klienter"><span class='glyphicon glyphicon-home' /></a></td>
+        @if (ViewBag.Menu != null)
+        {
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString())</td>
+            }
+        }
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
+@{
+    ViewData["Title"] = "Prut av kostnadsräkning exklusive moms";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <table class="table table-condensed table-no-border">
+            <tr>
+                <td class="head">Start:</td>
+                <td class="head">Slut:</td>
+                <td class="head">Ombud:</td>
+                <td class="head"></td>
+            </tr>
+            <tr>
+                <form asp-action="Bargain">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <td>
+                        <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
+                    </td>
+                    <td>
+                        <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
+                    </td>
+                    <td>
+                        <select name="Initial" class="font2">
+                            <option value="0"></option>
+                            @foreach (SelectListItem option in ViewBag.Employees)
+                            {
+                                if (option.Value == ViewBag.Initial)
+                                {
+                                    <option value="@option.Value" selected="selected">@option.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Value">@option.Text</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <input type="submit" value="Sök" class="btn btn-primary" />
+                    </td>
+                </form>
+                <form asp-action="ResetBargain">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <td>
+                        <input type="submit" value="Nollställ" class="btn btn-primary" />
+                    </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+@{
+    if (Model.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <table border="0" cellpadding="4" cellspacing="0" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <td class="tablehead2">Datum:</td>
+                            <td class="tablehead2">Uppdrag:</td>
+                            <td class="tablehead2">Faktura:</td>
+                            <td class="tablehead2">Underlag:</td>
+                            <td class="tablehead2">Skillnad:</td>
+                            <td class="tablehead2">Ombud:</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            IEnumerable<InvoiceAndInvoiceUnderlayModel> invoices = null;
+                            if (ViewBag.Invoices != null)
+                                invoices = ViewBag.Invoices as IEnumerable<InvoiceAndInvoiceUnderlayModel>;
+                            IEnumerable<TotalSumIdModel> underlays = null;
+                            if (ViewBag.Underlays != null)
+                                underlays = ViewBag.Underlays as IEnumerable<TotalSumIdModel>;
+                            @if (invoices != null && underlays != null)
+                            {
+                                @foreach (InvoiceUnderlaysCaseViewModel item in Model)
+                                {
+                                    bool show = true;
+                                    List<InvoiceLink> links = new();
+                                    double invoiceTotalSum = 0;
+                                    int numOfInvoices = 0;
+                                    double difference = 0;
+                                    string color = "#000000";
+
+                                    TotalSumIdModel underlay = null;
+                                    IEnumerable<InvoiceAndInvoiceUnderlayModel> tmp = null;
+
+                                    @if (invoices.Any(d => d.InvoiceUnderlayId == item.InvoiceUnderlayId))
+                                    {                             
+                                        tmp = invoices.Where(d => d.InvoiceUnderlayId == item.InvoiceUnderlayId).ToList();
+                                        foreach (InvoiceAndInvoiceUnderlayModel invoice in tmp)
+                                        {
+                                            InvoiceLink link = new();
+                                            link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
+                                            double addVat = 1.0 + (double)invoice.Vat / 100;
+                                            link.Sum = invoice.Sum / addVat;
+                                            links.Add(link);
+                                            invoiceTotalSum = invoiceTotalSum + invoice.Sum / addVat;
+                                        }
+                                        numOfInvoices = tmp.Count();
+                                    }
+                                    else
+                                        show = false;
+
+                                    @if (underlays.Any(d => d.Id == item.InvoiceUnderlayId))
+                                    {
+                                        underlay = underlays.Where(d => d.Id == item.InvoiceUnderlayId).FirstOrDefault();
+                                    }
+                                    else
+                                        show = false;
+
+                                    if (underlay == null)
+                                        show = false;
+                                    else
+                                    {
+                                        difference = invoiceTotalSum - underlay.TotalSum;
+                                        if (difference < 2.0 && difference > -2.0)
+                                            show = false;
+
+                                        if (difference < 0)
+                                            color = "#FF0000";
+                                    }
+
+                                    if (show)
+                                    {
+                                        <tr>
+                                            <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.UnderlayDate)</td>
+                                            <td class="tablefont2">@Html.ActionLink(item.CaseType.ToString() + "/" + item.CaseId.ToString(), "Details", "Cases", new { id = item.CaseId })</td>
+                                            <td class="tablefont2" align="right" nowrap>
+                                                @if(numOfInvoices > 1)
+                                                {
+                                                    @String.Format("{0:#,##0}: ", invoiceTotalSum)
+                                                }
+                                                @foreach (InvoiceLink link in links)
+                                                {
+                                                    <span>(<span>@link.Link</span>) @String.Format("{0:#,##0}", @link.Sum)</span>
+                                                }
+                                            </td>                                       
+                                            <td class="tablefont2" align="right" nowrap>@Html.ActionLink(@String.Format("{0:#,##0}", underlay.TotalSum), "Details", "InvoiceUnderlays", new { id = underlay.Id })</td>
+                                            <td class="tablefont2" align="right" nowrap><span style="color:@color;">@String.Format("{0:#,##0}", difference)</span></td>
+                                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+

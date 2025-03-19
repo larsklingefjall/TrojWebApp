@@ -1,7 +1,19 @@
 ﻿@using System.Linq
 @using Microsoft.AspNetCore.Html
 @model IEnumerable<TrojWebApp.Models.WorkingTimesEconomyModel>
-
+<table border="0" class="table table-condensed table-no-border">
+    <tr>
+        <td class="subhead" nowrap><a asp-area="" asp-controller="Economy" asp-action="Index" title="Summering av klienter"><span class='glyphicon glyphicon-home' /></a></td>
+        @if (ViewBag.Menu != null)
+        {
+            @foreach (SubPageMenusChildViewModel menu in ViewBag.Menu)
+            {
+                <td class="subhead" title="@menu.Tip.ToString()" nowrap>@Html.ActionLink(menu.Title.ToString(), menu.Action.ToString(), menu.Controller.ToString())</td>
+            }
+        }
+        <td class="subhead" nowrap style="width: 100%;"></td>
+    </tr>
+</table>
 @{
     ViewData["Title"] = "Summering av åtgärder";
 }
@@ -94,10 +106,10 @@
                             double totalProcessedSum = 0;
                             double underlayDiff = 0;
 
-                            IEnumerable<InvoiceEconomyModel> invoices = null;
+                            IEnumerable<InvoiceAndCaseModel> invoices = null;
                             if (ViewBag.Invoices != null)
                             {
-                                invoices = ViewBag.Invoices as IEnumerable<InvoiceEconomyModel>;
+                                invoices = ViewBag.Invoices as IEnumerable<InvoiceAndCaseModel>;
                             }
 
                             IEnumerable<WorkingTimesPeriodEconomyModel> periods = null;
@@ -178,7 +190,7 @@
                                             invoices = invoices.Where(d => d.CaseId == item.CaseId).ToList();
                                             List<InvoiceLink> links = new();
                                             double invoiceTotalSum = 0;
-                                            foreach (InvoiceEconomyModel invoice in invoices)
+                                            foreach (InvoiceAndCaseModel invoice in invoices)
                                             {
                                                 InvoiceLink link = new();
                                                 link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });

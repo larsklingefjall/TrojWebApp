@@ -28,9 +28,9 @@ namespace TrojWebApp.Services
         public async Task<IEnumerable<EmployeesModel>> GetActiveEmployees(bool initials = true)
         {
             if (initials)
-                return await _context.Employees.Where(e => e.Represent == true).Where(e => e.Active == true).OrderBy(s => s.Initials).ToListAsync();
+                return await _context.Employees.Where(e => e.Represent == true && e.Active == true).OrderBy(s => s.Initials).ToListAsync();
             else
-                return await _context.Employees.Where(e => e.Represent == true).Where(e => e.Active == true).OrderBy(s => s.LastName).OrderBy(s => s.FirstName).ToListAsync();
+                return await _context.Employees.Where(e => e.Represent == true && e.Active == true).OrderBy(s => s.LastName).OrderBy(s => s.FirstName).ToListAsync();
         }
 
         public async Task<IEnumerable<EmployeesModel>> GetOnlyActiveEmployees(bool initials = true)
