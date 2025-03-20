@@ -1,16 +1,8 @@
-﻿using Microsoft.CodeAnalysis.Operations;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Mail;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 

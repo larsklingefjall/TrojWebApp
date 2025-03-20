@@ -14,7 +14,7 @@ namespace TrojWebApp.Models
 
 
         public string FieldName { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

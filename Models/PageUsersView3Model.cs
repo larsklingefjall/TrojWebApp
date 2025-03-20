@@ -17,11 +17,11 @@ namespace TrojWebApp.Models
 
         public string Title { get; set; }
         public int Position { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Initials { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
 
     }
 }

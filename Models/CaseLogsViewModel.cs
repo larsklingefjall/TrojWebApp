@@ -12,9 +12,9 @@ namespace TrojWebApp.Models
         [ForeignKey("Cases")]
         public int CaseId { get; set; }
 
-        public string WhenDate { get; set; }
-        public string Comment { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public string? WhenDate { get; set; }
+        public string? Comment { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

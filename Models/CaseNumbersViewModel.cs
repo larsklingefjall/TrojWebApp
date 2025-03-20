@@ -15,8 +15,8 @@ namespace TrojWebApp.Models
         [ForeignKey("Courts")]
         public int CourtId { get; set; }
         public string CourtName { get; set; }
-        public string CaseNumber { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public string? CaseNumber { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

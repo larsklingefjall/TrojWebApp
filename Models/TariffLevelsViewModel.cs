@@ -16,7 +16,7 @@ namespace TrojWebApp.Models
         public DateTime? ValidFrom { get; set; }
         public DateTime? ValidTo { get; set; }
         public bool Valid { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

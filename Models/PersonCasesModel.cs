@@ -19,7 +19,7 @@ namespace TrojWebApp.Models
         public int PersonTypeId { get; set; }
 
         public bool Responsible { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

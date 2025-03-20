@@ -15,9 +15,9 @@ namespace TrojWebApp.Models
         [ForeignKey("SubPages3")]
         public int ChildPageId { get; set; }
 
-        public int Position { get; set; }
+        public int? Position { get; set; }
 
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

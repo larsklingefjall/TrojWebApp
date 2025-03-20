@@ -24,9 +24,9 @@ namespace TrojWebApp.Models
         public string ChildAction { get; set; }
         public string ChildTitle { get; set; }
 
-        public int Position { get; set; }
+        public int? Position { get; set; }
 
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

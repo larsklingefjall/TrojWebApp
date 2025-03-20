@@ -11,10 +11,10 @@ namespace TrojWebApp.Models
 
         [ForeignKey("Cases")]
         public int CaseId { get; set; }
-        public double ClientSum { get; set; }
-        public string Comment { get; set; }
-        public string ClientFundDate { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public double? ClientSum { get; set; }
+        public string? Comment { get; set; }
+        public string? ClientFundDate { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

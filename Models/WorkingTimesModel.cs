@@ -21,14 +21,14 @@ namespace TrojWebApp.Models
         [ForeignKey("Employees")]
         public int EmployeeId { get; set; }
 
-        public DateTime WhenDate { get; set; }
-        public double TariffLevel { get; set; }
-        public double NumberOfHours { get; set; }
-        public double Cost { get; set; }
-        public double Sum { get; set; }
-        public string Comment { get; set; }
+        public DateTime? WhenDate { get; set; }
+        public double? TariffLevel { get; set; }
+        public double? NumberOfHours { get; set; }
+        public double? Cost { get; set; }
+        public double? Sum { get; set; }
+        public string? Comment { get; set; }
         public bool Billed { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

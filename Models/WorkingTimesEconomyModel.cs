@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace TrojWebApp.Models
 {
@@ -8,11 +7,11 @@ namespace TrojWebApp.Models
         [Key]
         public int CaseId { get; set; }
         public int PersonId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
 #nullable enable
         public string? FinishedDate { get; set; }
 #nullable disable
-        public double WorkingTimesSum { get; set; }
+        public double? WorkingTimesSum { get; set; }
     }
 }

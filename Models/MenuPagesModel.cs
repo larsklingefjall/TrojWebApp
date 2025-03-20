@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrojWebApp.Models
 {
@@ -13,7 +12,7 @@ namespace TrojWebApp.Models
         public string Controller { get; set; }
         public string Action { get; set; }
         public int Id { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

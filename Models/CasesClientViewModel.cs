@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TrojWebApp.Models
 {
@@ -10,7 +8,7 @@ namespace TrojWebApp.Models
         public int CaseId { get; set; }
         public string CaseType { get; set; }
         public int PersonId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

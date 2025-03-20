@@ -16,7 +16,7 @@ namespace TrojWebApp.Models
         [ForeignKey("Invoices")]
         public int InvoiceId { get; set; }
 
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

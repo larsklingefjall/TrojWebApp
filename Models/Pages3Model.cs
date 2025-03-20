@@ -10,10 +10,10 @@ namespace TrojWebApp.Models
         public string Title { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public string Tip { get; set; }
+        public string? Tip { get; set; }
         public int Position { get; set; }
         public bool HasChild { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

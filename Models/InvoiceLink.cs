@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 
 namespace TrojWebApp.Models
 {

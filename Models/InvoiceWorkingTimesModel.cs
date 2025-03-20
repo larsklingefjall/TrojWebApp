@@ -15,10 +15,10 @@ namespace TrojWebApp.Models
         [ForeignKey("WorkingTimes")]
         public int WorkingTimeId { get; set; }
 
-        public double UnitCost { get; set; }
-        public double NumberOfHours { get; set; }
-        public double Sum { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public double? UnitCost { get; set; }
+        public double? NumberOfHours { get; set; }
+        public double? Sum { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

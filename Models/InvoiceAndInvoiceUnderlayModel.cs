@@ -11,8 +11,8 @@ namespace TrojWebApp.Models
         [ForeignKey("InvoiceUnderlays")]
         public int InvoiceUnderlayId { get; set; }
 
-        public string InvoiceNumber { get; set; }
-        public double Sum { get; set; }
-        public int Vat { get; set; }
+        public string? InvoiceNumber { get; set; }
+        public double? Sum { get; set; }
+        public int? Vat { get; set; }
     }
 }

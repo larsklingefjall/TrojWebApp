@@ -12,12 +12,12 @@ namespace TrojWebApp.Models
         [ForeignKey("Cases")]
         public int CaseId { get; set; }
 
-        public DateTime UnderlayDate { get; set; }
+        public DateTime? UnderlayDate { get; set; }
   
-        public string Responsible { get; set; }
-        public string CaseType { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? Responsible { get; set; }
+        public string? CaseType { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
 
     }
 }
