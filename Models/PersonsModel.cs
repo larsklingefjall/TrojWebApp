@@ -14,7 +14,7 @@ namespace TrojWebApp.Models
         public string MailAddress { get; set; }
         public bool Active { get; set; }
         public bool NeedInterpreter { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

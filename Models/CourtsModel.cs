@@ -13,7 +13,7 @@ namespace TrojWebApp.Models
         public string PostalCode { get; set; }
         public string PostalAddress { get; set; }
         public string Country { get; set; }
-        public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public DateTime? Changed { get; set; }
+        public string? ChangedBy { get; set; }
     }
 }

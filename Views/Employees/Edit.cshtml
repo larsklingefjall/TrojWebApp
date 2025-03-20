@@ -9,34 +9,34 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <input type="hidden" asp-for="EmployeeId"/>
+                <input type="hidden" asp-for="EmployeeId" />
             </div>
-            <table border="0" class="table table-condensed table-no-border">
+            <table border="1" class="table table-condensed table-no-border">
                 <tr>
                     <th class="head">Förnamn:</th>
                     <td>
-                        <input asp-for="FirstName" class="font2" />
+                        <input asp-for="FirstName" size="50" class="font2" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Efternamn:</th>
                     <td>
-                        <input asp-for="LastName" class="font2" />
+                        <input asp-for="LastName" size="50" class="font2" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Initialer:</th>
                     <td>
-                        <input asp-for="Initials" class="font2" />
+                        <input asp-for="Initials" size="10" class="font2" />
                         <span asp-validation-for="Initials" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Mail:</th>
                     <td>
-                        <input asp-for="MailAddress" class="font2" />
+                        <input asp-for="MailAddress" size="50" class="font2" />
                         <span asp-validation-for="MailAddress" class="text-danger"></span>
                     </td>
                 </tr>
@@ -44,45 +44,33 @@
                     <th class="head">Titel:</th>
                     <td>
 
-                        <input asp-for="EmployeeTitle" class="font2" />
+                        <input asp-for="EmployeeTitle" size="50" class="font2" />
                         <span asp-validation-for="EmployeeTitle" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Signaturlänk:</th>
                     <td>
-                        <input asp-for="SignatureLink" class="font2" />
+                        <input asp-for="SignatureLink" size="10" class="font2" />
                         <span asp-validation-for="SignatureLink" class="text-danger"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Företräda:</th>
                     <td>
-                        <div class="checkbox">
-                            <label>
-                                <input asp-for="Represent" /> Företräda
-                            </label>
-                        </div>
+                        <input asp-for="Represent" class="font2" />
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Aktiv:</th>
                     <td>
-                        <div class="checkbox">
-                            <label>
-                                <input asp-for="Active" /> Aktiv
-                            </label>
-                        </div>
+                        <input asp-for="Active" class="font2" />
                     </td>
                 </tr>
                 <tr>
                     <th class="head">Bara läsa:</th>
                     <td>
-                        <div class="checkbox">
-                            <label>
-                                <input asp-for="ReadOnly" /> Bara läsa
-                            </label>
-                        </div>
+                        <input asp-for="ReadOnly" class="font2" />
                     </td>
                 </tr>
                 <tr>
