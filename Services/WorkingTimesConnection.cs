@@ -771,14 +771,14 @@ namespace TrojWebApp.Services
             StringBuilder sql = new StringBuilder("SELECT TariffTypes.TariffType, WorkingTimes.Cost AS UnitCost, Sum(WorkingTimes.Sum) AS SumCosts, Sum(WorkingTimes.NumberOfHours) AS SumHours, Max(TariffTypes.BackgroundColor) AS BackgroundColor");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat(" WHERE DatePart(yyyy, WorkingTimes.WhenDate) = {0}", year);
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 0");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" UNION");
             sql.Append(" SELECT TariffTypes.TariffType, WorkingTimes.Cost AS UnitCost, Sum(WorkingTimes.Sum) AS SumCosts, Sum(WorkingTimes.NumberOfHours) AS SumHours, Max(TariffTypes.BackgroundColor) AS BackgroundColor");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat(" WHERE DatePart(yyyy, WorkingTimes.WhenDate) = {0}", year);
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 1");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" ORDER BY TariffTypes.TariffType");
@@ -791,7 +791,7 @@ namespace TrojWebApp.Services
             StringBuilder sql = new StringBuilder("SELECT Sum(WorkingTimes.Sum) AS SumOf");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat(" WHERE DatePart(yyyy, WorkingTimes.WhenDate) = {0}", year);
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             SumOfModel sumOf;
             try
             {
@@ -813,7 +813,7 @@ namespace TrojWebApp.Services
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat($" WHERE WorkingTimes.WhenDate >= '{thisWeekStart.Year}-{thisWeekStart.Month}-{thisWeekStart.Day}'");
             sql.AppendFormat($" AND WorkingTimes.WhenDate <= '{thisWeekEnd.Year}-{thisWeekEnd.Month}-{thisWeekEnd.Day}'");
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 0");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" UNION");
@@ -821,7 +821,7 @@ namespace TrojWebApp.Services
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat($" WHERE WorkingTimes.WhenDate >= '{thisWeekStart.Year}-{thisWeekStart.Month}-{thisWeekStart.Day}'");
             sql.AppendFormat($" AND WorkingTimes.WhenDate <= '{thisWeekEnd.Year}-{thisWeekEnd.Month}-{thisWeekEnd.Day}'");
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 1");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" ORDER BY TariffTypes.TariffType");
@@ -845,7 +845,7 @@ namespace TrojWebApp.Services
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat(" WHERE WorkingTimes.WhenDate >= '{0}'", thisWeekStart);
             sql.AppendFormat(" AND WorkingTimes.WhenDate <= '{0}'", thisWeekEnd);
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             SumOfModel sumOf;
             try
             {
@@ -865,14 +865,14 @@ namespace TrojWebApp.Services
             StringBuilder sql = new StringBuilder("SELECT TariffTypes.TariffType, WorkingTimes.Cost AS UnitCost, Sum(WorkingTimes.Sum) AS SumCosts, Sum(WorkingTimes.NumberOfHours) AS SumHours, Max(TariffTypes.BackgroundColor) AS BackgroundColor");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat($" WHERE WorkingTimes.WhenDate = '{currentDate.Year}-{currentDate.Month}-{currentDate.Day}'");
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 0");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" UNION");
             sql.Append(" SELECT TariffTypes.TariffType, WorkingTimes.Cost AS UnitCost, Sum(WorkingTimes.Sum) AS SumCosts, Sum(WorkingTimes.NumberOfHours) AS SumHours, Max(TariffTypes.BackgroundColor) AS BackgroundColor");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat($" WHERE WorkingTimes.WhenDate = '{currentDate.Year}-{currentDate.Month}-{currentDate.Day}'");
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND TariffTypes.NoLevel = 1");
             sql.Append(" GROUP BY TariffTypes.TariffType, WorkingTimes.TariffLevel, WorkingTimes.Cost");
             sql.Append(" ORDER BY TariffTypes.TariffType");
@@ -894,7 +894,7 @@ namespace TrojWebApp.Services
             StringBuilder sql = new StringBuilder("SELECT Sum(WorkingTimes.Sum) AS SumOf");
             sql.Append(" FROM TariffTypes INNER JOIN(Employees INNER JOIN WorkingTimes ON Employees.EmployeeId = WorkingTimes.EmployeeId) ON TariffTypes.TariffTypeId = WorkingTimes.TariffTypeId");
             sql.AppendFormat(" WHERE WorkingTimes.WhenDate = '{0}'", currentDate);
-            sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
             SumOfModel sumOf;
             try
             {

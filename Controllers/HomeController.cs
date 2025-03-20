@@ -104,7 +104,7 @@ namespace TrojWebApp.Controllers
 
             EmployeesModel currentEmployee = await _employeeConnection.GetEmployee(currentEmployeeId);
 
-            string currentUserName = currentEmployee.UserName;
+            string currentUserName = currentEmployee.UserName3;
 
             IEnumerable<WorkingTimesSummarysModel> workingTimesSummeriesOfYear = await _workingTimesConnection.GetUnderlaySummariesOfYear(currentDate, currentUserName);
             ViewBag.WorkingTimesSummeriesOfYear = workingTimesSummeriesOfYear;

@@ -16,7 +16,7 @@ namespace TrojWebApp.Models
         public bool Represent { get; set; }
         public bool Active { get; set; }
         public bool ReadOnly { get; set; }
-        public string UserName { get; set; }
+        public string UserName3 { get; set; }
         public DateTime Changed { get; set; }
         public string ChangedBy { get; set; }
     }

@@ -48,7 +48,7 @@ namespace TrojWebApp.Services
 
         public async Task<EmployeesModel> GetEmployee(string userName)
         {
-            return await _context.Employees.FirstOrDefaultAsync(m => m.UserName == userName);
+            return await _context.Employees.FirstOrDefaultAsync(m => m.UserName3 == userName);
         }
 
         public async Task<EmployeesModel> CreateEmployee(string firstName, string lastName, string initials, string mailAddress, string title, string userName = "")
@@ -64,7 +64,7 @@ namespace TrojWebApp.Services
                 Represent = true,
                 Active = true,
                 ReadOnly = false,
-                UserName = mailAddress,
+                UserName3 = mailAddress,
                 Changed = DateTime.Now,
                 ChangedBy = userName
             };

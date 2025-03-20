@@ -234,7 +234,7 @@ namespace TrojWebApp.Services
             sql.Append(" Employees ON Cases.Responsible = Employees.Initials INNER JOIN");
             sql.Append(" Persons ON PersonCases.PersonId = Persons.PersonId INNER JOIN");
             sql.Append(" WorkingTimes ON Persons.PersonId = WorkingTimes.PersonId");
-            sql.AppendFormat(" WHERE Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND Cases.Active = 1");
             sql.Append(" AND PersonCases.Responsible = 1");
             sql.Append(" GROUP BY Cases.CaseId");
@@ -253,7 +253,7 @@ namespace TrojWebApp.Services
             sql.Append(" Persons ON PersonCases.PersonId = Persons.PersonId INNER JOIN");
             sql.Append(" WorkingTimes ON Persons.PersonId = WorkingTimes.PersonId INNER JOIN");
             sql.Append(" Employees ON WorkingTimes.EmployeeId = Employees.EmployeeId");
-            sql.AppendFormat(" WHERE Employees.UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE Employees.UserName3 = '{0}'", userName);
             sql.Append(" AND Cases.Active = 1");
             sql.Append(" AND PersonCases.Responsible = 1");
             sql.Append(" GROUP BY Cases.CaseId");

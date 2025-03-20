@@ -53,9 +53,9 @@ namespace TrojWebApp.Services
             int pageId = page.PageId;
 
 
-            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName3, Changed, ChangedBy");
             sql.Append(" FROM Employees");
-            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE UserName3 = '{0}'", userName);
             EmployeesModel employee;
             try
             {
@@ -94,9 +94,9 @@ namespace TrojWebApp.Services
             if (string.IsNullOrEmpty(userName))
                 return null;
 
-            StringBuilder sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            StringBuilder sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName3, Changed, ChangedBy");
             sql.Append(" FROM Employees");
-            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE UserName3 = '{0}'", userName);
             EmployeesModel employee;
             try
             {
@@ -156,9 +156,9 @@ namespace TrojWebApp.Services
             if (subPage == null) return false;
             int subPageId = subPage.SubPageId;
 
-            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName3, Changed, ChangedBy");
             sql.Append(" FROM Employees");
-            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE UserName3 = '{0}'", userName);
             EmployeesModel employee;
             try
             {
@@ -216,9 +216,9 @@ namespace TrojWebApp.Services
             if (subPage == null) return false;
             int subPageId = subPage.SubPageId;
 
-            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName3, Changed, ChangedBy");
             sql.Append(" FROM Employees");
-            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE UserName3 = '{0}'", userName);
             EmployeesModel employee;
             try
             {
@@ -271,9 +271,9 @@ namespace TrojWebApp.Services
             if (subPage == null) return false;
             int subPageId = subPage.SubPageId;
 
-            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName, Changed, ChangedBy");
+            sql = new("SELECT EmployeeId, FirstName, LastName, Initials, MailAddress, EmployeeTitle, SignatureLink, Represent, Active, ReadOnly, UserName3, Changed, ChangedBy");
             sql.Append(" FROM Employees");
-            sql.AppendFormat(" WHERE UserName = '{0}'", userName);
+            sql.AppendFormat(" WHERE UserName3 = '{0}'", userName);
             EmployeesModel employee;
             try
             {
@@ -352,7 +352,7 @@ namespace TrojWebApp.Services
                 sql.Append(" SubPageUsers3 ON SubPages3.SubPageId = SubPageUsers3.SubPageId INNER JOIN ");
                 sql.Append(" Employees ON SubPageUsers3.EmployeeId = Employees.EmployeeId ");
                 sql.AppendFormat(" WHERE SubPageMenus.ParentPageId = {0}", page.Id);
-                sql.AppendFormat(" AND Employees.UserName = '{0}'", userName);
+                sql.AppendFormat(" AND Employees.UserName3 = '{0}'", userName);
                 sql.Append(" ORDER BY SubPageMenus.Position");
                 try
                 {
