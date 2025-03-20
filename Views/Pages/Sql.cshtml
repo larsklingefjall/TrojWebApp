@@ -17,7 +17,7 @@
     {
         <tr>
             <td class="subhead2" nowrap>
-                INSERT INTO Pages3 (Title,Controller,Action,Tip,Position,HasChild,Changed,ChangedBy)
+                INSERT INTO Pages3 ([Title],[Controller],[Action],[Tip],[Position],[HasChild],[Changed],[ChangedBy])
                 VALUES(
                 '@item.Title',
                 '@item.Controller',
@@ -26,11 +26,11 @@
                 @item.Position,
                 @if (@item.HasChild)
                 {
-                    <span>1</span>
+                    <span>1,</span>
                 }
                 else
                 {
-                    <span>0</span>
+                    <span>0,</span>
                 }
                 '@item.Changed',
                 '@item.ChangedBy'

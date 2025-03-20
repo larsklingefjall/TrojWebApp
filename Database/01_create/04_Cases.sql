@@ -1,7 +1,7 @@
 USE [d000540]
 GO
 
-/****** Object:  Table [dbo].[Cases]    Script Date: 2025-03-17 18:29:55 ******/
+/****** Object:  Table [dbo].[Cases]    Script Date: 2025-03-20 10:57:17 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,10 +18,10 @@ CREATE TABLE [dbo].[Cases](
 	[FilePath] [nvarchar](255) NULL,
 	[FilePathCry] [varbinary](512) NULL,
 	[Active] [bit] NULL,
-	[Secrecy] [bit] NULL,
 	[FinishedDate] [datetime] NULL,
 	[Comment] [nvarchar](max) NULL,
 	[CommentCry] [varbinary](max) NULL,
+	[Secrecy] [bit] NULL,
 	[Changed] [datetime] NULL,
 	[ChangedBy] [nvarchar](50) NULL,
  CONSTRAINT [PK_Cases] PRIMARY KEY CLUSTERED 

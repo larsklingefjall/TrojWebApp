@@ -12,9 +12,9 @@ CREATE TABLE [dbo].[SubPageMenus](
 	[SubPageMenuId] [int] IDENTITY(1,1) NOT NULL,
 	[ParentPageId] [int] NOT NULL,
 	[ChildPageId] [int] NOT NULL,
+	[Position] [int] NULL,
 	[Changed] [datetime] NULL,
 	[ChangedBy] [nvarchar](50) NULL,
-	[Position] [int] NULL,
  CONSTRAINT [PK_SubPageMenus] PRIMARY KEY CLUSTERED 
 (
 	[SubPageMenuId] ASC
