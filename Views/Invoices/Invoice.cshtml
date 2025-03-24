@@ -31,7 +31,7 @@
     <table border="0" class="table table-report">
         <tr>
             <td class="avaTablehead2w">Typ:</td>
-            <td class="avaTablehead2w">Antal:</td>
+            <td class="avaTablehead2w" align="right">Antal:</td>
             <td class="avaTablehead2w" align="right">Styckkost:</td>
             <td class="avaTablehead2w" align="right">Summa:</td>
         </tr>
@@ -39,8 +39,8 @@
         {
             <tr>
                 <td class="avaTablefont2" nowrap>@item.TariffType</td>
-                <td class="avaTablefont2" nowrap>@item.UnitCounts</td>
-                <td class="avaTablefont2" align="right" nowrap>@item.UnitCost</td>
+                <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCounts)</td>
+                <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                 <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
             </tr>
         }

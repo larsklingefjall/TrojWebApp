@@ -86,8 +86,8 @@
                         {
                             <tr style="background-color:@item.BackgroundColor;">
                                 <td class="tablefont2" nowrap>@item.TariffType</td>
-                                <td class="tablefont2" nowrap>@item.UnitCounts</td>
-                                <td class="tablefont2" nowrap>@item.UnitCost</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCounts)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                                 <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
                             </tr>
                         }

@@ -66,16 +66,16 @@
                 <tr><td class="avaFont5" colspan="4">Summering:</td></tr>
                 <tr>
                     <td class="avaTablehead2w">Typ:</td>
-                    <td class="avaTablehead2w">Antal:</td>
-                    <td class="avaTablehead2w">Styckkost:</td>
+                    <td class="avaTablehead2w" align="right">Antal:</td>
+                    <td class="avaTablehead2w" align="right">Styckkost:</td>
                     <td class="avaTablehead2w" align="right">Summa:</td>
                 </tr>
                 @foreach (InvoiceUnderlaySummarysModel item in ViewBag.UnderlaySummeries)
                 {
                     <tr style="background-color:@item.BackgroundColor;">
                         <td class="avaTablefont2" nowrap>@item.TariffType</td>
-                        <td class="avaTablefont2" nowrap>@item.SumHours</td>
-                        <td class="avaTablefont2" nowrap>@item.UnitCost</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumHours)</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                         <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
                     </tr>
                 }
@@ -97,7 +97,7 @@
                     <td class="avaTablehead2w">Datum:</td>
                     <td class="avaTablehead2w">Typ:</td>
                     <td class="avaTablehead2w">Kontext:</td>
-                    <td class="avaTablehead2w">Antal:</td>
+                    <td class="avaTablehead2w" align="right">Antal:</td>
                     <td class="avaTablehead2w" align="right">Styckkost:</td>
                     <td class="avaTablehead2w" align="right">Summa:</td>
                 </tr>
@@ -107,7 +107,7 @@
                         <td class="avaTablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                         <td class="avaTablefont2" nowrap>@item.TariffType</td>
                         <td class="avaTablefont2">@item.Comment</td>
-                        <td class="avaTablefont2" nowrap>@item.NumberOfHours</td>
+                        <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.NumberOfHours)</td>
                         <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                         <td class="avaTablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
                     </tr>

@@ -40,7 +40,7 @@ else
                             <input name="InvoiceId" type="hidden" value="@ViewBag.InvoiceId" />
                         <td>
                             <select class="font2" name="TariffTypeId"
-                            asp-items="@(new SelectList(ViewBag.TariffTypesWithLevel,"Value","Text"))">
+                                    asp-items="@(new SelectList(ViewBag.TariffTypesWithLevel,"Value","Text"))">
                             </select>
                         </td>
                         <td>
@@ -73,7 +73,7 @@ else
                             <input name="InvoiceId" type="hidden" value="@ViewBag.InvoiceId" />
                         <td>
                             <select class="font2" name="TariffTypeId"
-                            asp-items="@(new SelectList(ViewBag.TariffTypesNoneLevel,"Value","Text"))">
+                                    asp-items="@(new SelectList(ViewBag.TariffTypesNoneLevel,"Value","Text"))">
                             </select>
                         </td>
                         <td>
@@ -102,9 +102,9 @@ else
                     <tr><th class="head" colspan="5">Summering:</th></tr>
                     <tr>
                         <th class="tablehead2">Typ:</th>
-                        <th class="tablehead2">Antal:</th>
-                        <th class="tablehead2">Styckkost:</th>
-                        <th class="tablehead2">Summa:</th>
+                        <th class="tablehead2" align="right">Antal:</th>
+                        <th class="tablehead2" align="right">Styckkost:</th>
+                        <th class="tablehead2" align="right">Summa:</th>
                         <th class="tablehead2"></th>
                         <th class="tablehead2"></th>
                     </tr>
@@ -118,8 +118,8 @@ else
                                 @if (ViewBag.InvoiceLocked)
                                 {
                                     <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
-                                    <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.UnitCounts)</td>
-                                    <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.UnitCost)</td>
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCounts)</td>
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                                     <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
                                     <td class="tablefont2" nowrap></td>
                                 }
@@ -129,21 +129,21 @@ else
                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                         <input type="hidden" name="InvoiceSummaryId" value="@item.InvoiceSummaryId" />
                                         <input type="hidden" name="InvoiceId" value=" @ViewBag.InvoiceId" />
-                                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
-                                        <td class="tablefont2" nowrap>
-                                            <input class="font2" name="UnitCounts" type="text" size="10" value="@item.UnitCounts" />
-                                        </td>
-                                        <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.UnitCost)</td>
-                                        <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
-                                        <td class="tablefont2" nowrap><input type="submit" value="Ändra" class="btn btn-primary" /></td>
+                                    <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
+                                    <td class="tablefont2" nowrap>
+                                        <input class="font2" name="UnitCounts" type="text" size="10" value="@item.UnitCounts" />
+                                    </td>
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
+                                    <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
+                                    <td class="tablefont2" nowrap><input type="submit" value="Ändra" class="btn btn-primary" /></td>
                                     </form>
                                 }
                             }
                             else
                             {
                                 <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.TariffType)</td>
-                                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.UnitCounts)</td>
-                                <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.UnitCost)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCounts)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                                 <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
                                 <td class="tablefont2" nowrap></td>
                             }
@@ -159,7 +159,7 @@ else
                                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                         <input type="hidden" name="InvoiceSummaryId" value="@item.InvoiceSummaryId" />
                                         <input type="hidden" name="InvoiceId" value=" @ViewBag.InvoiceId" />
-                                        <td class="tablefont2" nowrap><input type="submit" value="Radera" class="btn btn-primary" /></td>
+                                    <td class="tablefont2" nowrap><input type="submit" value="Radera" class="btn btn-primary" /></td>
                                     </form>
                                 }
                             }
@@ -172,7 +172,7 @@ else
                 </tbody>
                 <tr>
                     <td class="tablehead2">Summa:</td>
-                    <td class="tablehead2">@ViewBag.TotalHours</td>
+                    <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalHours)</td>
                     <td class="tablehead2">&nbsp;</td>
                     <td class="tablehead2" align="right">@String.Format("{0:#,##0.00}", @ViewBag.TotalSum)</td>
                     <td class="tablehead2">&nbsp;</td>

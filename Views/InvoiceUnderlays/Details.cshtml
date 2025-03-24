@@ -70,8 +70,8 @@
                         <tr><th class="head" colspan="4">Summering:</th></tr>
                         <tr>
                             <th class="tablehead2">Typ:</th>
-                            <th class="tablehead2">Antal:</th>
-                            <th class="tablehead2">Styckkost:</th>
+                            <th class="tablehead2" align="right">Antal:</th>
+                            <th class="tablehead2" align="right">Styckkost:</th>
                             <th class="tablehead2" align="right">Summa:</th>
                         </tr>
                     </thead>
@@ -80,8 +80,8 @@
                         {
                             <tr style="background-color:@item.BackgroundColor;">
                                 <td class="tablefont2" nowrap>@item.TariffType</td>
-                                <td class="tablefont2" nowrap>@item.SumHours</td>
-                                <td class="tablefont2" nowrap>@item.UnitCost</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumHours)</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                                 <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.SumCosts)</td>
                             </tr>
                         }
@@ -110,9 +110,9 @@
                             <th class="tablehead2">Datum:</th>
                             <th class="tablehead2">Typ:</th>
                             <th class="tablehead2">Kontext:</th>
-                            <th class="tablehead2">Antal:</th>
-                            <th class="tablehead2">Styckkost:</th>
-                            <th class="tablehead2">Summa:</th>
+                            <th class="tablehead2" align="right">Antal:</th>
+                            <th class="tablehead2" align="right">Styckkost:</th>
+                            <th class="tablehead2" align="right">Summa:</th>
                             <th class="tablehead2">Ombud:</th>
                         </tr>
                     </thead>
@@ -123,7 +123,7 @@
                                 <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.WhenDate)</td>
                                 <td class="tablefont2" nowrap>@item.TariffType</td>
                                 <td class="tablefont2" nowrap>@item.Comment</td>
-                                <td class="tablefont2" nowrap>@item.NumberOfHours</td>
+                                <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.NumberOfHours)</td>
                                 <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.UnitCost)</td>
                                 <td class="tablefont2" align="right" nowrap>@String.Format("{0:#,##0.00}", item.Sum)</td>
                                 <td class="tablefont2" nowrap>@item.Initials</td>
