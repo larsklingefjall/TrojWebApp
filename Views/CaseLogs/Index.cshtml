@@ -58,12 +58,13 @@ else
 @if (Model.Count() > 0)
 {
     <div class="row">
-        <div class="col-sm-2" style="margin-left: 6px;">
+        <div class="col-sm-12" style="margin-left: 6px;">
             <table class="table table-condensed">
                 <thead>
                     <tr>
                         <th class="tablehead2">Anteckningar:</th>
                         <th class="tablehead2">Datum:</th>
+                        <th class="tablehead2">Skapad:</th>
                         <th class="tablehead2"></th>
                     </tr>
                 </thead>
@@ -71,13 +72,28 @@ else
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.Comment)</td>
-                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.WhenDate)</td>
+                            <td class="tablefont2" style="width:max-content;">@Html.DisplayFor(modelItem => item.Comment)</td>
+                            @{
+                                string title = "";
+                                if (item.Changed.HasValue)
+                                    title = "Ändrad: " + item.Changed.Value.ToString();
+
+                                string changed = "";
+                                if (item.Changed.HasValue)
+                                    changed = item.Changed.Value.ToString();
+
+                                string date = item.WhenDate;
+                                if (string.IsNullOrEmpty(item.WhenDate) || item.WhenDate.Contains("1900-01-01"))
+                                    if (item.Changed.HasValue)
+                                        date = item.Changed.Value.ToString("yyyy-MM-dd");
+                            }
+                            <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => date)</td>
+                            <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => changed) av @Html.DisplayFor(modelItem => item.ChangedBy)</td>
                             @if (@ViewBag.DeletePermission)
                             {
                                 @if (ViewBag.CaseActive)
                                 {
-                                    <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseLogs",  new { id = @item.CaseLogId, caseId = @ViewBag.CaseId })</td>
+                                    <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseLogs", new { id = @item.CaseLogId, caseId = @ViewBag.CaseId })</td>
                                 }
                                 else
                                 {

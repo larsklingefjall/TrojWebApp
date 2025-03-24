@@ -7,8 +7,8 @@ namespace TrojWebApp.Models
         [Key]
         public int TariffTypeId { get; set; }
         public double TariffLevel { get; set; }
-        public double? UnitCost { get; set; }
-        public double? SumCosts { get; set; }
-        public double? SumHours { get; set; }
+        public double UnitCost { get; set; }
+        public double SumCosts { get; set; }
+        public double SumHours { get; set; }
     }
 }

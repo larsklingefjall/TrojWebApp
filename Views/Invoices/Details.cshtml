@@ -37,7 +37,12 @@
             </tr>
             <tr>
                 <td class="font2" nowrap>@Html.ActionLink(Model.CaseType + "/" + Model.CaseId.ToString(), "Details", "Cases", new { id = Model.CaseId })</td>
-                <td class="font2" nowrap>@Html.ActionLink(Model.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
+                @{
+                    string underlayNumber = Model.UnderlayNumber;
+                    if (string.IsNullOrEmpty(Model.UnderlayNumber))
+                        underlayNumber = "Inget underlagsnummer";
+                }
+                <td class="font2" nowrap>@Html.ActionLink(underlayNumber, "Details", "InvoiceUnderlays", new { id = Model.InvoiceUnderlayId })</td>
                 <td class="font2" nowrap>@Html.ActionLink(Model.FirstName + " " + Model.LastName + "/" + Model.PersonId.ToString(), "Details", "Persons", new { id = Model.PersonId })</td>
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Initials)</td>
                 <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.InvoiceDate)</td>

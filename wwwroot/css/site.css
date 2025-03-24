@@ -91,6 +91,12 @@ a {
     border-bottom: 1px solid #C0C0C0;
 }
 
+.tablefont3 {
+    font-family: Times;
+    font-size: 6pt;
+    border-bottom: 1px solid #C0C0C0;
+}
+
 .h1, h1 {
     font-family: Arial, Verdana, Geneva, Sans-serif;
     font-size: 24px;

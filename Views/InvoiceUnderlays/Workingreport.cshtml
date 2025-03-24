@@ -48,12 +48,9 @@
             {
                 <td class="avaFont3" nowrap>@ViewBag.EmployeeFirstName @ViewBag.EmployeeLastName</td>
             }
-            @if (@ViewBag.CaseNumber == false)
+            @if (@ViewBag.CaseNumber == false && ViewBag.CaseNumbers != "")
             {
-                @if (ViewBag.CaseNumbers != "")
-                {
-                    <td class="avaFont3" nowrap>@ViewBag.CaseNumbers</td>
-                }
+                <td class="avaFont3" nowrap>@Html.Raw(ViewBag.CaseNumbers)</td>
             }
             @if (@ViewBag.Client == false)
             {

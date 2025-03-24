@@ -145,7 +145,7 @@
                                     {
                                         <td class="tablefont2" align="right"></td>
                                     }
-                                    
+
                                     <td class="tablefont2" align="right">@String.Format("{0:#,##0.00}", @item.WorkingTimesSum)</td>
                                     @if (sumOfUnderlays != null)
                                     {
@@ -193,11 +193,17 @@
                                             foreach (InvoiceAndCaseModel invoice in invoices)
                                             {
                                                 InvoiceLink link = new();
-                                                link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
-                                                double addVat = 1.0 + (double)invoice.Vat / 100;
-                                                link.Sum = invoice.Sum / addVat;
+                                                if (string.IsNullOrEmpty(invoice.InvoiceNumber))
+                                                    link.Link = Html.ActionLink("Inget fakturanummer", "Details", "Invoices", new { id = invoice.InvoiceId });
+                                                else
+                                                    link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
+                                                double addVat = 1.0 / 100;
+                                                if (invoice.Vat.HasValue)
+                                                    addVat = 1.0 + (double)invoice.Vat.Value / 100;
+                                                if (invoice.Sum.HasValue)
+                                                    link.Sum = invoice.Sum.Value / addVat;
                                                 links.Add(link);
-                                                invoiceTotalSum = invoiceTotalSum + invoice.Sum / addVat;
+                                                invoiceTotalSum = invoiceTotalSum + link.Sum;
                                             }
                                             <td class="tablefont2" align="right" nowrap>
                                                 @foreach (InvoiceLink link in links)

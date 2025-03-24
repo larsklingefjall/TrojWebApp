@@ -25,7 +25,7 @@ namespace TrojWebApp.Models
         public string? Title { get; set; }
         public string? UnderlayNumber { get; set; }
         public string? SignatureLink { get; set; }
-        public DateTime? UnderlayDate { get; set; }
+        public DateTime UnderlayDate { get; set; }
         public string? UnderlayPlace { get; set; }
         public string? ReceiverName { get; set; }
         public string? CareOf { get; set; }

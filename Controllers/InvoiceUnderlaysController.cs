@@ -218,10 +218,13 @@ namespace TrojWebApp.Controllers
             IEnumerable<SubPageMenusChildViewModel> menu = await _userConnection.GetMenu(HttpContext.Request, UserName);
             ViewBag.Menu = menu;
 
+            string underlayNumber = underlay.UnderlayNumber;
+            if (string.IsNullOrEmpty(underlay.UnderlayNumber))
+                underlayNumber = "Inget underlagsnummer";
             if (string.IsNullOrEmpty(underlay.Title))
-                ViewBag.UnderlayPageTitle = "Underlag: " + underlay.UnderlayNumber;
+                ViewBag.UnderlayPageTitle = "Underlag: " + underlayNumber;
             else
-                ViewBag.UnderlayPageTitle = "Underlag: " + underlay.UnderlayNumber + ", " + underlay.Title;
+                ViewBag.UnderlayPageTitle = "Underlag: " + underlayNumber + ", " + underlay.Title;
 
             StringBuilder receiver = new StringBuilder();
             receiver.AppendFormat("{0}<br/>", underlay.ReceiverName);
@@ -277,7 +280,7 @@ namespace TrojWebApp.Controllers
             _currentUnderlayId = id;
             ViewBag.InvoiceUnderlayId = id;
             ViewBag.UnderlayPageTitle = "Skriv ut kostnadsräkning och arbetsredogörelse";
-            IEnumerable <InvoicePrintingFieldsModel> fields = await _invoiceUnderlaysConnection.GetInvoicePrintingFields(id);
+            IEnumerable<InvoicePrintingFieldsModel> fields = await _invoiceUnderlaysConnection.GetInvoicePrintingFields(id);
 
             ViewBag.Case = false;
             ViewBag.Employee = false;
@@ -285,11 +288,11 @@ namespace TrojWebApp.Controllers
             ViewBag.Client = true;
             ViewBag.Address = false;
             ViewBag.CaseNumber = false;
-            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)           
-                ViewBag.Case = true;      
-            if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)  
-                ViewBag.Employee = true;      
-            if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)   
+            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)
+                ViewBag.Case = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)
+                ViewBag.Employee = true;
+            if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)
                 ViewBag.Date = true;
             if (fields.FirstOrDefault(u => u.FieldName == "Client") != null)
                 ViewBag.Client = false;
@@ -297,7 +300,7 @@ namespace TrojWebApp.Controllers
                 ViewBag.Address = true;
             if (fields.FirstOrDefault(u => u.FieldName == "CaseNumber") != null)
                 ViewBag.CaseNumber = true;
-            
+
             return View(fields);
         }
 
@@ -354,8 +357,8 @@ namespace TrojWebApp.Controllers
             ViewBag.Client = true;
             ViewBag.Address = false;
             ViewBag.CaseNumber = false;
-            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)            
-                ViewBag.Case = true;       
+            if (fields.FirstOrDefault(u => u.FieldName == "Case") != null)
+                ViewBag.Case = true;
             if (fields.FirstOrDefault(u => u.FieldName == "Employee") != null)
                 ViewBag.Employee = true;
             if (fields.FirstOrDefault(u => u.FieldName == "Date") != null)
@@ -380,13 +383,23 @@ namespace TrojWebApp.Controllers
                 ViewBag.NumberOfColumns = configuration.ConfigValue;
             }
 
-            IEnumerable<CaseNumbersViewModel> caseNumbers = await _caseConnection.GetCaseNumbers(underlay.CaseId);
-            if (caseNumbers.Count<CaseNumbersViewModel>() == 0)
+            IEnumerable<CaseNumbersViewModel> caseNumbersView = await _caseConnection.GetCaseNumbers(underlay.CaseId);
+            if (caseNumbersView.Count<CaseNumbersViewModel>() == 0)
             {
-                ViewBag.CaseNumbers = null;
+                ViewBag.CaseNumbers = "";
             }
             else
             {
+                string caseNumbers = "";
+                string nl = "";
+                foreach (CaseNumbersViewModel caseNumber in caseNumbersView)
+                {
+                    if (string.IsNullOrEmpty(caseNumber.CaseNumber))
+                        caseNumbers = caseNumbers + nl + caseNumber.CourtName;
+                    else
+                        caseNumbers = caseNumbers + nl + caseNumber.CaseNumber;
+                    nl = ", ";
+                }
                 ViewBag.CaseNumbers = caseNumbers;
             }
 
@@ -464,7 +477,7 @@ namespace TrojWebApp.Controllers
             IEnumerable<CaseNumbersViewModel> caseNumbersView = await _caseConnection.GetCaseNumbers(underlay.CaseId);
             if (caseNumbersView.Count<CaseNumbersViewModel>() == 0)
             {
-                ViewBag.CaseNumbers = null;
+                ViewBag.CaseNumbers = "";
             }
             else
             {
@@ -472,7 +485,11 @@ namespace TrojWebApp.Controllers
                 string nl = "";
                 foreach (CaseNumbersViewModel caseNumber in caseNumbersView)
                 {
-                    caseNumbers = caseNumbers + caseNumber.CourtName + ": " + caseNumber.CaseNumber + nl;
+                    if (string.IsNullOrEmpty(caseNumber.CaseNumber))
+                        caseNumbers = caseNumbers + nl + caseNumber.CourtName;
+                    else
+                        caseNumbers = caseNumbers + nl + caseNumber.CourtName + ": " + caseNumber.CaseNumber;
+                    nl = "<br />";
                 }
                 ViewBag.CaseNumbers = caseNumbers;
             }

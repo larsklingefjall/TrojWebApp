@@ -47,7 +47,10 @@
                     {
                         @foreach (InvoiceUnderlaysPartialViewModel item in ViewBag.UnderlaysAtCase)
                         {
-                            @Html.ActionLink((string)item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = @item.InvoiceUnderlayId })
+                            if (string.IsNullOrEmpty(item.UnderlayNumber))
+                                @Html.ActionLink("Inget underlagsnummer", "Details", "InvoiceUnderlays", new { id = @item.InvoiceUnderlayId })
+                            else
+                                @Html.ActionLink((string)item.UnderlayNumber, "Details", "InvoiceUnderlays", new { id = @item.InvoiceUnderlayId })
                             <br />
                         }
                     }

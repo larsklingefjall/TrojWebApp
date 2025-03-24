@@ -11,19 +11,12 @@
         }
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="30"></td></tr>
         <tr><td class="avaFont5" valign="top" align="left" nowrap>KOSTNADSRÄKNING</td></tr>
-        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="15"></td></tr>
-        @if (@ViewBag.CaseNumber == false)
+        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="24"></td></tr>
+        @if (@ViewBag.CaseNumber == false && @ViewBag.CaseNumbers != "")
         {
             <tr>
                 <td class="avaHeadPrint" valign="top" align="left" nowrap>
-                    Målnummer:
-                    @if (ViewBag.CaseNumbers != null)
-                    {
-                        @foreach (CaseNumbersViewModel item in ViewBag.CaseNumbers)
-                        {
-                            @item.CaseNumber
-                        }
-                    }
+                    Målnummer: @Html.Raw(ViewBag.CaseNumbers)
                 </td>
             </tr>
         }

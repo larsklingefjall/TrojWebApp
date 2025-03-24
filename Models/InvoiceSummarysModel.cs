@@ -15,7 +15,7 @@ namespace TrojWebApp.Models
         [ForeignKey("TariffTypes")]
         public int TariffTypeId { get; set; }
 
-        public double? UnitCost { get; set; }
+        public double UnitCost { get; set; }
         public double? UnitCounts { get; set; }
         public double? Sum { get; set; }
 

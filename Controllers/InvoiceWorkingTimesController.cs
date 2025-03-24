@@ -54,7 +54,10 @@ namespace TrojWebApp.Controllers
             ViewBag.Menu = menu;
 
             ViewBag.InvoiceUnderlayId = underlay.InvoiceUnderlayId;
-            ViewBag.UnderlayLinkText = underlay.UnderlayNumber;
+            string underlayNumber = underlay.UnderlayNumber;
+            if (string.IsNullOrEmpty(underlay.UnderlayNumber))
+                underlayNumber = "Inget underlagsnummer";
+            ViewBag.UnderlayLinkText = underlayNumber;
             ViewBag.CaseId = underlay.CaseId.ToString();
             ViewBag.CaseLinkText = underlay.CaseType + "/" + underlay.CaseId.ToString();
             ViewBag.UnderlayLocked = underlay.Locked;

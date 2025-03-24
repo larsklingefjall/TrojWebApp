@@ -30,37 +30,37 @@
             <tr>
                 <form asp-action="Bargain">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <td>
-                        <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
-                    </td>
-                    <td>
-                        <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
-                    </td>
-                    <td>
-                        <select name="Initial" class="font2">
-                            <option value="0"></option>
+                <td>
+                    <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
+                </td>
+                <td>
+                    <select name="Initial" class="font2">
+                        <option value="0"></option>
                             @foreach (SelectListItem option in ViewBag.Employees)
                             {
                                 if (option.Value == ViewBag.Initial)
                                 {
-                                    <option value="@option.Value" selected="selected">@option.Text</option>
+                                <option value="@option.Value" selected="selected">@option.Text</option>
                                 }
                                 else
                                 {
-                                    <option value="@option.Value">@option.Text</option>
+                                <option value="@option.Value">@option.Text</option>
                                 }
                             }
-                        </select>
-                    </td>
-                    <td>
-                        <input type="submit" value="Sök" class="btn btn-primary" />
-                    </td>
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Sök" class="btn btn-primary" />
+                </td>
                 </form>
                 <form asp-action="ResetBargain">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <td>
-                        <input type="submit" value="Nollställ" class="btn btn-primary" />
-                    </td>
+                <td>
+                    <input type="submit" value="Nollställ" class="btn btn-primary" />
+                </td>
                 </form>
             </tr>
         </table>
@@ -105,16 +105,22 @@
                                     IEnumerable<InvoiceAndInvoiceUnderlayModel> tmp = null;
 
                                     @if (invoices.Any(d => d.InvoiceUnderlayId == item.InvoiceUnderlayId))
-                                    {                             
+                                    {
                                         tmp = invoices.Where(d => d.InvoiceUnderlayId == item.InvoiceUnderlayId).ToList();
                                         foreach (InvoiceAndInvoiceUnderlayModel invoice in tmp)
                                         {
                                             InvoiceLink link = new();
-                                            link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
-                                            double addVat = 1.0 + (double)invoice.Vat / 100;
-                                            link.Sum = invoice.Sum / addVat;
+                                            if (string.IsNullOrEmpty(invoice.InvoiceNumber))
+                                                link.Link = Html.ActionLink("Inget fakturanummer", "Details", "Invoices", new { id = invoice.InvoiceId });
+                                            else
+                                                link.Link = Html.ActionLink(invoice.InvoiceNumber, "Details", "Invoices", new { id = invoice.InvoiceId });
+                                            double addVat = 1.0 / 100;
+                                            if (invoice.Vat.HasValue)
+                                                addVat = 1.0 + invoice.Vat.Value / 100;
+                                            if (invoice.Sum.HasValue)
+                                                link.Sum = invoice.Sum.Value / addVat;
                                             links.Add(link);
-                                            invoiceTotalSum = invoiceTotalSum + invoice.Sum / addVat;
+                                            invoiceTotalSum = invoiceTotalSum + link.Sum;
                                         }
                                         numOfInvoices = tmp.Count();
                                     }
@@ -146,7 +152,7 @@
                                             <td class="tablefont2" nowrap>@string.Format("{0:yyyy-MM-dd}", item.UnderlayDate)</td>
                                             <td class="tablefont2">@Html.ActionLink(item.CaseType.ToString() + "/" + item.CaseId.ToString(), "Details", "Cases", new { id = item.CaseId })</td>
                                             <td class="tablefont2" align="right" nowrap>
-                                                @if(numOfInvoices > 1)
+                                                @if (numOfInvoices > 1)
                                                 {
                                                     @String.Format("{0:#,##0}: ", invoiceTotalSum)
                                                 }
@@ -154,7 +160,7 @@
                                                 {
                                                     <span>(<span>@link.Link</span>) @String.Format("{0:#,##0}", @link.Sum)</span>
                                                 }
-                                            </td>                                       
+                                            </td>
                                             <td class="tablefont2" align="right" nowrap>@Html.ActionLink(@String.Format("{0:#,##0}", underlay.TotalSum), "Details", "InvoiceUnderlays", new { id = underlay.Id })</td>
                                             <td class="tablefont2" align="right" nowrap><span style="color:@color;">@String.Format("{0:#,##0}", difference)</span></td>
                                             <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>

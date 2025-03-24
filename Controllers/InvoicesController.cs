@@ -275,13 +275,21 @@ namespace TrojWebApp.Controllers
                 ViewBag.NumberOfColumns = configuration.ConfigValue;
             }
 
-            IEnumerable<CaseNumbersViewModel> caseNumbers = await _caseConnection.GetCaseNumbers(invoice.CaseId);
-            if (caseNumbers.Count<CaseNumbersViewModel>() == 0)
+            IEnumerable<CaseNumbersViewModel> caseNumbersView = await _caseConnection.GetCaseNumbers(invoice.CaseId);
+            if (caseNumbersView.Count<CaseNumbersViewModel>() == 0)
             {
-                ViewBag.CaseNumbers = null;
+                ViewBag.CaseNumbers = "";
             }
             else
             {
+                string caseNumbers = "";
+                string nl = "";
+                foreach (CaseNumbersViewModel caseNumber in caseNumbersView)
+                {
+                    if (string.IsNullOrEmpty(caseNumber.CaseNumber) == false)
+                        caseNumbers = caseNumbers + nl + caseNumber.CaseNumber;
+                    nl = ", ";
+                }
                 ViewBag.CaseNumbers = caseNumbers;
             }
 
@@ -350,7 +358,11 @@ namespace TrojWebApp.Controllers
             ViewBag.CaseId = currentUnderlay.CaseId.ToString();
             ViewBag.CaseLinkText = currentUnderlay.CaseType + "/" + currentUnderlay.CaseId.ToString();
             ViewBag.InvoiceUnderlayId = currentUnderlay.InvoiceUnderlayId;
-            ViewBag.InvoiceUnderlayLinkText = currentUnderlay.UnderlayNumber;
+
+            string underlayNumber = currentUnderlay.UnderlayNumber;
+            if (string.IsNullOrEmpty(currentUnderlay.UnderlayNumber))
+                underlayNumber = "Inget underlagsnummer";
+            ViewBag.InvoiceUnderlayLinkText = underlayNumber;
             ViewBag.PersonId = currentUnderlay.PersonId;
             ViewBag.ClientLinkText = currentUnderlay.FirstName + " " + currentUnderlay.LastName + "/" + currentUnderlay.PersonId.ToString();
             ViewBag.UnderlayLocked = currentUnderlay.Locked;

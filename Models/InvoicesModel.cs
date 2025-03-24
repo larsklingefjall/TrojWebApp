@@ -24,7 +24,7 @@ namespace TrojWebApp.Models
         public string? SignatureLink { get; set; }
      
         public string? InvoiceNumber { get; set; }
-        public DateTime? InvoiceDate { get; set; }
+        public DateTime InvoiceDate { get; set; }
         public string? InvoicePlace { get; set; }
         public DateTime? ExpirationDate { get; set; }
 

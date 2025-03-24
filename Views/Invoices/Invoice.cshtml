@@ -8,21 +8,15 @@
         <tr><td class="avaFont3" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.InvoicePlace) @string.Format("{0:yyyy-MM-dd}", Model.InvoiceDate)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="30"></td></tr>
         <tr><td class="avaFont5" valign="top" align="left" nowrap>FAKTURA</td></tr>
-        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="15"></td></tr>
-        <tr>
-            <td class="avaHeadPrint" valign="top" align="left" nowrap>
-                Målnummer:
-                @{
-                    if (ViewBag.CaseNumbers != null)
-                    {
-                        @foreach (CaseNumbersViewModel item in ViewBag.CaseNumbers)
-                        {
-                            @item.CaseNumber
-                        }
-                    }
-                }
-            </td>
-        </tr>
+        <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="24"></td></tr>
+        @if (@ViewBag.CaseNumbers != "")
+        {
+            <tr>
+                <td class="avaHeadPrint" valign="top" align="left" nowrap>
+                    Målnummer: @Html.Raw(ViewBag.CaseNumbers)
+                </td>
+            </tr>
+        }
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="5"></td></tr>
         <tr><td class="avaFont4" valign="top" align="left" nowrap>@Html.DisplayFor(model => model.Headline1)</td></tr>
         <tr><td colspan="2"><img src="@ViewBag.BlankImage" width="1" height="10"></td></tr>
