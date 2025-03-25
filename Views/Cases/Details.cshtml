@@ -60,7 +60,15 @@
                 <td class="font2" nowrap>@Html.DisplayFor(model => model.Active)</td>
                 @if (Model.FinishedDate.HasValue)
                 {
-                    <td class="font2" nowrap>@string.Format("{0:yyyy-MM-dd}", Model.FinishedDate)</td>
+                    string finishedDate = Model.FinishedDate.Value.ToString("yyyy-MM-dd");
+                    if (finishedDate.Contains("1900-01-01"))
+                    {
+                        <td class="font2" nowrap></td>
+                    }
+                    else
+                    {
+                        <td class="font2" nowrap>@finishedDate</td>
+                    }
                 }
                 else
                 {
@@ -112,7 +120,7 @@
                                 {
                                     @if (ViewBag.CaseActive)
                                     {
-                                        <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseNumbers",  new { id = @item.CaseNumberId, caseId = Model.CaseId })</td>
+                                        <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "CaseNumbers", new { id = @item.CaseNumberId, caseId = Model.CaseId })</td>
                                     }
                                     else
                                     {
@@ -155,7 +163,7 @@
                                 {
                                     @if (ViewBag.CaseActive)
                                     {
-                                        <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PersonCases",  new { id = @item.PersonCaseId, caseId = Model.CaseId })</td>
+                                        <td class="tablefont2">@Html.ActionLink("Radera", "Delete", "PersonCases", new { id = @item.PersonCaseId, caseId = Model.CaseId })</td>
                                     }
                                     else
                                     {

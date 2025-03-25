@@ -30,37 +30,37 @@
             <tr>
                 <form asp-action="Index">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <td>
-                    <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
-                </td>
-                <td>
-                    <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
-                </td>
-                <td>
-                    <select name="EmployeeId" class="font2">
-                        <option value="0"></option>
+                    <td>
+                        <input name="StartWhenDate" value="@ViewBag.StartWhenDate" type="date" class="font2" />
+                    </td>
+                    <td>
+                        <input name="EndWhenDate" value="@ViewBag.EndWhenDate" type="date" class="font2" />
+                    </td>
+                    <td>
+                        <select name="EmployeeId" class="font2">
+                            <option value="0"></option>
                             @foreach (SelectListItem option in ViewBag.Employees)
                             {
                                 if (option.Value == ViewBag.EmployeeId)
                                 {
-                                <option value="@option.Value" selected="selected">@option.Text</option>
+                                    <option value="@option.Value" selected="selected">@option.Text</option>
                                 }
                                 else
                                 {
-                                <option value="@option.Value">@option.Text</option>
+                                    <option value="@option.Value">@option.Text</option>
                                 }
                             }
-                    </select>
-                </td>
-                <td>
-                    <input type="submit" value="Sök" class="btn btn-primary" />
-                </td>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="submit" value="Sök" class="btn btn-primary" />
+                    </td>
                 </form>
                 <form asp-action="Reset">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <td>
-                    <input type="submit" value="Nollställ" class="btn btn-primary" />
-                </td>
+                    <td>
+                        <input type="submit" value="Nollställ" class="btn btn-primary" />
+                    </td>
                 </form>
             </tr>
         </table>
@@ -231,7 +231,21 @@
                                         <td class="tablefont2" align="right"></td>
                                         <td class="tablefont2" align="right"></td>
                                     }
-                                    <td class="tablefont2" nowrap>@item.FinishedDate</td>
+                                    @if (string.IsNullOrEmpty(item.FinishedDate))
+                                    {
+                                        <td class="tablefont2" nowrap></td>
+                                    }
+                                    else
+                                    {
+                                        if (item.FinishedDate.Contains("1900-01-01"))
+                                        {
+                                            <td class="tablefont2" nowrap></td>
+                                        }
+                                        else
+                                        {
+                                            <td class="tablefont2" nowrap>@item.FinishedDate</td>
+                                        }
+                                    }
                                     @if (periods != null)
                                     {
                                         @if (periods.Any(d => d.CaseId == item.CaseId))
