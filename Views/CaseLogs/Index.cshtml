@@ -69,23 +69,20 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (CaseLogsViewModel item in Model)
                     {
                         <tr>
                             <td class="tablefont2" style="width:max-content;">@Html.DisplayFor(modelItem => item.Comment)</td>
                             @{
                                 string title = "";
-                                if (item.Changed.HasValue)
-                                    title = "Ändrad: " + item.Changed.Value.ToString();
+                                    title = "Ändrad: " + item.Changed.ToString();
 
                                 string changed = "";
-                                if (item.Changed.HasValue)
-                                    changed = item.Changed.Value.ToString();
+                                    changed = item.Changed.ToString();
 
                                 string date = item.WhenDate;
                                 if (string.IsNullOrEmpty(item.WhenDate) || item.WhenDate.Contains("1900-01-01"))
-                                    if (item.Changed.HasValue)
-                                        date = item.Changed.Value.ToString("yyyy-MM-dd");
+                                        date = "";
                             }
                             <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => date)</td>
                             <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => changed) av @Html.DisplayFor(modelItem => item.ChangedBy)</td>

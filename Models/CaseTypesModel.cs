@@ -7,8 +7,8 @@ namespace TrojWebApp.Models
     {
         [Key]
         public int CaseTypeId { get; set; }
-        public string? CaseType { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public string CaseType { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }

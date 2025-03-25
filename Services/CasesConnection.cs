@@ -345,7 +345,7 @@ namespace TrojWebApp.Services
             return newCaseNumber;
         }
 
-        public async Task<CaseLogsModel> CreateCaseLog(int caseId, DateTime whenDate, string comment, string userName = "")
+        public async Task<CaseLogsModel> CreateCaseLog(int caseId, DateTime whenDate, string comment, string userName)
         {
             CaseLogsModel caseLog = new CaseLogsModel
             {
