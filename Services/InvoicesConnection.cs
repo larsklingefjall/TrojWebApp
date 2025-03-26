@@ -328,7 +328,7 @@ namespace TrojWebApp.Services
             return await _context.TotalSumAndHours.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
-        public async Task<InvoicesModel> CreateInvoice(int invoiceUnderlayId, int employeeId, string invoicePlace, DateTime invoiceDate, DateTime expirationDate, int vat, int division, double clientFundingTotalSum, string userName = "")
+        public async Task<InvoicesModel> CreateInvoice(int invoiceUnderlayId, int employeeId, string invoicePlace, DateTime invoiceDate, DateTime expirationDate, int vat, int division, double clientFundingTotalSum, string userName)
         {
             InvoiceUnderlaysViewModel underlay = await _invoiceUnderlaysConnection.GetUnderlay(invoiceUnderlayId);
 
@@ -559,7 +559,7 @@ namespace TrojWebApp.Services
             return await _context.Database.ExecuteSqlRawAsync(sql.ToString());
         }
 
-        public async Task<InvoicesModel> UpdateInvoice(int id, int employeeId, DateTime invoiceDate, DateTime expirationDate, string invoicePlace, string headline1, string headline2, string text1, bool locked, bool hideClientFunding, InvoicesModel currentInvoice, string userName = "")
+        public async Task<InvoicesModel> UpdateInvoice(int id, int employeeId, DateTime invoiceDate, DateTime expirationDate, string invoicePlace, string headline1, string headline2, string text1, bool locked, bool hideClientFunding, InvoicesModel currentInvoice, string userName)
         {
             EmployeesModel newEmployee = await _employeesConnection.GetEmployee(employeeId);
             InvoicesModel invoice = new InvoicesModel
@@ -648,7 +648,7 @@ namespace TrojWebApp.Services
             return await _context.InvoiceSummarys.FindAsync(id);
         }
 
-        public async Task<int> CreateInvoiceSummary(int invoiceId, int tariffTypeId, double unitCounts, string userName = "")
+        public async Task<int> CreateInvoiceSummary(int invoiceId, int tariffTypeId, double unitCounts, string userName)
         {
             double level = 0;
             TariffLevelsModel tariffLevel = await _tariffLevelsConnection.GetValidTariffLevel(tariffTypeId);
@@ -681,7 +681,7 @@ namespace TrojWebApp.Services
             return await UpdateInvoiceSum(invoiceId);
         }
 
-        public async Task<int> CreateInvoiceSummary(int invoiceId, int tariffTypeId, double unitCounts, double unitCost, string userName = "")
+        public async Task<int> CreateInvoiceSummary(int invoiceId, int tariffTypeId, double unitCounts, double unitCost, string userName)
         {
             double sum = unitCost * unitCounts;
 
@@ -707,7 +707,7 @@ namespace TrojWebApp.Services
             return await UpdateInvoiceSum(invoiceId);
         }
 
-        public async Task<int> UpdateInvoiceSummary(int id, double unitCounts, string userName = "")
+        public async Task<int> UpdateInvoiceSummary(int id, double unitCounts, string userName)
         {
             InvoiceSummarysModel currentSummary = await _context.InvoiceSummarys.FindAsync(id);
             double sum = currentSummary.UnitCost * unitCounts;

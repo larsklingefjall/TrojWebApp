@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,8 +15,8 @@ namespace TrojWebApp.Models
 
         public DateTime? UnderlayDate { get; set; }
   
-        public string? Responsible { get; set; }
-        public string? CaseType { get; set; }
+        public required string Responsible { get; set; }
+        public required string CaseType { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
-using TrojWebApp.Models;
 
 namespace TrojWebApp.Models
 {
@@ -42,6 +40,7 @@ namespace TrojWebApp.Models
         public DbSet<ClientFundingsModel> ClientFundings { get; set; } = null!;
         public DbSet<ClientFundingsViewModel> ClientFundingsView { get; set; } = null!;
         public DbSet<TotalSumModel> ClientFundingTotalSum { get; set; } = null!;
+        public DbSet<ClientFundingMovesModel> ClientFundingMoves { get; set; } = null!;
         public DbSet<InvoiceUnderlaysModel> InvoiceUnderlays { get; set; } = null!;
         public DbSet<InvoiceUnderlaysViewModel> InvoiceUnderlaysView { get; set; } = null!;
         public DbSet<InvoiceUnderlaysPartialViewModel> InvoiceUnderlaysPartialView { get; set; } = null!;

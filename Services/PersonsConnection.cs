@@ -332,7 +332,7 @@ namespace TrojWebApp.Services
             return await _context.MailAddresses.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
-        public async Task<PersonsModel> CreatePerson(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string userName = "")
+        public async Task<PersonsModel> CreatePerson(string firstName, string lastName, string middleName, string personNumber, string mailAddress, string userName)
         {
             PersonsModel person = new PersonsModel
             {
@@ -407,7 +407,7 @@ namespace TrojWebApp.Services
             return await GetPerson(newPerson.PersonId);
         }
 
-        public async Task<PersonAddressesModel> CreateAddress(int personId, string careOf, string streetName, string streetNumber, string postalCode, string postalAddress, string country, string userName = "")
+        public async Task<PersonAddressesModel> CreateAddress(int personId, string careOf, string streetName, string streetNumber, string postalCode, string postalAddress, string country, string userName)
         {
             PersonAddressesModel address = new PersonAddressesModel
             {
@@ -457,7 +457,7 @@ namespace TrojWebApp.Services
             return await GetAddress(newAddress.PersonAddressId);
         }
 
-        public async Task<PhoneNumbersViewModel> CreatePhoneNumber(int personId, int phoneNumberTypeId, string number, string userName = "")
+        public async Task<PhoneNumbersViewModel> CreatePhoneNumber(int personId, int phoneNumberTypeId, string number, string userName)
         {
             PhoneNumbersModel phoneNumber = new PhoneNumbersModel
             {
@@ -533,7 +533,7 @@ namespace TrojWebApp.Services
             return await GetMailAddress(newMail.MailAddressId);
         }
 
-        public async Task<PersonsModel> UpdatePerson(int id, string firstName, string lastName, string middleName, string personNumber, string mailAddress, bool active, bool needInterpreter, string userName = "")
+        public async Task<PersonsModel> UpdatePerson(int id, string firstName, string lastName, string middleName, string personNumber, string mailAddress, bool active, bool needInterpreter, string userName)
         {
             PersonsModel person = new PersonsModel
             {
@@ -603,7 +603,7 @@ namespace TrojWebApp.Services
             return await GetPerson(id);
         }
 
-        public async Task<PersonAddressesModel> UpdateAddress(int id, int personId, string careOf, string streetName, string streetNumber, string postalCode, string postalAddress, string country, bool valid, string userName = "")
+        public async Task<PersonAddressesModel> UpdateAddress(int id, int personId, string careOf, string streetName, string streetNumber, string postalCode, string postalAddress, string country, bool valid, string userName)
         {
             PersonAddressesModel address = new PersonAddressesModel
             {

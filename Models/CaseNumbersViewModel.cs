@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
 
@@ -14,9 +15,9 @@ namespace TrojWebApp.Models
 
         [ForeignKey("Courts")]
         public int CourtId { get; set; }
-        public string CourtName { get; set; }
+        public required string CourtName { get; set; }
         public string? CaseNumber { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

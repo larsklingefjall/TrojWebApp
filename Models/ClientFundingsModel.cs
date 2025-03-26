@@ -16,6 +16,6 @@ namespace TrojWebApp.Models
         public string? Comment { get; set; }
         public DateTime ClientFundDate { get; set; }
         public DateTime Changed { get; set; }
-        public string ChangedBy { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

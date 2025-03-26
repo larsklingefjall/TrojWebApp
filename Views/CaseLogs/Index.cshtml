@@ -74,18 +74,14 @@ else
                         <tr>
                             <td class="tablefont2" style="width:max-content;">@Html.DisplayFor(modelItem => item.Comment)</td>
                             @{
-                                string title = "";
-                                    title = "Ändrad: " + item.Changed.ToString();
-
-                                string changed = "";
-                                    changed = item.Changed.ToString();
+                                string changed = item.Changed.ToString("yyyy-MM-dd HH.mm:ss");
 
                                 string date = item.WhenDate;
                                 if (string.IsNullOrEmpty(item.WhenDate) || item.WhenDate.Contains("1900-01-01"))
-                                        date = "";
+                                    date = "";
                             }
-                            <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => date)</td>
-                            <td class="tablefont2" title=@title nowrap>@Html.DisplayFor(modelItem => changed) av @Html.DisplayFor(modelItem => item.ChangedBy)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => date)</td>
+                            <td class="tablefont2" nowrap>@Html.DisplayFor(modelItem => changed) av @Html.DisplayFor(modelItem => item.ChangedBy)</td>
                             @if (@ViewBag.DeletePermission)
                             {
                                 @if (ViewBag.CaseActive)

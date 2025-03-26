@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+#nullable enable
 using System;
 
 namespace TrojWebApp.Models
@@ -19,7 +20,7 @@ namespace TrojWebApp.Models
         public double? UnitCounts { get; set; }
         public double? Sum { get; set; }
 
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

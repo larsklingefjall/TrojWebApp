@@ -252,6 +252,25 @@ namespace TrojWebApp.Controllers
             TotalSumModel totalSumModel = await _invoicesConnection.GetClientFundTotalSum(id);
             ViewBag.ClientFundingTotalSum = totalSumModel.TotalSum;
 
+            TotalSumModel underlayTotalSum = await _invoiceUnderlaysConnection.GetUnderlaySummariesTotalSum(invoice.InvoiceUnderlayId);
+            double totalSumUnderlay = 0.0;
+            if (underlayTotalSum != null)
+            {
+                totalSumUnderlay = (double)underlayTotalSum.TotalSum;
+            }
+            ViewBag.Difference = totalSum - totalSumUnderlay;
+
+
+            var caseNumbers = await _caseConnection.GetCaseNumbers(invoice.CaseId);
+            if (caseNumbers.Count() == 0)
+            {
+                ViewBag.CaseNumbers = null;
+            }
+            else
+            {
+                ViewBag.CaseNumbers = caseNumbers;
+            }
+
             return View(invoice);
         }
 

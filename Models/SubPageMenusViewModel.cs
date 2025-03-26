@@ -26,7 +26,7 @@ namespace TrojWebApp.Models
 
         public int? Position { get; set; }
 
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }

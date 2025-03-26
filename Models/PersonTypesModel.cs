@@ -7,8 +7,8 @@ namespace TrojWebApp.Models
     {
         [Key]
         public int PersonTypeId { get; set; }
-        public string? PersonType { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public string PersonType { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }

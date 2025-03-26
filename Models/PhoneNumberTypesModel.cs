@@ -8,7 +8,7 @@ namespace TrojWebApp.Models
         [Key]
         public int PhoneNumberTypeId { get; set; }
         public string PhoneNumberType { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }

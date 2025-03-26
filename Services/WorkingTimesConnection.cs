@@ -538,7 +538,7 @@ namespace TrojWebApp.Services
             return await _context.WorkingTimes.FromSqlRaw(sql.ToString()).FirstAsync();
         }
 
-        public async Task<WorkingTimesModel> CreateWorkingTime(int caseId, int tariffTypeId, int employeeId, double numberOfHours, double? cost, string comment, DateTime? whenDate, string userName = "")
+        public async Task<WorkingTimesModel> CreateWorkingTime(int caseId, int tariffTypeId, int employeeId, double numberOfHours, double? cost, string comment, DateTime? whenDate, string userName)
         {
             double level;
             double workingTimeSum;
@@ -603,7 +603,7 @@ namespace TrojWebApp.Services
             return await GetWorkingTime(newWorkingTime.WorkingTimeId);
         }
 
-        public async Task<int> UpdateWorkingTime(int id, double numberOfHours, string comment, string userName = "")
+        public async Task<int> UpdateWorkingTime(int id, double numberOfHours, string comment, string userName)
         {
             WorkingTimesModel workingTime = await GetWorkingTime(id);
             workingTime.NumberOfHours = numberOfHours;

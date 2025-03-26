@@ -236,9 +236,9 @@ namespace TrojWebApp.Controllers
                     tariffTypes.Add(new SelectListItem { Value = item.TariffTypeId.ToString(), Text = item.TariffType });
             ViewBag.TariffTypes = tariffTypes;
 
-            WorkingTimesViewModel zeroWorkingTime = new WorkingTimesViewModel
+            WorkingTimesViewModel zeroWorkingTime = new()
             {
-                ChangedBy = ""
+                TariffType = "Arvode"
             };
             WorkingTimesViewModel firstWorkingTime = zeroWorkingTime;
             if (workingTimes != null && workingTimes.Count() > 0)
@@ -305,7 +305,7 @@ namespace TrojWebApp.Controllers
 
             WorkingTimesViewModel zeroWorkingTime = new WorkingTimesViewModel
             {
-                ChangedBy = ""
+                TariffType = "Arvode"
             };
             WorkingTimesViewModel firstWorkingTime = zeroWorkingTime;
             if (workingTimes.Count() > 0)

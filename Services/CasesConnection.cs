@@ -253,7 +253,7 @@ namespace TrojWebApp.Services
             return await _context.ActiveCasesWorkingTimesView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
-        public async Task<CasesViewModel> CreateCase(int caseTypeId, string title, string responsible, int personId, string userName = "")
+        public async Task<CasesViewModel> CreateCase(int caseTypeId, string title, string responsible, int personId, string userName)
         {
             CasesModel casesModel = new CasesModel
             {
@@ -310,7 +310,7 @@ namespace TrojWebApp.Services
             return await GetCase(newCase.CaseId);
         }
 
-        public async Task<CaseNumbersModel> CreateCaseNumber(int caseId, int courtId, string caseNumber, string userName = "")
+        public async Task<CaseNumbersModel> CreateCaseNumber(int caseId, int courtId, string caseNumber, string userName)
         {
             CaseNumbersModel caseNumberModel = new CaseNumbersModel
             {
@@ -380,7 +380,7 @@ namespace TrojWebApp.Services
             return newCaseLog;
         }
 
-        public async Task<ClientFundingsModel> CreateClientFund(int caseId, double clientSum, DateTime clientFundDate, string comment, string userName = "")
+        public async Task<ClientFundingsModel> CreateClientFund(int caseId, double clientSum, DateTime clientFundDate, string comment, string userName)
         {
             ClientFundingsModel clientFunding = new ClientFundingsModel
             {
@@ -405,7 +405,7 @@ namespace TrojWebApp.Services
             return newClientFunding;
         }
 
-        public async Task<int> CreatePersonCase(int personId, int caseId, int personTypeId, string userName = "")
+        public async Task<int> CreatePersonCase(int personId, int caseId, int personTypeId, string userName)
         {
             PersonCasesModel personCasesModel = new PersonCasesModel
             {
@@ -421,7 +421,7 @@ namespace TrojWebApp.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<CasesViewModel> UpdateCase(int id, int caseTypeId, string title, string responsible, bool active, bool secrecy, DateTime? finishedDate, string comment, int personId, CasesViewModel currentCase, string userName = "")
+        public async Task<CasesViewModel> UpdateCase(int id, int caseTypeId, string title, string responsible, bool active, bool secrecy, DateTime? finishedDate, string comment, int personId, CasesViewModel currentCase, string userName)
         {
             CasesModel casesModel = new CasesModel
             {

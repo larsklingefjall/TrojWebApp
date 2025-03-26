@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TrojWebApp.Models;
 
@@ -34,7 +32,7 @@ namespace TrojWebApp.Services
             return await _context.Configurations.FirstOrDefaultAsync(c => c.ConfigKey == key);
         }
 
-        public async Task<ConfigurationsModel> CreateConfiguration(string key, string value, string userName = "")
+        public async Task<ConfigurationsModel> CreateConfiguration(string key, string value, string userName)
         {
             ConfigurationsModel configuration = new ConfigurationsModel
             {
@@ -53,7 +51,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<ConfigurationsModel> UpdateConfiguration(int id, string key, string value, string userName = "")
+        public async Task<ConfigurationsModel> UpdateConfiguration(int id, string key, string value, string userName)
         {
             ConfigurationsModel configuration = new ConfigurationsModel
             {

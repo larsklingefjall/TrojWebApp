@@ -22,6 +22,11 @@
     <h3><span class="label label-danger">Fakturan är låst!</span></h3>
     <br />
 }
+@if (ViewBag.Difference > 2.0 || ViewBag.Difference < -2.0)
+{
+    <h3><span class="label label-warning">Missmatch mellan underlag och faktura: @String.Format("{0:#,##0.00}", ViewBag.Difference)</span></h3>
+    <br />
+}
 <div class="row">
     <div class="col-sm-2">
         <table border="0" class="table table-condensed table-no-border">

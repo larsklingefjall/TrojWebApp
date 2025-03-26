@@ -51,7 +51,7 @@ namespace TrojWebApp.Services
             return await _context.Employees.FirstOrDefaultAsync(m => m.UserName3 == userName);
         }
 
-        public async Task<EmployeesModel> CreateEmployee(string firstName, string lastName, string initials, string mailAddress, string title, string userName = "")
+        public async Task<EmployeesModel> CreateEmployee(string firstName, string lastName, string initials, string mailAddress, string title, string userName)
         {
             EmployeesModel employee = new EmployeesModel
             {
@@ -77,7 +77,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<EmployeesModel> UpdateEmployee(int id, string firstName, string lastName, string initials, string mailAddress, string link, string title, bool represent, bool active, bool readOnly, string userName = "")
+        public async Task<EmployeesModel> UpdateEmployee(int id, string firstName, string lastName, string initials, string mailAddress, string link, string title, bool represent, bool active, bool readOnly, string userName)
         {
             EmployeesModel employee = new EmployeesModel
             {

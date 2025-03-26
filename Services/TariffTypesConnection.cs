@@ -48,7 +48,7 @@ namespace TrojWebApp.Services
             return await _context.TariffTypes.FindAsync(id);
         }
 
-        public async Task<TariffTypesModel> CreateTariffType(string type, bool noLevel, bool invisible, string backgroundColor, string userName = "")
+        public async Task<TariffTypesModel> CreateTariffType(string type, bool noLevel, bool invisible, string backgroundColor, string userName)
         {
             TariffTypesModel tariffType = new TariffTypesModel
             {
@@ -69,7 +69,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<TariffTypesModel> UpdateTariffType(int tariffTypeId, string type, bool noLevel, bool invisible, string backgroundColor, string userName = "")
+        public async Task<TariffTypesModel> UpdateTariffType(int tariffTypeId, string type, bool noLevel, bool invisible, string backgroundColor, string userName)
         {
             TariffTypesModel tariffType = new TariffTypesModel
             {

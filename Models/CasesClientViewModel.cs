@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations;
 
 namespace TrojWebApp.Models
 {
@@ -6,7 +7,7 @@ namespace TrojWebApp.Models
     {
         [Key]
         public int CaseId { get; set; }
-        public string CaseType { get; set; }
+        public required string CaseType { get; set; }
         public int PersonId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

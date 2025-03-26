@@ -7,9 +7,9 @@ namespace TrojWebApp.Models
     {
         [Key]
         public int ConfigurationId { get; set; }
-        public string? ConfigKey { get; set; }
-        public string? ConfigValue { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public string ConfigKey { get; set; }
+        public string ConfigValue { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }

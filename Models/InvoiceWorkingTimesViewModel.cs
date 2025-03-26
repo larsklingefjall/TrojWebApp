@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,13 +19,13 @@ namespace TrojWebApp.Models
         public DateTime? WhenDate { get; set; }
         public bool Billed { get; set; }
         public string? TariffType { get; set; }
-        public string? BackgroundColor { get; set; }
+        public required string BackgroundColor { get; set; }
         public string? Comment { get; set; }
         public double? UnitCost { get; set; }
         public double? NumberOfHours { get; set; }
         public double? Sum { get; set; }
         public string? Initials { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

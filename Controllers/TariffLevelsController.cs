@@ -70,11 +70,11 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("ValidTo", out StringValues validTo))
                 return NoContent();
 
-            DateTime? validFromDate = null;
+            DateTime validFromDate = new DateTime(DateTime.Now.Year, 1, 1);
             if (validFrom != "")
                 validFromDate = DateTime.Parse(validFrom);
 
-            DateTime? validToDate = null;
+            DateTime validToDate = new DateTime(DateTime.Now.Year, 12, 31);
             if (validTo != "")
                 validToDate = DateTime.Parse(validTo);
 
@@ -132,11 +132,11 @@ namespace TrojWebApp.Controllers
                 valid = true;
             }
 
-            DateTime? validFromDate = null;
+            DateTime validFromDate = new DateTime(DateTime.Now.Year, 1, 1);
             if (validFrom != "")
                 validFromDate = DateTime.Parse(validFrom);
 
-            DateTime? validToDate = null;
+            DateTime validToDate = new DateTime(DateTime.Now.Year, 12, 31);
             if (validTo != "")
                 validToDate = DateTime.Parse(validTo);
 

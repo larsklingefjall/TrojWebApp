@@ -288,7 +288,7 @@ namespace TrojWebApp.Services
             return await _context.InvoiceUnderlaysPartialView.FromSqlRaw(sql.ToString()).ToListAsync();
         }
 
-        public async Task<InvoiceUnderlaysModel> CreateUnderlay(int caseId, int employeeId, int courtId, int personId, string underlayPlace, DateTime underlayDate, int vat, string userName = "")
+        public async Task<InvoiceUnderlaysModel> CreateUnderlay(int caseId, int employeeId, int courtId, int personId, string underlayPlace, DateTime underlayDate, int vat, string userName)
         {
             string headline1 = "";
             ConfigurationsModel configuration = await _configurationConnection.GetConfigurationWithkey("KostnadsRakningText1");
@@ -425,7 +425,7 @@ namespace TrojWebApp.Services
             return newUnderlay;
         }
 
-        public async Task<InvoiceUnderlaysModel> UpdateUnderlay(int id, int employeeId, string title, DateTime underlayDate, string underlayPlace, string headline1, string headline2, string workingReport, bool locked, InvoiceUnderlaysModel currentUnderlay, string userName = "")
+        public async Task<InvoiceUnderlaysModel> UpdateUnderlay(int id, int employeeId, string title, DateTime underlayDate, string underlayPlace, string headline1, string headline2, string workingReport, bool locked, InvoiceUnderlaysModel currentUnderlay, string userName)
         {
             EmployeesModel employee = await _employeesConnection.GetEmployee(employeeId);
             InvoiceUnderlaysModel underlay = new InvoiceUnderlaysModel
@@ -507,7 +507,7 @@ namespace TrojWebApp.Services
             return await GetUnderlay2(id);
         }
 
-        public async Task<bool> MoveAllWorkingTimes(int caseId, int invoiceUnderlayId, string userName = "")
+        public async Task<bool> MoveAllWorkingTimes(int caseId, int invoiceUnderlayId, string userName)
         {
             IEnumerable<WorkingTimesViewModel> workingTimes = await _workingTimesConnection.GetWorkingTimesForCaseNotBilled(caseId);
             bool result = true;
@@ -561,7 +561,7 @@ namespace TrojWebApp.Services
             return result;
         }
 
-        public async Task<bool> MoveWorkingTime(int workingTimeId, int invoiceUnderlayId, string userName = "")
+        public async Task<bool> MoveWorkingTime(int workingTimeId, int invoiceUnderlayId, string userName)
         {
             WorkingTimesViewModel workingTime = await _workingTimesConnection.GetWorkingTimeNotBilled(workingTimeId);
             double cost = 0;

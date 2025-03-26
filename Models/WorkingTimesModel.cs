@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
+#nullable enable
 namespace TrojWebApp.Models
 {
     public class WorkingTimesModel

@@ -1,6 +1,5 @@
-﻿using System;
+﻿#nullable enable
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrojWebApp.Models
 {
@@ -9,9 +8,9 @@ namespace TrojWebApp.Models
         [Key]
         public int SubPageMenuId { get; set; }
 
-        public string Controller { get; set; }
-        public string Action { get; set; }
-        public string Title { get; set; }
+        public required string Controller { get; set; }
+        public required string Action { get; set; }
+        public required string Title { get; set; }
         public string? Tip { get; set; }
     }
 }

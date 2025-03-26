@@ -93,7 +93,7 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("UnitCounts", out StringValues unitCounts))
                 return NoContent();
 
-            await _invoicesConnection.CreateInvoiceSummary(int.Parse(invoiceId), int.Parse(tariffTypeId), double.Parse(unitCounts));
+            await _invoicesConnection.CreateInvoiceSummary(int.Parse(invoiceId), int.Parse(tariffTypeId), double.Parse(unitCounts), UserName);
 
             return RedirectToAction("Index", new { id = int.Parse(invoiceId) });
         }

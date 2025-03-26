@@ -171,7 +171,7 @@ namespace TrojWebApp.Controllers
                 valid = true;
             }
 
-            PersonAddressesModel updatedAddress = await _personConnection.UpdateAddress(id, Int32.Parse(personId.ToString()), careOf.ToString(), streetName.ToString(), streetNumber.ToString(), postalCode.ToString(), postalAddress.ToString(), country.ToString(), valid);
+            PersonAddressesModel updatedAddress = await _personConnection.UpdateAddress(id, Int32.Parse(personId.ToString()), careOf.ToString(), streetName.ToString(), streetNumber.ToString(), postalCode.ToString(), postalAddress.ToString(), country.ToString(), valid, UserName);
             if (updatedAddress == null)
                 return NoContent();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,7 +14,7 @@ namespace TrojWebApp.Models
         public int InvoiceUnderlayId { get; set; }
 
 
-        public string FieldName { get; set; }
+        public string? FieldName { get; set; }
         public DateTime? Changed { get; set; }
         public string? ChangedBy { get; set; }
     }

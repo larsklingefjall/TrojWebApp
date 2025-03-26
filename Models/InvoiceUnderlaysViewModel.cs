@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +12,7 @@ namespace TrojWebApp.Models
 
         [ForeignKey("Cases")]
         public int CaseId { get; set; }
-        public string CaseType { get; set; }
+        public required string CaseType { get; set; }
 
 
         [ForeignKey("Persons")]
@@ -32,7 +33,7 @@ namespace TrojWebApp.Models
         public string? Title { get; set; }
         public string? UnderlayNumber { get; set; }
         public string? SignatureLink { get; set; }
-        public DateTime? UnderlayDate { get; set; }
+        public DateTime UnderlayDate { get; set; }
         public string? UnderlayPlace { get; set; }
         public string? ReceiverName { get; set; }
         public string? CareOf { get; set; }

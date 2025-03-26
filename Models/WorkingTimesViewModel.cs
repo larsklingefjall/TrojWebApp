@@ -15,7 +15,7 @@ namespace TrojWebApp.Models
         public string? Title { get; set; }
         public string? CaseType { get; set; }
         public int TariffTypeId { get; set; }
-        public string TariffType { get; set; }
+        public required string TariffType { get; set; }
         public string? BackgroundColor { get; set; }
         public double TariffLevel { get; set; }
         public bool NoLevel { get; set; }

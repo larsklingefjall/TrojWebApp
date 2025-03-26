@@ -27,7 +27,7 @@ namespace TrojWebApp.Services
             return await _context.Courts.FindAsync(id);
         }
 
-        public async Task<CourtsModel> CreateCourt(string name, string userName = "")
+        public async Task<CourtsModel> CreateCourt(string name, string userName)
         {
             CourtsModel court = new CourtsModel
             {
@@ -50,7 +50,7 @@ namespace TrojWebApp.Services
                 return null;
         }
 
-        public async Task<CourtsModel> UpdateCourt(int id, string name, string street, string number, string postalCode, string PostalAddress, string country, string userName = "")
+        public async Task<CourtsModel> UpdateCourt(int id, string name, string street, string number, string postalCode, string PostalAddress, string country, string userName)
         {
             CourtsModel court = new CourtsModel
             {

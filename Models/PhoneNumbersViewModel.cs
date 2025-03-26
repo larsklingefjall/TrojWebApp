@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,7 +16,7 @@ namespace TrojWebApp.Models
         [ForeignKey("PhoneNumberTypes")]
         public int PhoneNumberTypeId { get; set; }
 
-        public string PhoneNumberType { get; set; }
+        public required string PhoneNumberType { get; set; }
         public string? PhoneNumber { get; set; }
         public DateTime? Changed { get; set; }
         public string? ChangedBy { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
 
@@ -11,9 +12,9 @@ namespace TrojWebApp.Models
 
         [ForeignKey("InvoiceUnderlays")]
         public int InvoiceUnderlayId { get; set; }
-        public string UnderlayNumber { get; set; }
+        public string? UnderlayNumber { get; set; }
         public int CaseId { get; set; }
-        public string CaseType { get; set; }
+        public required string CaseType { get; set; }
 
         [ForeignKey("Persons")]
         public int PersonId { get; set; }
@@ -22,9 +23,9 @@ namespace TrojWebApp.Models
 
         [ForeignKey("Employees")]
         public int EmployeeId { get; set; }
-        public string? Initials { get; set; }
+        public required string? Initials { get; set; }
         
-        public string? InvoiceNumber { get; set; }
+        public required string InvoiceNumber { get; set; }
         public DateTime InvoiceDate { get; set; }
         public string? InvoicePlace { get; set; }
         public DateTime? ExpirationDate { get; set; }
@@ -49,7 +50,7 @@ namespace TrojWebApp.Models
         public bool Locked { get; set; }
         public bool HideClientFunding { get; set; }
 
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

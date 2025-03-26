@@ -111,7 +111,7 @@ namespace TrojWebApp.Controllers
             if (!collection.TryGetValue("InvoiceUnderlayId", out StringValues invoiceUnderlayId))
                 return NoContent();
 
-            await _invoiceUnderlaysConnection.MoveAllWorkingTimes(Int32.Parse(caseId.ToString()), Int32.Parse(invoiceUnderlayId.ToString()));
+            await _invoiceUnderlaysConnection.MoveAllWorkingTimes(Int32.Parse(caseId.ToString()), Int32.Parse(invoiceUnderlayId.ToString()), UserName);
 
             return RedirectToAction("Index", new { id = Int32.Parse(invoiceUnderlayId.ToString()) });
         }

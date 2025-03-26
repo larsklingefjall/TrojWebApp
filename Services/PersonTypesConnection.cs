@@ -26,7 +26,7 @@ namespace TrojWebApp.Services
             return await _context.PersonTypes.FindAsync(id);
         }
 
-        public async Task<PersonTypesModel> CreatePersonTypes(string type, string userName = "")
+        public async Task<PersonTypesModel> CreatePersonTypes(string type, string userName)
         {
             PersonTypesModel personType = new PersonTypesModel
             {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations;
 using System;
 
 namespace TrojWebApp.Models
@@ -7,13 +8,13 @@ namespace TrojWebApp.Models
     {
         [Key]
         public int CourtId { get; set; }
-        public string CourtName { get; set; }
+        public required string CourtName { get; set; }
         public string? StreetName { get; set; }
         public string? StreetNumber { get; set; }
         public string? PostalCode { get; set; }
         public string? PostalAddress { get; set; }
         public string? Country { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

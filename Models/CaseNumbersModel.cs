@@ -17,7 +17,7 @@ namespace TrojWebApp.Models
         public int CourtId { get; set; }
 
         public string? CaseNumber { get; set; }
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public required string ChangedBy { get; set; }
     }
 }

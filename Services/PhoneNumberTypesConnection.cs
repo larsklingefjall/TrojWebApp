@@ -26,7 +26,7 @@ namespace TrojWebApp.Services
             return await _context.PhoneNumberTypes.FindAsync(id);
         }
 
-        public async Task<PhoneNumberTypesModel> CreatePhoneNumberType(string type, string userName = "")
+        public async Task<PhoneNumberTypesModel> CreatePhoneNumberType(string type, string userName)
         {
             PhoneNumberTypesModel phoneNumberType = new PhoneNumberTypesModel
             {

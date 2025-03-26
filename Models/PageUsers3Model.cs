@@ -15,7 +15,7 @@ namespace TrojWebApp.Models
         [ForeignKey("Employees")]
         public int EmployeeId { get; set; }
 
-        public DateTime? Changed { get; set; }
-        public string? ChangedBy { get; set; }
+        public DateTime Changed { get; set; }
+        public string ChangedBy { get; set; }
     }
 }
